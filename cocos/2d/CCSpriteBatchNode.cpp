@@ -182,7 +182,7 @@ void SpriteBatchNode::addChild(Node *child, int zOrder, int tag)
 
     appendChild(sprite);
     
-    
+#ifdef CC_USE_PHYSICS
     if (this->getParent() &&
         dynamic_cast<Layer*>(this->getParent()) != nullptr)
     {
@@ -192,6 +192,7 @@ void SpriteBatchNode::addChild(Node *child, int zOrder, int tag)
             dynamic_cast<Scene*>(this->getParent()->getParent())->addChildToPhysicsWorld(child);
         }
     }
+#endif
 }
 
 // override reorderChild
