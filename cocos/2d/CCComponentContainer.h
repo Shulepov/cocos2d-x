@@ -51,6 +51,7 @@ public:
     virtual bool remove(const char *pName);
     virtual void removeAll();
     virtual void visit(float fDelta);
+    virtual void nodeOnEnter();
 public:
     bool isEmpty() const;
     

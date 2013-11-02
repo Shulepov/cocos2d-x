@@ -939,6 +939,10 @@ void Node::onEnter()
     
     _running = true;
 
+    if (_componentContainer) {
+        _componentContainer->nodeOnEnter();
+    }
+
     if (_scriptType != kScriptTypeNone)
     {
         int action = kNodeOnEnter;

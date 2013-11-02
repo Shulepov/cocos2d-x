@@ -58,6 +58,7 @@ public:
     virtual void serialize(void* r);
     virtual bool isEnabled() const;
     virtual void setEnabled(bool b);
+    virtual void nodeOnEnter();
     static Component* create(void);
     
     const char* getName() const;

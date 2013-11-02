@@ -58,6 +58,10 @@ void Component::serialize(void *ar)
 {
 }
 
+void Component::nodeOnEnter()
+{
+}
+
 Component* Component::create(void)
 {
     Component * pRet = new Component();

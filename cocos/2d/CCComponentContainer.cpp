@@ -139,6 +139,18 @@ void ComponentContainer::visit(float fDelta)
     }
 }
 
+void ComponentContainer::nodeOnEnter()
+{
+    if (_components != NULL)
+    {
+        DictElement *pElement, *tmp;
+        HASH_ITER(hh, _components->_elements, pElement, tmp)
+        {
+            ((Component*)pElement->getObject())->nodeOnEnter();
+        }
+    }
+}
+
 bool ComponentContainer::isEmpty() const
 {
     return (bool)(!(_components && _components->count()));
