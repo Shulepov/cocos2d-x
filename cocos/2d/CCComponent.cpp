@@ -29,7 +29,7 @@ NS_CC_BEGIN
 
 Component::Component(void)
 : _owner(NULL)
-, _enabled(true)
+, _enabled(false)
 {
 }
 
@@ -44,10 +44,12 @@ bool Component::init()
 
 void Component::onEnter()
 {
+    setEnabled(true);
 }
 
 void Component::onExit()
 {
+    setEnabled(false);
 }
 
 void Component::update(float delta)
