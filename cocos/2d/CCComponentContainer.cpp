@@ -87,7 +87,7 @@ bool ComponentContainer::remove(const char *pName)
         CC_BREAK_IF(!_components);
         Object* pRetObject = NULL;
         DictElement *pElement = NULL;
-        HASH_FIND_PTR(_components->_elements, pName, pElement);
+        HASH_FIND_STR(_components->_elements, pName, pElement);
         if (pElement != NULL)
         {
            pRetObject = pElement->getObject();
