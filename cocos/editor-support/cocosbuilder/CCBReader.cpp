@@ -387,8 +387,8 @@ bool CCBReader::readHeader()
     int magicBytes = *((int*)(this->_bytes + this->_currentByte));
     this->_currentByte += 4;
 
-    if(CC_SWAP_INT32_LITTLE_TO_HOST(magicBytes) != (*reinterpret_cast<const int*>("ccbi"))) {
-        return false; 
+    if(CC_SWAP_INT32_LITTLE_TO_HOST(magicBytes) != 'ccbi') {
+        return false;
     }
 
     /* Read version. */
