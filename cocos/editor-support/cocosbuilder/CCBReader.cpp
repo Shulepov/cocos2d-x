@@ -387,7 +387,7 @@ bool CCBReader::readHeader()
     int magicBytes = *((int*)(this->_bytes + this->_currentByte));
     this->_currentByte += 4;
 
-    if(CC_SWAP_INT32_LITTLE_TO_HOST(magicBytes) != 'ccbi') {
+    if(CC_SWAP_INT32_LITTLE_TO_HOST(magicBytes) != (*reinterpret_cast<const int*>("ccbi"))) {
         return false; 
     }
 
@@ -482,12 +482,12 @@ int CCBReader::readInt(bool pSigned) {
     if(pSigned) {
         int s = current % 2;
         if(s) {
-            num = (int)(current / 2);
+            num = static_cast<int>(current / 2);
         } else {
-            num = (int)(-current / 2);
+            num = static_cast<int>(-current / 2);
         }
     } else {
-        num = current - 1;
+        num = static_cast<int>(current - 1);
     }
     
     this->alignBits();
@@ -833,7 +833,7 @@ CCBKeyframe* CCBReader::readKeyframe(PropertyType type)
         {
             spriteFile = _CCBRootPath + spriteFile;
 
-            Texture2D *texture = TextureCache::getInstance()->addImage(spriteFile.c_str());
+            Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(spriteFile.c_str());
             Rect bounds = Rect(0, 0, texture->getContentSize().width, texture->getContentSize().height);
             
             spriteFrame = SpriteFrame::createWithTexture(texture, bounds);
