@@ -372,12 +372,13 @@ void ActionManager::update(float dt)
                 } else
                 if (_currentTarget->currentAction->isDone())
                 {
-                    _currentTarget->currentAction->stop();
-
                     Action *action = _currentTarget->currentAction;
+                    action->retain();
                     // Make currentAction nil to prevent removeAction from salvaging it.
                     _currentTarget->currentAction = NULL;
                     removeAction(action);
+                    action->stop();
+                    action->release();
                 }
 
                 _currentTarget->currentAction = NULL;
