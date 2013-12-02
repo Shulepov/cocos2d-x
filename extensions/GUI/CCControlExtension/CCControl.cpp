@@ -84,7 +84,7 @@ bool Control::init()
         touchListener->onTouchMoved = CC_CALLBACK_2(Control::onTouchMoved, this);
         touchListener->onTouchEnded = CC_CALLBACK_2(Control::onTouchEnded, this);
         touchListener->onTouchCancelled = CC_CALLBACK_2(Control::onTouchCancelled, this);
-        
+        touchListener->setSwallowTouches(true);
         dispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
         
         return true;
