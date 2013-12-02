@@ -122,7 +122,7 @@ const cocos2d::Size GUIReader::getFileDesignSize(const char* fileName) const
 UIWidget* GUIReader::widgetFromJsonFile(const char *fileName)
 {
     DictionaryHelper* dicHelper = DICTOOL;
-    const char *des = nullptr;
+    char *des = nullptr;
     std::string jsonpath;
     JsonDictionary *jsonDict = nullptr;
     jsonpath = CCFileUtils::getInstance()->fullPathForFilename(fileName);
@@ -164,7 +164,7 @@ UIWidget* GUIReader::widgetFromJsonFile(const char *fileName)
     
     CC_SAFE_DELETE(pReader);
     CC_SAFE_DELETE(jsonDict);
-    CC_SAFE_DELETE_ARRAY(des);
+    free(des);
     return widget;
 }
 
@@ -1126,12 +1126,15 @@ void WidgetPropertiesReader0300::setPropsForWidgetFromJsonDictionary(UIWidget*wi
             default:
                 break;
         }
-        float mgl = dicHelper->getFloatValue_json(layoutParameterDic, "marginLeft");
-        float mgt = dicHelper->getFloatValue_json(layoutParameterDic, "marginTop");
-        float mgr = dicHelper->getFloatValue_json(layoutParameterDic, "marginRight");
-        float mgb = dicHelper->getFloatValue_json(layoutParameterDic, "marginDown");
-        parameter->setMargin(UIMargin(mgl, mgt, mgr, mgb));
-        widget->setLayoutParameter(parameter);
+        if (parameter)
+        {
+            float mgl = dicHelper->getFloatValue_json(layoutParameterDic, "marginLeft");
+            float mgt = dicHelper->getFloatValue_json(layoutParameterDic, "marginTop");
+            float mgr = dicHelper->getFloatValue_json(layoutParameterDic, "marginRight");
+            float mgb = dicHelper->getFloatValue_json(layoutParameterDic, "marginDown");
+            parameter->setMargin(UIMargin(mgl, mgt, mgr, mgb));
+            widget->setLayoutParameter(parameter);
+        }
     }
     CC_SAFE_DELETE(layoutParameterDic);
 }

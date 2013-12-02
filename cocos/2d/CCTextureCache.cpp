@@ -162,10 +162,6 @@ void TextureCache::loadImage()
 
     while (true)
     {
-        // create autorelease pool for iOS
-        Thread thread;
-        thread.createAutoreleasePool();
-
         std::queue<AsyncStruct*> *pQueue = _asyncStructQueue;
         _asyncStructQueueMutex.lock();
         if (pQueue->empty())
@@ -622,7 +618,7 @@ void VolatileTextureMgr::reloadAllTextures()
                     Texture2D::setDefaultAlphaPixelFormat(oldPixelFormat);
                 }
                 
-                CC_SAFE_DELETE_ARRAY(pBuffer);
+                free(pBuffer);
                 CC_SAFE_RELEASE(image);
             }
             break;

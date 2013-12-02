@@ -27,31 +27,20 @@
 #include <climits>
 #include <algorithm>
 
-#if (CC_PHYSICS_ENGINE == CC_PHYSICS_CHIPMUNK)
 #include "chipmunk.h"
-#elif (CC_PHYSICS_ENGINE == CCPHYSICS_BOX2D)
-#include "Box2D.h"
-#endif
 
 #include "CCPhysicsShape.h"
 #include "CCPhysicsJoint.h"
 #include "CCPhysicsWorld.h"
 
 #include "chipmunk/CCPhysicsBodyInfo_chipmunk.h"
-#include "box2d/CCPhysicsBodyInfo_box2d.h"
 #include "chipmunk/CCPhysicsJointInfo_chipmunk.h"
-#include "box2d/CCPhysicsJointInfo_box2d.h"
 #include "chipmunk/CCPhysicsWorldInfo_chipmunk.h"
-#include "box2d/CCPhysicsWorldInfo_box2d.h"
 #include "chipmunk/CCPhysicsShapeInfo_chipmunk.h"
-#include "box2d/CCPhysicsShapeInfo_box2d.h"
 #include "chipmunk/CCPhysicsHelper_chipmunk.h"
-#include "box2d/CCPhysicsHelper_box2d.h"
 
 NS_CC_BEGIN
-
-
-#if (CC_PHYSICS_ENGINE == CC_PHYSICS_CHIPMUNK)
+extern const float PHYSICS_INFINITY;
 
 namespace
 {
@@ -293,19 +282,32 @@ void PhysicsBody::setDynamic(bool dynamic)
         if (dynamic)
         {
             cpBodySetMass(_info->getBody(), _mass);
+            cpBodySetMoment(_info->getBody(), _moment);
             
             if (_world != nullptr)
             {
+                // reset the gravity enable
+                if (isGravityEnabled())
+                {
+                    _gravityEnable = false;
+                    setGravityEnable(true);
+                }
+                
                 cpSpaceAddBody(_world->_info->getSpace(), _info->getBody());
             }
-        }else
+        }
+        else
         {
-            cpBodySetMass(_info->getBody(), PHYSICS_INFINITY);
-            
             if (_world != nullptr)
             {
                 cpSpaceRemoveBody(_world->_info->getSpace(), _info->getBody());
             }
+            
+            // avoid incorrect collion simulation.
+            cpBodySetMass(_info->getBody(), PHYSICS_INFINITY);
+            cpBodySetMoment(_info->getBody(), PHYSICS_INFINITY);
+            cpBodySetVel(_info->getBody(), cpvzero);
+            cpBodySetAngVel(_info->getBody(), 0.0f);
         }
         
     }
@@ -360,20 +362,23 @@ float PhysicsBody::getRotation() const
     return -PhysicsHelper::cpfloat2float(cpBodyGetAngle(_info->getBody()) / 3.14f * 180.0f);
 }
 
-PhysicsShape* PhysicsBody::addShape(PhysicsShape* shape)
+PhysicsShape* PhysicsBody::addShape(PhysicsShape* shape, bool addMassAndMoment/* = true*/)
 {
     if (shape == nullptr) return nullptr;
     
     // add shape to body
-    if (_shapes->getIndexOfObject(shape) == UINT_MAX)
+    if (_shapes->getIndexOfObject(shape) == CC_INVALID_INDEX)
     {
         shape->setBody(this);
         
         // calculate the area, mass, and desity
         // area must update before mass, because the density changes depend on it.
-        _area += shape->getArea();
-        addMass(shape->getMass());
-        addMoment(shape->getMoment());
+        if (addMassAndMoment)
+        {
+            _area += shape->getArea();
+            addMass(shape->getMass());
+            addMoment(shape->getMoment());
+        }
         
         if (_world != nullptr)
         {
@@ -399,6 +404,17 @@ void PhysicsBody::applyForce(const Vect& force)
 void PhysicsBody::applyForce(const Vect& force, const Point& offset)
 {
     cpBodyApplyForce(_info->getBody(), PhysicsHelper::point2cpv(force), PhysicsHelper::point2cpv(offset));
+}
+
+void PhysicsBody::resetForces()
+{
+    cpBodyResetForces(_info->getBody());
+    
+    // if _gravityEnable is false, add a reverse of gravity force to body
+    if (_world != nullptr && !_gravityEnable)
+    {
+        applyForce(-_world->getGravity() * _mass);
+    }
 }
 
 void PhysicsBody::applyImpulse(const Vect& impulse)
@@ -442,7 +458,11 @@ void PhysicsBody::setMass(float mass)
         }
     }
     
-    cpBodySetMass(_info->getBody(), PhysicsHelper::float2cpfloat(_mass));
+    // the static body's mass and moment is always infinity
+    if (_dynamic)
+    {
+        cpBodySetMass(_info->getBody(), PhysicsHelper::float2cpfloat(_mass));
+    }
 }
 
 void PhysicsBody::addMass(float mass)
@@ -484,25 +504,29 @@ void PhysicsBody::addMass(float mass)
         }
     }
     
-    cpBodySetMass(_info->getBody(), PhysicsHelper::float2cpfloat(_mass));
+    // the static body's mass and moment is always infinity
+    if (_dynamic)
+    {
+        cpBodySetMass(_info->getBody(), PhysicsHelper::float2cpfloat(_mass));
+    }
 }
 
 void PhysicsBody::addMoment(float moment)
 {
     if (moment == PHYSICS_INFINITY)
     {
-        // if moment is INFINITY, the moment of the body will become INFINITY
+        // if moment is PHYSICS_INFINITY, the moment of the body will become PHYSICS_INFINITY
         _moment = PHYSICS_INFINITY;
         _momentDefault = false;
     }
     else if (moment == -PHYSICS_INFINITY)
     {
-        // if moment is -INFINITY, it won't change
+        // if moment is -PHYSICS_INFINITY, it won't change
         return;
     }
     else
     {
-        // if moment of the body is INFINITY is has no effect
+        // if moment of the body is PHYSICS_INFINITY is has no effect
         if (_moment != PHYSICS_INFINITY)
         {
             if (_momentDefault)
@@ -523,7 +547,8 @@ void PhysicsBody::addMoment(float moment)
         }
     }
     
-    if (_rotationEnable)
+    // the static body's mass and moment is always infinity
+    if (_rotationEnable && _dynamic)
     {
         cpBodySetMoment(_info->getBody(), PhysicsHelper::float2cpfloat(_moment));
     }
@@ -531,6 +556,12 @@ void PhysicsBody::addMoment(float moment)
 
 void PhysicsBody::setVelocity(const Point& velocity)
 {
+    if (!_dynamic)
+    {
+        CCLOG("physics warning: your cann't set velocity for a static body.");
+        return;
+    }
+    
     cpBodySetVel(_info->getBody(), PhysicsHelper::point2cpv(velocity));
 }
 
@@ -551,6 +582,12 @@ Point PhysicsBody::getVelocityAtWorldPoint(const Point& point)
 
 void PhysicsBody::setAngularVelocity(float velocity)
 {
+    if (!_dynamic)
+    {
+        CCLOG("physics warning: your cann't set angular velocity for a static body.");
+        return;
+    }
+    
     cpBodySetAngVel(_info->getBody(), PhysicsHelper::float2cpfloat(velocity));
 }
 
@@ -584,7 +621,8 @@ void PhysicsBody::setMoment(float moment)
     _moment = moment;
     _momentDefault = false;
     
-    if (_rotationEnable)
+    // the static body's mass and moment is always infinity
+    if (_rotationEnable && _dynamic)
     {
         cpBodySetMoment(_info->getBody(), PhysicsHelper::float2cpfloat(_moment));
     }
@@ -604,28 +642,31 @@ PhysicsShape* PhysicsBody::getShape(int tag) const
     return nullptr;
 }
 
-void PhysicsBody::removeShape(int tag)
+void PhysicsBody::removeShape(int tag, bool reduceMassAndMoment/* = true*/)
 {
     for (auto child : *_shapes)
     {
         PhysicsShape* shape = dynamic_cast<PhysicsShape*>(child);
         if (shape->getTag() == tag)
         {
-            removeShape(shape);
+            removeShape(shape, reduceMassAndMoment);
             return;
         }
     }
 }
 
-void PhysicsBody::removeShape(PhysicsShape* shape)
+void PhysicsBody::removeShape(PhysicsShape* shape, bool reduceMassAndMoment/* = true*/)
 {
-    if (_shapes->getIndexOfObject(shape) != UINT_MAX)
+    if (_shapes->getIndexOfObject(shape) != CC_INVALID_INDEX)
     {
         // deduce the area, mass and moment
         // area must update before mass, because the density changes depend on it.
-        _area -= shape->getArea();
-        addMass(-shape->getMass());
-        addMoment(-shape->getMoment());
+        if (reduceMassAndMoment)
+        {
+            _area -= shape->getArea();
+            addMass(-shape->getMass());
+            addMoment(-shape->getMoment());
+        }
         
         //remove
         if (_world)
@@ -640,7 +681,7 @@ void PhysicsBody::removeShape(PhysicsShape* shape)
     }
 }
 
-void PhysicsBody::removeAllShapes()
+void PhysicsBody::removeAllShapes(bool reduceMassAndMoment/* = true*/)
 {
     for (auto child : *_shapes)
     {
@@ -648,9 +689,12 @@ void PhysicsBody::removeAllShapes()
         
         // deduce the area, mass and moment
         // area must update before mass, because the density changes depend on it.
-        _area -= shape->getArea();
-        addMass(-shape->getMass());
-        addMoment(-shape->getMoment());
+        if (reduceMassAndMoment)
+        {
+            _area -= shape->getArea();
+            addMass(-shape->getMass());
+            addMoment(-shape->getMoment());
+        }
         
         if (_world)
         {
@@ -755,11 +799,6 @@ Point PhysicsBody::local2World(const Point& point)
 {
     return PhysicsHelper::cpv2point(cpBodyLocal2World(_info->getBody(), PhysicsHelper::point2cpv(point)));
 }
-
-#elif (CC_PHYSICS_ENGINE == CC_PHYSICS_BOX2D)
-
-
-#endif
 
 NS_CC_END
 

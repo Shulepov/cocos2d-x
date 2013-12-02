@@ -103,6 +103,14 @@ int lua_print(lua_State * luastate)
 
 NS_CC_BEGIN
 
+LuaStack::~LuaStack()
+{
+    if (nullptr != _state)
+    {
+        lua_close(_state);
+    }
+}
+
 LuaStack *LuaStack::create(void)
 {
     LuaStack *stack = new LuaStack();
@@ -272,6 +280,11 @@ void LuaStack::pushInt(int intValue)
 void LuaStack::pushFloat(float floatValue)
 {
     lua_pushnumber(_state, floatValue);
+}
+
+void LuaStack::pushLong(long longValue)
+{
+    lua_pushnumber(_state, longValue);
 }
 
 void LuaStack::pushBoolean(bool boolValue)
