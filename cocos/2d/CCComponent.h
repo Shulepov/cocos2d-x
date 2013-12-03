@@ -59,8 +59,9 @@ public:
     virtual bool isEnabled() const;
     virtual void setEnabled(bool b);
     virtual void nodeOnEnter();
+    virtual bool shouldScheduleUpdate() const { return false; }
     static Component* create(void);
-    
+
     const char* getName() const;
     void setName(const char *pName);
     

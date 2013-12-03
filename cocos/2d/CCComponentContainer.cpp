@@ -70,6 +70,9 @@ bool ComponentContainer::add(Component *pCom)
         
         CCASSERT(pComponent == NULL, "Component already added. It can't be added again");
         CC_BREAK_IF(pComponent);
+        if (pCom->shouldScheduleUpdate()) {
+            _scheduledComponents.push_back(pCom);
+        }
         pCom->setOwner(_owner);
         _components->setObject(pCom, pCom->getName());
         pCom->onEnter();
@@ -94,6 +97,7 @@ bool ComponentContainer::remove(const char *pName)
         }
         Component *com = dynamic_cast<Component*>(pRetObject);
         CC_BREAK_IF(!com);
+        _scheduledComponents.erase(std::remove(_scheduledComponents.begin(), _scheduledComponents.end(), com), _scheduledComponents.end());
         com->onExit();
         com->setOwner(NULL);
         HASH_DEL(_components->_elements, pElement);
@@ -106,6 +110,7 @@ bool ComponentContainer::remove(const char *pName)
 
 void ComponentContainer::removeAll()
 {
+    _scheduledComponents.clear();
     if (_components != NULL)
     {
         DictElement *pElement, *tmp;
@@ -129,13 +134,8 @@ void ComponentContainer::alloc(void)
 
 void ComponentContainer::visit(float fDelta)
 {
-    if (_components != NULL)
-    {
-        DictElement *pElement, *tmp;
-        HASH_ITER(hh, _components->_elements, pElement, tmp)
-        {
-            ((Component*)pElement->getObject())->update(fDelta);
-        }
+    for (Component *component : _scheduledComponents) {
+        component->update(fDelta);
     }
 }
 

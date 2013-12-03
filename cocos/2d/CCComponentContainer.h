@@ -25,6 +25,7 @@ THE SOFTWARE.
 #ifndef __CC_FRAMEWORK_COMCONTAINER_H__
 #define __CC_FRAMEWORK_COMCONTAINER_H__
 
+#include <vector>
 #include "CCDictionary.h"
 
 NS_CC_BEGIN
@@ -60,6 +61,7 @@ private:
     
 private:
     Dictionary *_components;        ///< Dictionary of components
+    std::vector<Component *> _scheduledComponents;
     Node *_owner;
     
     friend class Node;
