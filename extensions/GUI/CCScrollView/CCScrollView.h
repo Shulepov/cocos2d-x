@@ -63,8 +63,11 @@ public:
  * ScrollView support for cocos2d-x.
  * It provides scroll view functionalities to cocos2d projects natively.
  */
-class ScrollView : public Layer
+class ScrollView : public Layer, public ActionTweenDelegate
 {
+public:
+    virtual void updateTweenAction(float value, const std::string& key);
+    
 public:
     enum class Direction
     {
@@ -98,6 +101,8 @@ public:
      */
     virtual ~ScrollView();
 
+    CC_SYNTHESIZE(float, _deaccelerationRate, DeaccelerationRate);
+    
     bool init();
     /**
      * Returns a scroll view object
@@ -123,8 +128,8 @@ public:
      * @param offset    The new offset.
      * @param dt        The animation duration.
      */
-    void setContentOffsetInDuration(Point offset, float dt); 
-
+    void setContentOffsetInDuration(const Point &offset, float dt);
+    
     void setZoomScale(float s);
     /**
      * Sets a new scale and does that for a predefined duration.
@@ -133,9 +138,12 @@ public:
      * @param animated  If true, scaling is animated
      */
     void setZoomScale(float s, bool animated);
-
+    
     float getZoomScale();
-
+    
+    void setMaxZoomScale(float scale);
+    void setMinZoomScale(float scale);
+    
     /**
      * Sets a new scale for container in a given duration.
      *
@@ -143,6 +151,9 @@ public:
      * @param dt    The animation duration
      */
     void setZoomScaleInDuration(float s, float dt);
+    void setZoomScale(const float s, const float dt, const Point &center);
+
+
     /**
      * Returns the current container's minimum offset. You may want this while you animate scrolling by yourself
      */
@@ -229,6 +240,7 @@ public:
     virtual void addChild(Node * child) override;
 
 protected:
+    void setZoom2Scale(float s);
     /**
      * Relocates the container at the proper offset, in bounds of max/min offsets.
      *
@@ -351,6 +363,7 @@ protected:
     
     /** Touch listener */
     EventListenerTouchOneByOne* _touchListener;
+    Point _zoomCenter;
 };
 
 // end of GUI group

@@ -30,7 +30,7 @@
 NS_CC_EXT_BEGIN
 
 #define SCROLL_DEACCEL_RATE  0.95f
-#define SCROLL_DEACCEL_DIST  1.0f
+#define SCROLL_DEACCEL_DIST  0.01f
 #define BOUNCE_DURATION      0.15f
 #define INSET_RATIO          0.2f
 #define MOVE_INCH            7.0f/160.0f
@@ -133,6 +133,7 @@ bool ScrollView::initWithViewSize(Size size, Node *container/* = NULL*/)
 
 bool ScrollView::init()
 {
+    _deaccelerationRate = SCROLL_DEACCEL_RATE;
     return this->initWithViewSize(Size(200, 200), NULL);
 }
 
@@ -200,7 +201,7 @@ void ScrollView::setContentOffset(Point offset, bool animated/* = false*/)
     if (animated)
     { //animate scrolling
         this->setContentOffsetInDuration(offset, BOUNCE_DURATION);
-    } 
+    }
     else
     { //set the container position directly
         if (!_bounceable)
@@ -211,17 +212,17 @@ void ScrollView::setContentOffset(Point offset, bool animated/* = false*/)
             offset.x = MAX(minOffset.x, MIN(maxOffset.x, offset.x));
             offset.y = MAX(minOffset.y, MIN(maxOffset.y, offset.y));
         }
-
+        
         _container->setPosition(offset);
-
+        
         if (_delegate != NULL)
         {
-            _delegate->scrollViewDidScroll(this);   
+            _delegate->scrollViewDidScroll(this);
         }
     }
 }
 
-void ScrollView::setContentOffsetInDuration(Point offset, float dt)
+void ScrollView::setContentOffsetInDuration(const Point &offset, float dt)
 {
     FiniteTimeAction *scroll, *expire;
     
@@ -241,16 +242,19 @@ void ScrollView::setZoomScale(float s)
     if (_container->getScale() != s)
     {
         Point oldCenter, newCenter;
-        Point center;
+        Point center = Point(_viewSize.width*0.5f, _viewSize.height*0.5f);
+        center = this->convertToWorldSpace(center);
         
-        if (_touchLength == 0.0f) 
+        if (_touchLength != 0.0f)
         {
-            center = Point(_viewSize.width*0.5f, _viewSize.height*0.5f);
-            center = this->convertToWorldSpace(center);
-        }
-        else
-        {
-            center = _touchPoint;
+            float containerWidth = _container->getContentSize().width * _container->getScaleX();
+            float containerHeight = _container->getContentSize().height * _container->getScaleY();
+            if (_viewSize.width < containerWidth) {
+                center.x = _touchPoint.x;
+            }
+            if (_viewSize.height < containerHeight) {
+                center.y = _touchPoint.y;
+            }
         }
         
         oldCenter = _container->convertToNodeSpace(center);
@@ -263,6 +267,41 @@ void ScrollView::setZoomScale(float s)
             _delegate->scrollViewDidZoom(this);
         }
         this->setContentOffset(_container->getPosition() + offset);
+    }
+}
+
+void ScrollView::setZoom2Scale(float s)
+{
+    if (_container->getScale() != s)
+    {
+        //        Point oldCenter, newCenter;
+        Point center = _zoomCenter;
+        
+        _container->setScale(MAX(_minScale, MIN(_maxScale, s)));
+        
+        if (_delegate != NULL)
+        {
+            _delegate->scrollViewDidZoom(this);
+        }
+        this->setContentOffset(- _zoomCenter * s + Point(_viewSize.width * 0.5, _viewSize.height * 0.5));
+    }
+}
+
+void ScrollView::setZoomScale(const float s, const float dt, const Point &center)
+{
+    _zoomCenter = center;
+    if (dt > 0)
+    {
+        if (_container->getScale() != s)
+        {
+            ActionTween *scaleAction;
+            scaleAction = ActionTween::create(dt, "zoom2Scale", _container->getScale(), s);
+            this->runAction(scaleAction);
+        }
+    }
+    else
+    {
+        this->setZoom2Scale(s);
     }
 }
 
@@ -338,7 +377,7 @@ void ScrollView::relocateContainer(bool animated)
     max = this->maxContainerOffset();
     
     oldPoint = _container->getPosition();
-
+    
     newX     = oldPoint.x;
     newY     = oldPoint.y;
     if (_direction == Direction::BOTH || _direction == Direction::HORIZONTAL)
@@ -346,13 +385,13 @@ void ScrollView::relocateContainer(bool animated)
         newX     = MAX(newX, min.x);
         newX     = MIN(newX, max.x);
     }
-
+    
     if (_direction == Direction::BOTH || _direction == Direction::VERTICAL)
     {
         newY     = MIN(newY, max.y);
         newY     = MAX(newY, min.y);
     }
-
+    
     if (newY != oldPoint.y || newX != oldPoint.x)
     {
         this->setContentOffset(Point(newX, newY), animated);
@@ -361,13 +400,42 @@ void ScrollView::relocateContainer(bool animated)
 
 Point ScrollView::maxContainerOffset()
 {
-    return Point(0.0f, 0.0f);
+    float xOffset = 0.0f;
+    float yOffset = 0.0f;
+    
+    float containerWidth = _container->getContentSize().width * _container->getScaleX();
+    float containerHeight = _container->getContentSize().height * _container->getScaleY();
+    
+    if (_viewSize.width > containerWidth) {
+        xOffset = (_viewSize.width - containerWidth) / 2;
+    }
+    
+    if (_viewSize.height > containerHeight) {
+        yOffset = (_viewSize.height - containerHeight) / 2;
+    }
+    
+    return Point(xOffset, yOffset);
 }
 
 Point ScrollView::minContainerOffset()
 {
-    return Point(_viewSize.width - _container->getContentSize().width*_container->getScaleX(), 
-               _viewSize.height - _container->getContentSize().height*_container->getScaleY());
+    float xOffset, yOffset;
+    
+    float containerWidth = _container->getContentSize().width * _container->getScaleX();
+    if (_viewSize.width > containerWidth) {
+        xOffset = (_viewSize.width - containerWidth) / 2;
+    } else {
+        xOffset = _viewSize.width - containerWidth;
+    }
+    
+    float containerHeight = _container->getContentSize().height * _container->getScaleY();
+    if (_viewSize.height > containerHeight) {
+        yOffset = (_viewSize.height - containerHeight) / 2;
+    } else {
+        yOffset = _viewSize.height - containerHeight;
+    }
+    
+    return Point(xOffset, yOffset);
 }
 
 void ScrollView::deaccelerateScrolling(float dt)
@@ -387,21 +455,20 @@ void ScrollView::deaccelerateScrolling(float dt)
     {
         maxInset = _maxInset;
         minInset = _minInset;
+        
+        newX = _container->getPosition().x;
+        newY = _container->getPosition().y;
     }
     else
     {
         maxInset = this->maxContainerOffset();
         minInset = this->minContainerOffset();
+        
+        newX     = MIN(_container->getPosition().x, maxInset.x);
+        newX     = MAX(newX, minInset.x);
+        newY     = MIN(_container->getPosition().y, maxInset.y);
+        newY     = MAX(newY, minInset.y);
     }
-    
-    //check to see if offset lies within the inset bounds
-    newX     = MIN(_container->getPosition().x, maxInset.x);
-    newX     = MAX(newX, minInset.x);
-    newY     = MIN(_container->getPosition().y, maxInset.y);
-    newY     = MAX(newY, minInset.y);
-    
-    newX = _container->getPosition().x;
-    newY = _container->getPosition().y;
     
     _scrollDistance     = _scrollDistance - Point(newX - _container->getPosition().x, newY - _container->getPosition().y);
     _scrollDistance     = _scrollDistance * SCROLL_DEACCEL_RATE;
@@ -410,9 +477,7 @@ void ScrollView::deaccelerateScrolling(float dt)
     if ((fabsf(_scrollDistance.x) <= SCROLL_DEACCEL_DIST &&
          fabsf(_scrollDistance.y) <= SCROLL_DEACCEL_DIST) ||
         newY > maxInset.y || newY < minInset.y ||
-        newX > maxInset.x || newX < minInset.x ||
-        newX == maxInset.x || newX == minInset.x ||
-        newY == maxInset.y || newY == minInset.y)
+        newX > maxInset.x || newX < minInset.x)
     {
         this->unschedule(schedule_selector(ScrollView::deaccelerateScrolling));
         this->relocateContainer(true);
@@ -792,4 +857,22 @@ Rect ScrollView::getViewRect()
 
     return Rect(screenPos.x, screenPos.y, _viewSize.width*scaleX, _viewSize.height*scaleY);
 }
+
+void ScrollView::setMaxZoomScale(float scale) {
+    _maxScale = scale;
+}
+
+void ScrollView::setMinZoomScale(float scale) {
+    _minScale = scale;
+}
+
+void ScrollView::updateTweenAction(float value, const std::string &key) {
+    if (key == "zoom2Scale") {
+        setZoom2Scale(value);
+        
+    } else if (key == "zoomScale") {
+        setZoomScale(value);
+    }
+}
+
 NS_CC_EXT_END
