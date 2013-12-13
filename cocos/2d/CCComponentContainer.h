@@ -26,7 +26,7 @@ THE SOFTWARE.
 #define __CC_FRAMEWORK_COMCONTAINER_H__
 
 #include <vector>
-#include "CCDictionary.h"
+#include "CCMap.h"
 
 NS_CC_BEGIN
 
@@ -60,8 +60,8 @@ private:
     void alloc(void);
     
 private:
-    Dictionary *_components;        ///< Dictionary of components
     std::vector<Component *> _scheduledComponents;
+    Map<std::string, Component*>* _components;
     Node *_owner;
     
     friend class Node;
