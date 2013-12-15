@@ -56,17 +56,15 @@ public:
     static Scene *createWithPhysics();
 #endif
 
+public:
+    virtual std::string getDescription() const override;
 
 #ifdef CC_USE_PHYSICS
-public:
-
+    virtual void update(float delta) override;
     inline PhysicsWorld* getPhysicsWorld() { return _physicsWorld; }
-
     virtual void addChild(Node* child) override;
     virtual void addChild(Node* child, int zOrder) override;
     virtual void addChild(Node* child, int zOrder, int tag) override;
-    virtual void update(float delta) override;    
-    virtual std::string getDescription() const override;
 
 protected:
     bool initWithPhysics();

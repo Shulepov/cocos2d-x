@@ -58,6 +58,7 @@ bool ComponentContainer::add(Component *pCom)
     bool bRet = false;
     CCASSERT(pCom != NULL, "Argument must be non-nil");
     CCASSERT(pCom->getOwner() == NULL, "Component already added. It can't be added again");
+    CCASSERT(pCom->getName(), "Component does not have a name");
     do
     {
         if (_components == nullptr)
