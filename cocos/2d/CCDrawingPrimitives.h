@@ -119,6 +119,8 @@ namespace DrawPrimitives
     void drawSolidCircle( const Point& center, float radius, float angle, unsigned int segments, float scaleX, float scaleY);
     void drawSolidCircle( const Point& center, float radius, float angle, unsigned int segments);
 
+    void drawSolidCircleSegment(const Point &center, const float &rRadius, const float &startAngle, const float &endAngle, unsigned int segments);
+
     /** draws a quad bezier path
      @warning This function could be pretty slow. Use it only for debugging purposes.
      @since v0.8
