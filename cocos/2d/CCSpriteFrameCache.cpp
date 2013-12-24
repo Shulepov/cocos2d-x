@@ -258,7 +258,47 @@ void SpriteFrameCache::addSpriteFramesWithFile(const std::string& pszPlist)
             CCLOG("cocos2d: SpriteFrameCache: Trying to use file %s as texture", texturePath.c_str());
         }
 
+        auto oldPixelFormat = Texture2D::getDefaultAlphaPixelFormat();
+        if (dict.find("metadata") != dict.end()) {
+            ValueMap& metadataDict = dict["metadata"].asValueMap();
+            const auto &formatName = metadataDict["pixelFormat"].asString();
+            auto newPixelFormat = oldPixelFormat;
+            if (formatName == "RGBA8888") {
+                newPixelFormat = Texture2D::PixelFormat::RGBA8888;
+            } else if (formatName == "RGB888") {
+                newPixelFormat = Texture2D::PixelFormat::RGB888;
+            } else if (formatName == "PVRTC4") {
+                newPixelFormat = Texture2D::PixelFormat::PVRTC4A;
+            } else if (formatName == "PVRTC2") {
+                newPixelFormat = Texture2D::PixelFormat::PVRTC2A;
+            } else if (formatName == "PVRTC4_NOALPHA") {
+                newPixelFormat = Texture2D::PixelFormat::PVRTC4;
+            } else if (formatName == "PVRTC2_NOALPHA") {
+                newPixelFormat = Texture2D::PixelFormat::PVRTC2;
+            } else if (formatName == "RGBA5551") {
+                newPixelFormat = Texture2D::PixelFormat::RGB5A1;
+            } else if (formatName == "RGB565") {
+                newPixelFormat = Texture2D::PixelFormat::RGB565;
+            } else if (formatName == "RGBA4444") {
+                newPixelFormat = Texture2D::PixelFormat::RGBA4444;
+            } else if (formatName == "ALPHA") {
+                newPixelFormat = Texture2D::PixelFormat::A8;
+            } else if (formatName == "ALPHA_INTENSITY") {
+                newPixelFormat = Texture2D::PixelFormat::AI88;
+            } else if (formatName.length()) {
+                CCLOG("Unsupported atlas pixel format: %s", formatName.c_str());
+            }
+
+            if (formatName.find("PVRTC") != std::string::npos) {
+                bool premultipliedAlpha = metadataDict["premultipliedAlpha"].asBool();
+                Texture2D::PVRImagesHavePremultipliedAlpha(premultipliedAlpha);
+            }
+
+            Texture2D::setDefaultAlphaPixelFormat(newPixelFormat);
+        }
+
         Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(texturePath.c_str());
+        Texture2D::setDefaultAlphaPixelFormat(oldPixelFormat);
 
         if (texture)
         {
