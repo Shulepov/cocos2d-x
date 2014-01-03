@@ -327,7 +327,7 @@ static tinyxml2::XMLElement* generateElementForDict(ValueMap& dict, tinyxml2::XM
 /*
  * Use tinyxml2 to write plist files
  */
-bool FileUtils::writeToFile(ValueMap& dict, const std::string &fullPath)
+bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
 {
     //CCLOG("tinyxml2 Dictionary %d writeToFile %s", dict->_ID, fullPath.c_str());
     tinyxml2::XMLDocument *pDoc = new tinyxml2::XMLDocument();
@@ -458,7 +458,7 @@ NS_CC_BEGIN
 /* The subclass FileUtilsApple should override these two method. */
 ValueMap FileUtils::getValueMapFromFile(const std::string& filename) {return ValueMap();}
 ValueVector FileUtils::getValueVectorFromFile(const std::string& filename) {return ValueVector();}
-bool FileUtils::writeToFile(ValueMap& dict, const std::string &fullPath) {return false;}
+bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath) {return false;}
 
 #endif /* (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC) */
 

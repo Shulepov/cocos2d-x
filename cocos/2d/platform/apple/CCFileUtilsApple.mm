@@ -38,7 +38,7 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 static void addValueToDict(id nsKey, id nsValue, ValueMap& dict);
-static void addObjectToNSDict(const std::string& key, Value& value, NSMutableDictionary *dict);
+static void addObjectToNSDict(const std::string& key, const Value& value, NSMutableDictionary *dict);
 
 static void addItemToArray(id item, ValueVector& array)
 {
@@ -83,7 +83,7 @@ static void addItemToArray(id item, ValueVector& array)
     }
 }
 
-static void addObjectToNSArray(Value& value, NSMutableArray *array)
+static void addObjectToNSArray(const Value& value, NSMutableArray *array)
 {
     // add string into array
     if (value.getType() == Value::Type::STRING)
@@ -171,7 +171,7 @@ static void addValueToDict(id nsKey, id nsValue, ValueMap& dict)
     }
 }
 
-static void addObjectToNSDict(const std::string& key, Value& value, NSMutableDictionary *dict)
+static void addObjectToNSDict(const std::string& key, const Value& value, NSMutableDictionary *dict)
 {
     NSString *NSkey = [NSString stringWithCString:key.c_str() encoding:NSUTF8StringEncoding];
     
@@ -327,14 +327,14 @@ ValueMap FileUtilsApple::getValueMapFromFile(const std::string& filename)
     return ret;
 }
 
-bool FileUtilsApple::writeToFile(ValueMap& dict, const std::string &fullPath)
+bool FileUtilsApple::writeToFile(const ValueMap& dict, const std::string &fullPath)
 {
     //CCLOG("iOS||Mac Dictionary %d write to file %s", dict->_ID, fullPath.c_str());
     NSMutableDictionary *nsDict = [NSMutableDictionary dictionary];
     
-    for (auto iter = dict.begin(); iter != dict.end(); ++iter)
+    for (const auto &entry : dict)
     {
-        addObjectToNSDict(iter->first, iter->second, nsDict);
+        addObjectToNSDict(entry.first, entry.second, nsDict);
     }
     
     NSString *file = [NSString stringWithUTF8String:fullPath.c_str()];

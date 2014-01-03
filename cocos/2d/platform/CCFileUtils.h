@@ -306,7 +306,7 @@ public:
      *  Write a ValueMap to a plist file.
      *  @note This method is used internally.
      */
-    virtual bool writeToFile(ValueMap& dict, const std::string& fullPath);
+    virtual bool writeToFile(const ValueMap& dict, const std::string& fullPath);
     
     /**
      *  Converts the contents of a file to a ValueVector.
