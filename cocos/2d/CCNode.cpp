@@ -1366,6 +1366,15 @@ Component* Node::getComponent(const char *pName)
     return nullptr;
 }
 
+static Vector<Component *> emptyComponents;
+
+const cocos2d::Vector<Component *> &Node::getAllComponents() const {
+    if (_componentContainer) {
+        _componentContainer->getAllComponents();
+    }
+    return emptyComponents;
+}
+
 bool Node::addComponent(Component *pComponent)
 {
     // lazy alloc

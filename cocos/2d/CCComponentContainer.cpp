@@ -75,6 +75,7 @@ bool ComponentContainer::add(Component *pCom)
         }
         pCom->setOwner(_owner);
         _components->insert(pCom->getName(), pCom);
+        _allComponents.pushBack(pCom);
         pCom->onEnter();
         bRet = true;
     } while(0);
@@ -98,6 +99,7 @@ bool ComponentContainer::remove(const char *pName)
         com->setOwner(NULL);
         
         _components->erase(iter);
+        _allComponents.eraseObject(com);
         
         bRet = true;
     } while(0);
@@ -117,6 +119,7 @@ void ComponentContainer::removeAll()
         
         _components->clear();
         CC_SAFE_DELETE(_components);
+        _allComponents.clear();
         
         _owner->unscheduleUpdate();
     }
@@ -124,7 +127,7 @@ void ComponentContainer::removeAll()
 
 void ComponentContainer::alloc(void)
 {
-    _components = new Map<std::string, Component*>();
+//    _components = new Map<std::string, Component*>();
 }
 
 void ComponentContainer::visit(float fDelta)
@@ -136,11 +139,8 @@ void ComponentContainer::visit(float fDelta)
 
 void ComponentContainer::nodeOnEnter()
 {
-    if (_components != NULL)
-    {
-        for (auto iter = _components->begin(); iter != _components->end(); ++iter) {
-            iter->second->nodeOnEnter();
-        }
+    for (auto component : _allComponents) {
+        component->nodeOnEnter();
     }
 }
 

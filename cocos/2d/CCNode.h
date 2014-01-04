@@ -1369,6 +1369,8 @@ public:
     virtual void removeAllComponents();
     /// @} end of component functions
 
+    virtual const Vector<Component *> &getAllComponents() const;
+
 
 #ifdef CC_USE_PHYSICS
     /**

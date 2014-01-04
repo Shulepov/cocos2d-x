@@ -27,6 +27,7 @@ THE SOFTWARE.
 
 #include <vector>
 #include "CCMap.h"
+#include "CCVector.h"
 
 NS_CC_BEGIN
 
@@ -53,6 +54,8 @@ public:
     virtual void removeAll();
     virtual void visit(float fDelta);
     virtual void nodeOnEnter();
+    const Vector<Component *> &getAllComponents() const { return _allComponents; }
+
 public:
     bool isEmpty() const;
     
@@ -62,6 +65,7 @@ private:
 private:
     std::vector<Component *> _scheduledComponents;
     Map<std::string, Component*>* _components;
+    Vector<Component *> _allComponents;
     Node *_owner;
     
     friend class Node;
