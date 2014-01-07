@@ -121,6 +121,26 @@ static void addObjectToNSArray(const Value& value, NSMutableArray *array)
         
         [array addObject:dictElement];
     }
+    
+    if (value.getType() == Value::Type::BYTE) {
+        [array addObject:[NSNumber numberWithChar:value.asByte()]];
+        return;
+    }
+    
+    if (value.getType() == Value::Type::DOUBLE) {
+        [array addObject:[NSNumber numberWithChar:value.asDouble()]];
+        return;
+    }
+    
+    if (value.getType() == Value::Type::FLOAT) {
+        [array addObject:[NSNumber numberWithChar:value.asFloat()]];
+        return;
+    }
+    
+    if (value.getType() == Value::Type::INTEGER) {
+        [array addObject:[NSNumber numberWithChar:value.asInt()]];
+        return;
+    }
 }
 
 static void addValueToDict(id nsKey, id nsValue, ValueMap& dict)
@@ -209,6 +229,26 @@ static void addObjectToNSDict(const std::string& key, const Value& value, NSMuta
         });
 
         [dict setObject:arrElement forKey:NSkey];
+        return;
+    }
+    
+    if (value.getType() == Value::Type::BYTE) {
+        [dict setObject:[NSNumber numberWithChar:value.asByte()] forKey:NSkey];
+        return;
+    }
+    
+    if (value.getType() == Value::Type::DOUBLE) {
+        [dict setObject:[NSNumber numberWithChar:value.asDouble()] forKey:NSkey];
+        return;
+    }
+    
+    if (value.getType() == Value::Type::FLOAT) {
+        [dict setObject:[NSNumber numberWithChar:value.asFloat()] forKey:NSkey];
+        return;
+    }
+    
+    if (value.getType() == Value::Type::INTEGER) {
+        [dict setObject:[NSNumber numberWithChar:value.asInt()] forKey:NSkey];
         return;
     }
 }
@@ -338,10 +378,19 @@ bool FileUtilsApple::writeToFile(const ValueMap& dict, const std::string &fullPa
     }
     
     NSString *file = [NSString stringWithUTF8String:fullPath.c_str()];
+    NSString *directory = [file stringByDeletingLastPathComponent];
+    bool directoryExists =[s_fileManager fileExistsAtPath:directory];
+    if (!directoryExists) {
+        [s_fileManager createDirectoryAtPath:directory
+                 withIntermediateDirectories:YES
+                                  attributes:nil
+                                       error:nil];
+    };
+
     // do it atomically
-    [nsDict writeToFile:file atomically:YES];
+    bool ret = [nsDict writeToFile:file atomically:YES];
     
-    return true;
+    return ret;
 }
 
 ValueVector FileUtilsApple::getValueVectorFromFile(const std::string& filename)
