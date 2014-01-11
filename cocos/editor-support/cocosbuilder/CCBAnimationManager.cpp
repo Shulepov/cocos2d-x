@@ -504,7 +504,7 @@ void CCBAnimationManager::setAnimatedProperty(const std::string& propName, Node 
             }
             else if (propName == "displayFrame")
             {
-                static_cast<Sprite*>(pNode)->setDisplayFrame(static_cast<SpriteFrame*>(obj));
+                static_cast<Sprite*>(pNode)->setDisplayFrame(dynamic_cast<SpriteFrame *>(obj));
             }
             else if (propName == "color")
             {
