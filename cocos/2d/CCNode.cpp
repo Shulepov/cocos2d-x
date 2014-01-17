@@ -1370,7 +1370,7 @@ static Vector<Component *> emptyComponents;
 
 const cocos2d::Vector<Component *> &Node::getAllComponents() const {
     if (_componentContainer) {
-        _componentContainer->getAllComponents();
+        return _componentContainer->getAllComponents();
     }
     return emptyComponents;
 }
