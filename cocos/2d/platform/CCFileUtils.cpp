@@ -321,8 +321,8 @@ ValueVector FileUtils::getValueVectorFromFile(const std::string& filename)
 /*
  * forward statement
  */
-static tinyxml2::XMLElement* generateElementForArray(ValueVector& array, tinyxml2::XMLDocument *pDoc);
-static tinyxml2::XMLElement* generateElementForDict(ValueMap& dict, tinyxml2::XMLDocument *pDoc);
+static tinyxml2::XMLElement* generateElementForArray(const ValueVector& array, tinyxml2::XMLDocument *pDoc);
+static tinyxml2::XMLElement* generateElementForDict(const ValueMap& dict, tinyxml2::XMLDocument *pDoc);
 
 /*
  * Use tinyxml2 to write plist files
@@ -371,7 +371,7 @@ bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
 /*
  * Generate tinyxml2::XMLElement for Object through a tinyxml2::XMLDocument
  */
-static tinyxml2::XMLElement* generateElementForObject(Value& value, tinyxml2::XMLDocument *pDoc)
+static tinyxml2::XMLElement* generateElementForObject(const Value& value, tinyxml2::XMLDocument *pDoc)
 {
     // object is String
     if (value.getType() == Value::Type::STRING)
@@ -417,7 +417,7 @@ static tinyxml2::XMLElement* generateElementForObject(Value& value, tinyxml2::XM
 /*
  * Generate tinyxml2::XMLElement for Dictionary through a tinyxml2::XMLDocument
  */
-static tinyxml2::XMLElement* generateElementForDict(ValueMap& dict, tinyxml2::XMLDocument *pDoc)
+static tinyxml2::XMLElement* generateElementForDict(const ValueMap& dict, tinyxml2::XMLDocument *pDoc)
 {
     tinyxml2::XMLElement* rootNode = pDoc->NewElement("dict");
     
@@ -438,11 +438,11 @@ static tinyxml2::XMLElement* generateElementForDict(ValueMap& dict, tinyxml2::XM
 /*
  * Generate tinyxml2::XMLElement for Array through a tinyxml2::XMLDocument
  */
-static tinyxml2::XMLElement* generateElementForArray(ValueVector& array, tinyxml2::XMLDocument *pDoc)
+static tinyxml2::XMLElement* generateElementForArray(const ValueVector& array, tinyxml2::XMLDocument *pDoc)
 {
     tinyxml2::XMLElement* rootNode = pDoc->NewElement("array");
     
-    std::for_each(array.begin(), array.end(), [=](Value& value){
+    std::for_each(array.begin(), array.end(), [=](const Value& value){
         tinyxml2::XMLElement *element = generateElementForObject(value, pDoc);
         if (element)
             rootNode->LinkEndChild(element);

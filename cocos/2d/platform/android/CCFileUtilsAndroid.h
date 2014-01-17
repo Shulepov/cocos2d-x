@@ -49,6 +49,9 @@ public:
      * @js NA
      * @lua NA
      */
+    virtual std::vector<std::string> getDirectoryContents(const std::string &directoryPath) override;
+    virtual bool isDirectory(const std::string &filePath) override;
+
     virtual ~FileUtilsAndroid();
 
     static void setassetmanager(AAssetManager* a);
