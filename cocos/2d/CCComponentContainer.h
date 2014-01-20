@@ -1,5 +1,5 @@
 /****************************************************************************
-Copyright (c) 2013 cocos2d-x.org
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -28,6 +28,7 @@ THE SOFTWARE.
 #include <vector>
 #include "CCMap.h"
 #include "CCVector.h"
+#include <string>
 
 NS_CC_BEGIN
 
@@ -48,11 +49,11 @@ public:
      * @lua NA
      */
     virtual ~ComponentContainer(void);
-    virtual Component* get(const char *pName) const;
-    virtual bool add(Component *pCom);
-    virtual bool remove(const char *pName);
+    virtual Component* get(const std::string& name) const;
+    virtual bool add(Component *com);
+    virtual bool remove(const std::string& name);
     virtual void removeAll();
-    virtual void visit(float fDelta);
+    virtual void visit(float delta);
     virtual void nodeOnEnter();
     const Vector<Component *> &getAllComponents() const { return _allComponents; }
 

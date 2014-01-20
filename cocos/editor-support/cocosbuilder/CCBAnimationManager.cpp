@@ -19,29 +19,27 @@ namespace cocosbuilder {
 
 CCBAnimationManager::CCBAnimationManager()
 : _jsControlled(false)
-, _owner(NULL)
-, _sequences(NULL)
-, _baseValues(NULL)
+, _owner(nullptr)
 , _autoPlaySequenceId(0)
-, _rootNode(NULL)
+, _rootNode(nullptr)
 , _rootContainerSize(Size::ZERO)
-, _delegate(NULL)
-, _runningSequence(NULL)
+, _delegate(nullptr)
+, _runningSequence(nullptr)
 {
     init();
 }
 
 bool CCBAnimationManager::init()
 {
-    _target = NULL;
-    _animationCompleteCallbackFunc = NULL;
+    _target = nullptr;
+    _animationCompleteCallbackFunc = nullptr;
     
     return true;
 }
 
 CCBAnimationManager::~CCBAnimationManager()
 {
-//     DictElement *pElement = NULL;
+//     DictElement *pElement = nullptr;
 //     CCDICT_FOREACH(_nodeSequences, pElement)
 //     {
 //         Node *node = (Node*)pElement->getIntKey();
@@ -58,8 +56,8 @@ CCBAnimationManager::~CCBAnimationManager()
         _rootNode->stopAllActions();
     }
     
-    setRootNode(NULL);
-    setDelegate(NULL);
+    setRootNode(nullptr);
+    setDelegate(nullptr);
     
     for (auto iter = _objects.begin(); iter != _objects.end(); ++iter)
     {
@@ -201,7 +199,7 @@ const char* CCBAnimationManager::getRunningSequenceName()
     {
         return _runningSequence->getName();
     }
-    return NULL;
+    return nullptr;
 }
 
 const Size& CCBAnimationManager::getContainerSize(Node *pNode)
@@ -279,7 +277,7 @@ CCBSequence* CCBAnimationManager::getSequence(int nSequenceId)
             return seq;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 float CCBAnimationManager::getSequenceDuration(const char *pSequenceName)
@@ -420,7 +418,7 @@ ActionInterval* CCBAnimationManager::getAction(CCBKeyframe *pKeyframe0, CCBKeyfr
         log("CCBReader: Failed to create animation for property: %s", propName.c_str());
     }
     
-    return NULL;
+    return nullptr;
 }
 
 void CCBAnimationManager::setAnimatedProperty(const std::string& propName, Node *pNode, const Value& value, Object* obj, float fTweenDuration)
@@ -437,7 +435,7 @@ void CCBAnimationManager::setAnimatedProperty(const std::string& propName, Node 
         kf1->setEasingType(CCBKeyframe::EasingType::LINEAR);
         
         // Animate
-        ActionInterval *tweenAction = getAction(NULL, kf1, propName, pNode);
+        ActionInterval *tweenAction = getAction(nullptr, kf1, propName, pNode);
         pNode->runAction(tweenAction);
     }
     else 
@@ -500,11 +498,11 @@ void CCBAnimationManager::setAnimatedProperty(const std::string& propName, Node 
             else if (propName == "opacity")
             {
                 unsigned char opacity = value.asByte();
-                (dynamic_cast<RGBAProtocol*>(pNode))->setOpacity(opacity);
+                pNode->setOpacity(opacity);
             }
             else if (propName == "displayFrame")
             {
-                static_cast<Sprite*>(pNode)->setDisplayFrame(dynamic_cast<SpriteFrame *>(obj));
+                static_cast<Sprite*>(pNode)->setSpriteFrame(static_cast<SpriteFrame*>(obj));
             }
             else if (propName == "color")
             {
@@ -512,7 +510,7 @@ void CCBAnimationManager::setAnimatedProperty(const std::string& propName, Node 
                 unsigned char r = c["r"].asByte();
                 unsigned char g = c["g"].asByte();
                 unsigned char b = c["b"].asByte();
-                (dynamic_cast<RGBAProtocol*>(pNode))->setColor(Color3B(r, g, b));
+                pNode->setColor(Color3B(r, g, b));
             }
             else if (propName == "visible")
             {
@@ -650,7 +648,7 @@ Object* CCBAnimationManager::actionForCallbackChannel(CCBSequenceProperty* chann
             {
                 CallFunc* callbackClone = callback->clone();
     
-                if (callbackClone != NULL)
+                if (callbackClone != nullptr)
                 {
                     actions.pushBack(callbackClone);
                 }
@@ -658,14 +656,14 @@ Object* CCBAnimationManager::actionForCallbackChannel(CCBSequenceProperty* chann
         }
         else
         {
-            Object* target = NULL;
+            Object* target = nullptr;
             
             if(selectorTarget == CCBReader::TargetType::DOCUMENT_ROOT)
                 target = _rootNode;
             else if (selectorTarget == CCBReader::TargetType::OWNER)
                 target = _owner;
             
-            if(target != NULL)
+            if(target != nullptr)
             {
                 if(selectorName.length() > 0)
                 {
@@ -673,7 +671,7 @@ Object* CCBAnimationManager::actionForCallbackChannel(CCBSequenceProperty* chann
                     
                     CCBSelectorResolver* targetAsCCBSelectorResolver = dynamic_cast<CCBSelectorResolver *>(target);
 
-                    if(targetAsCCBSelectorResolver != NULL)
+                    if(targetAsCCBSelectorResolver != nullptr)
                     {
                         selCallFunc = targetAsCCBSelectorResolver->onResolveCCBCCCallFuncSelector(target, selectorName.c_str    ());
                     }
@@ -702,7 +700,7 @@ Object* CCBAnimationManager::actionForCallbackChannel(CCBSequenceProperty* chann
             }
         }
     }
-    if(actions.size() < 1) return NULL;
+    if(actions.size() < 1) return nullptr;
     
     return (Object *) Sequence::create(actions);
 }
@@ -744,7 +742,7 @@ Object* CCBAnimationManager::actionForSoundChannel(CCBSequenceProperty* channel)
         actions.pushBack(CCBSoundEffect::actionWithSoundFile(soundFile, pitch, pan, gain));
     }
 
-    if(actions.size() < 1) return NULL;
+    if(actions.size() < 1) return nullptr;
     
     return Sequence::create(actions);
 }
@@ -871,16 +869,16 @@ void CCBAnimationManager::runAnimationsForSequenceIdTweenDuration(int nSeqId, fl
     
     // Set the running scene
 
-    if(seq->getCallbackChannel() != NULL) {
+    if(seq->getCallbackChannel() != nullptr) {
         Action* action = (Action *)actionForCallbackChannel(seq->getCallbackChannel());
-        if(action != NULL) {
+        if(action != nullptr) {
             _rootNode->runAction(action);
         }
     } 
 
-    if(seq->getSoundChannel() != NULL) {
+    if(seq->getSoundChannel() != nullptr) {
         Action* action = (Action *)actionForSoundChannel(seq->getSoundChannel());
-        if(action != NULL) {
+        if(action != nullptr) {
             _rootNode->runAction(action);
         }
     }
@@ -928,7 +926,7 @@ void CCBAnimationManager::sequenceCompleted()
 {
     const char *runningSequenceName = _runningSequence->getName();
     int nextSeqId = _runningSequence->getChainedSequenceId();
-    _runningSequence = NULL;
+    _runningSequence = nullptr;
     
     if(_lastCompletedSequenceName != runningSequenceName) {
         _lastCompletedSequenceName = runningSequenceName;
@@ -1005,7 +1003,7 @@ CCBSetSpriteFrame* CCBSetSpriteFrame::reverse() const
 
 void CCBSetSpriteFrame::update(float time)
 {
-    ((Sprite*)_target)->setDisplayFrame(_spriteFrame);
+    static_cast<Sprite*>(_target)->setSpriteFrame(_spriteFrame);
 }
 
 
@@ -1015,7 +1013,7 @@ void CCBSetSpriteFrame::update(float time)
 
 CCBSoundEffect* CCBSoundEffect::actionWithSoundFile(const std::string &filename, float pitch, float pan, float gain) {
   CCBSoundEffect* pRet = new CCBSoundEffect();
-  if (pRet != NULL && pRet->initWithSoundFile(filename, pitch, pan, gain))
+  if (pRet != nullptr && pRet->initWithSoundFile(filename, pitch, pan, gain))
     {
       pRet->autorelease();
     }

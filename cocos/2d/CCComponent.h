@@ -1,5 +1,5 @@
 /****************************************************************************
-Copyright (c) 2013 cocos2d-x.org
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -55,15 +55,15 @@ public:
      */
     virtual void onExit();
     virtual void update(float delta);
-    virtual void serialize(void* r);
+    virtual bool serialize(void* r);
     virtual bool isEnabled() const;
     virtual void setEnabled(bool b);
     virtual void nodeOnEnter();
     virtual bool shouldScheduleUpdate() const { return false; }
     static Component* create(void);
-
-    const char* getName() const;
-    void setName(const char *pName);
+    
+    const std::string& getName() const;
+    void setName(const std::string& name);
     
     void setOwner(Node *pOwner);
     Node* getOwner() const;

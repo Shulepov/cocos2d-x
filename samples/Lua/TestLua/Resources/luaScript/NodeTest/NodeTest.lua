@@ -261,10 +261,10 @@ local function Test6()
     local rot = cc.RotateBy:create(2, 360)
     local rot_back = rot:reverse()
     local forever1 = cc.RepeatForever:create(cc.Sequence:create(rot, rot_back))
-    local forever11 = tolua.cast(forever1:clone(), "RepeatForever")
+    local forever11 = tolua.cast(forever1:clone(), "cc.RepeatForever")
 
-    local forever2 = tolua.cast(forever1:clone(), "RepeatForever")
-    local forever21 = tolua.cast(forever1:clone(), "RepeatForever")
+    local forever2 = tolua.cast(forever1:clone(), "cc.RepeatForever")
+    local forever21 = tolua.cast(forever1:clone(), "cc.RepeatForever")
 
     Test6_layer:addChild(sp1, 0, kTagSprite1)
     sp1:addChild(sp11)
@@ -370,10 +370,10 @@ local function StressTest2()
 
     local fire = cc.ParticleFire:create()
     fire:setTexture(cc.TextureCache:getInstance():addImage("Images/fire.png"))
-	fire = tolua.cast(fire, "Node")
+	fire = tolua.cast(fire, "cc.Node")
     fire:setPosition(80, s.height / 2 - 50)
 
-    local copy_seq3 = tolua.cast(seq3:clone(), "Sequence")
+    local copy_seq3 = tolua.cast(seq3:clone(), "cc.Sequence")
     fire:runAction(cc.RepeatForever:create(copy_seq3))
     sublayer:addChild(fire, 2)
 
@@ -446,7 +446,6 @@ local function CameraOrbitTest()
     sprite:setScale(0.5)
     p:addChild(sprite, 0)
     sprite:setPosition(cc.p(s.width / 4 * 1, s.height / 2))
-    local cam = sprite:getCamera()
     local orbit = cc.OrbitCamera:create(2, 1, 0, 0, 360, 0, 0)
     sprite:runAction(cc.RepeatForever:create(orbit))
 
@@ -488,12 +487,12 @@ local function CameraZoomTest_update(dt)
 	z = z + dt * 100
 
     local sprite = CameraZoomTest_layer:getChildByTag(20)
-    local cam = sprite:getCamera()
-    cam:setEye(0, 0, z)
+    -- local cam = sprite:getCamera()
+    -- cam:setEye(0, 0, z)
 
     sprite = CameraZoomTest_layer:getChildByTag(40)
-    cam = sprite:getCamera()
-    cam:setEye(0, 0, -z)
+    -- cam = sprite:getCamera()
+    -- cam:setEye(0, 0, -z)
 end
 
 local function CameraZoomTest_onEnterOrExit(tag)
@@ -515,9 +514,9 @@ local function CameraZoomTest()
     local sprite = cc.Sprite:create(s_pPathGrossini)
     CameraZoomTest_layer:addChild(sprite, 0)
     sprite:setPosition(cc.p(s.width / 4 * 1, s.height / 2))
-    local cam = sprite:getCamera()
-    cam:setEye(0, 0, 415 / 2)
-    cam:setCenter(0, 0, 0)
+    -- local cam = sprite:getCamera()
+    -- cam:setEye(0, 0, 415 / 2)
+    -- cam:setCenter(0, 0, 0)
 
     -- CENTER
     sprite = cc.Sprite:create(s_pPathGrossini)
@@ -565,7 +564,7 @@ local function ConvertToNode()
 
         point:setPosition(sprite:getPosition())
 
-        local copy = tolua.cast(action:clone(), "RepeatForever")
+        local copy = tolua.cast(action:clone(), "cc.RepeatForever")
         sprite:runAction(copy)
         ConvertToNode_layer:addChild(sprite, i)
     end

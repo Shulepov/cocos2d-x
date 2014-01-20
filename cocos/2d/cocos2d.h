@@ -1,7 +1,8 @@
 /****************************************************************************
-Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2008-2010 Ricardo Quesada
+Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -111,12 +112,24 @@ THE SOFTWARE.
 #include "CCMotionStreak.h"
 #include "CCProgressTimer.h"
 #include "CCRenderTexture.h"
+#include "CCNodeGrid.h"
 
 // particle_nodes
 #include "CCParticleBatchNode.h"
 #include "CCParticleSystem.h"
 #include "CCParticleExamples.h"
 #include "CCParticleSystemQuad.h"
+
+// new renderer
+#include "renderer/CCCustomCommand.h"
+#include "renderer/CCFrustum.h"
+#include "renderer/CCGroupCommand.h"
+#include "renderer/CCMaterialManager.h"
+#include "renderer/CCQuadCommand.h"
+#include "renderer/CCRenderCommand.h"
+#include "renderer/CCRenderCommandPool.h"
+#include "renderer/CCRenderMaterial.h"
+#include "renderer/CCRenderer.h"
 
 // physics
 #include "CCPhysicsBody.h"
@@ -238,7 +251,6 @@ THE SOFTWARE.
 #include "CCEventListenerCustom.h"
 
 // root
-#include "CCCamera.h"
 #include "CCConfiguration.h"
 #include "CCDirector.h"
 #include "CCScheduler.h"

@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013      Zynga Inc.
+ Copyright (c) 2013-2014 Chukong Technologies Inc.
  
  http://www.cocos2d-x.org
  
@@ -25,8 +26,8 @@
 #ifndef _CCFontAtlasFactory_h_
 #define _CCFontAtlasFactory_h_
 
-#include "cocos2d.h"
 #include "CCFontAtlas.h"
+#include "CCLabel.h"
 
 
 NS_CC_BEGIN
@@ -36,8 +37,12 @@ class CC_DLL FontAtlasFactory
     
 public:
     
-    static FontAtlas * createAtlasFromTTF(const char* fntFilePath, int fontSize, GlyphCollection glyphs, const char *customGlyphs = 0);
-    static FontAtlas * createAtlasFromFNT(const char* fntFilePath);
+    static FontAtlas * createAtlasFromTTF(const std::string& fntFilePath, int fontSize, GlyphCollection glyphs, const char *customGlyphs = 0, bool useDistanceField = false);
+    static FontAtlas * createAtlasFromFNT(const std::string& fntFilePath);
+
+    static FontAtlas * createAtlasFromCharMap(const std::string& charMapFile, int itemWidth, int itemHeight, int startCharMap);
+    static FontAtlas * createAtlasFromCharMap(Texture2D* texture, int itemWidth, int itemHeight, int startCharMap);
+    static FontAtlas * createAtlasFromCharMap(const std::string& plistFile);
     
 private:
 };

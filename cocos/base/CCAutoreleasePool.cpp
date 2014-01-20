@@ -1,5 +1,6 @@
 /****************************************************************************
-Copyright (c) 2010 cocos2d-x.org
+Copyright (c) 2010-2012 cocos2d-x.org
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -64,14 +65,14 @@ void AutoreleasePool::clear()
         int nIndex = _managedObjectArray.size() - 1;
 #endif
 
-        _managedObjectArray.forEachReverse([&](Object* obj){
+        for(const auto &obj : _managedObjectArray) {
             --(obj->_autoReleaseCount);
             //(*it)->release();
             //delete (*it);
 #ifdef _DEBUG
             nIndex--;
 #endif
-        });
+        }
 
         _managedObjectArray.clear();
     }
@@ -118,9 +119,9 @@ void PoolManager::finalize()
 {
     if (!_releasePoolStack.empty())
     {
-        _releasePoolStack.forEach([](AutoreleasePool* pool){
+        for(const auto &pool : _releasePoolStack) {
             pool->clear();
-        });
+        }
     }
 }
 

@@ -1,7 +1,12 @@
 #ifndef _CCB_CCBMEMBERVARIABLEASSIGNER_H_
 #define _CCB_CCBMEMBERVARIABLEASSIGNER_H_
 
-#include "cocos2d.h"
+#include "CCValue.h"
+
+namespace cocos2d {
+    class Node;
+    class Object;
+}
 
 namespace cocosbuilder {
 
@@ -23,6 +28,7 @@ namespace cocosbuilder {
         CC_ASSERT(MEMBERVARIABLE); \
         return true; \
     }
+    
 
 class CCBMemberVariableAssigner {
     public:

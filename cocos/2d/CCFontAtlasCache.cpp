@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013      Zynga Inc.
+ Copyright (c) 2013-2014 Chukong Technologies Inc.
  
  http://www.cocos2d-x.org
  
@@ -22,6 +23,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include <sstream>
+
 #include "CCFontAtlasCache.h"
 #include "CCFontAtlasFactory.h"
 
@@ -30,14 +33,14 @@ NS_CC_BEGIN
 
 std::unordered_map<std::string, FontAtlas *> FontAtlasCache::_atlasMap;
 
-FontAtlas * FontAtlasCache::getFontAtlasTTF(const char *fontFileName, int size, GlyphCollection glyphs, const char *customGlyphs)
+FontAtlas * FontAtlasCache::getFontAtlasTTF(const std::string& fontFileName, int size, GlyphCollection glyphs, const char *customGlyphs, bool useDistanceField)
 {
-    std::string atlasName = generateFontName(fontFileName, size, glyphs);
+    std::string atlasName = generateFontName(fontFileName, size, glyphs, useDistanceField);
     FontAtlas  *tempAtlas = _atlasMap[atlasName];
     
     if ( !tempAtlas )
     {
-        tempAtlas = FontAtlasFactory::createAtlasFromTTF(fontFileName, size, glyphs, customGlyphs);
+        tempAtlas = FontAtlasFactory::createAtlasFromTTF(fontFileName, size, glyphs, customGlyphs, useDistanceField);
         if (tempAtlas)
             _atlasMap[atlasName] = tempAtlas;
     }
@@ -49,9 +52,9 @@ FontAtlas * FontAtlasCache::getFontAtlasTTF(const char *fontFileName, int size, 
     return tempAtlas;
 }
 
-FontAtlas * FontAtlasCache::getFontAtlasFNT(const char *fontFileName)
+FontAtlas * FontAtlasCache::getFontAtlasFNT(const std::string& fontFileName)
 {
-    std::string atlasName = generateFontName(fontFileName, 0, GlyphCollection::CUSTOM);
+    std::string atlasName = generateFontName(fontFileName, 0, GlyphCollection::CUSTOM,false);
     FontAtlas *tempAtlas = _atlasMap[atlasName];
     
     if ( !tempAtlas )
@@ -68,7 +71,66 @@ FontAtlas * FontAtlasCache::getFontAtlasFNT(const char *fontFileName)
     return tempAtlas;
 }
 
-std::string FontAtlasCache::generateFontName(const char *fontFileName, int size, GlyphCollection theGlyphs)
+FontAtlas * FontAtlasCache::getFontAtlasCharMap(const std::string& plistFile)
+{
+    std::string atlasName = generateFontName(plistFile, 0, GlyphCollection::CUSTOM,false);
+    FontAtlas *tempAtlas = _atlasMap[atlasName];
+
+    if ( !tempAtlas )
+    {
+        tempAtlas = FontAtlasFactory::createAtlasFromCharMap(plistFile);
+        if (tempAtlas)
+            _atlasMap[atlasName] = tempAtlas;
+    }
+    else
+    {
+        tempAtlas->retain();
+    }
+
+    return tempAtlas;
+}
+
+FontAtlas * FontAtlasCache::getFontAtlasCharMap(Texture2D* texture, int itemWidth, int itemHeight, int startCharMap)
+{
+    char tmp[30];
+    sprintf(tmp,"name:%u_%d_%d_%d",texture->getName(),itemWidth,itemHeight,startCharMap);
+    std::string atlasName = generateFontName(tmp, 0, GlyphCollection::CUSTOM,false);
+    FontAtlas *tempAtlas = _atlasMap[atlasName];
+
+    if ( !tempAtlas )
+    {
+        tempAtlas = FontAtlasFactory::createAtlasFromCharMap(texture,itemWidth,itemHeight,startCharMap);
+        if (tempAtlas)
+            _atlasMap[atlasName] = tempAtlas;
+    }
+    else
+    {
+        tempAtlas->retain();
+    }
+
+    return tempAtlas;
+}
+
+FontAtlas * FontAtlasCache::getFontAtlasCharMap(const std::string& charMapFile, int itemWidth, int itemHeight, int startCharMap)
+{
+    std::string atlasName = generateFontName(charMapFile, 0, GlyphCollection::CUSTOM,false);
+    FontAtlas *tempAtlas = _atlasMap[atlasName];
+
+    if ( !tempAtlas )
+    {
+        tempAtlas = FontAtlasFactory::createAtlasFromCharMap(charMapFile,itemWidth,itemHeight,startCharMap);
+        if (tempAtlas)
+            _atlasMap[atlasName] = tempAtlas;
+    }
+    else
+    {
+        tempAtlas->retain();
+    }
+
+    return tempAtlas;
+}
+
+std::string FontAtlasCache::generateFontName(const std::string& fontFileName, int size, GlyphCollection theGlyphs, bool useDistanceField)
 {
     std::string tempName(fontFileName);
     
@@ -93,7 +155,8 @@ std::string FontAtlasCache::generateFontName(const char *fontFileName, int size,
         default:
             break;
     }
-    
+    if(useDistanceField)
+        tempName.append("df");
     // std::to_string is not supported on android, using std::stringstream instead.
     std::stringstream ss;
     ss << size;
@@ -102,20 +165,18 @@ std::string FontAtlasCache::generateFontName(const char *fontFileName, int size,
 
 bool FontAtlasCache::releaseFontAtlas(FontAtlas *atlas)
 {
-    if (atlas)
+    if (nullptr != atlas)
     {
         for( auto &item: _atlasMap )
         {
             if ( item.second == atlas )
             {
-                bool removeFromList = false;
-                if(item.second->isSingleReference())
-                    removeFromList = true;
+                if( atlas->isSingleReference() )
+                {
+                  _atlasMap.erase(item.first);
+                }
                 
-                item.second->release();
-                
-                if (removeFromList)
-                    _atlasMap.erase(item.first);
+                atlas->release();
                 
                 return true;
             }

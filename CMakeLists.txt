@@ -38,15 +38,15 @@ option(USE_CHIPMUNK "Use chipmunk for physics library" ON)
 option(USE_BOX2D "Use box2d for physics library" OFF)
 option(DEBUG_MODE "Debug or release?" ON)
 option(BUILD_LIBS_LUA "Build lua libraries" OFF)
-option(BUILD_GUI "Build GUI library" OFF)
-option(BUILD_NETWORK "Build network library" OFF)
-option(BUILD_EXTENSIONS "Build extension library" OFF)
-option(BUILD_EDITOR_SPINE "Build editor support for spine" OFF)
-option(BUILD_EDITOR_COCOSTUDIO "Build editor support for cocostudio" OFF)
-option(BUILD_EDITOR_COCOSBUILDER "Build editor support for cocosbuilder" OFF)
+option(BUILD_GUI "Build GUI library" ON)
+option(BUILD_NETWORK "Build network library" ON)
+option(BUILD_EXTENSIONS "Build extension library" ON)
+option(BUILD_EDITOR_SPINE "Build editor support for spine" ON)
+option(BUILD_EDITOR_COCOSTUDIO "Build editor support for cocostudio" ON)
+option(BUILD_EDITOR_COCOSBUILDER "Build editor support for cocosbuilder" ON)
 
 option(BUILD_HelloCpp "Only build HelloCpp sample" ON)
-option(BUILD_TestCpp "Only build TestCpp sample" OFF)
+option(BUILD_TestCpp "Only build TestCpp sample" ON)
 option(BUILD_HelloLua "Only build HelloLua sample" OFF)
 option(BUILD_TestLua "Only build TestLua sample" OFF)
 
@@ -143,6 +143,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/cocos
   ${CMAKE_CURRENT_SOURCE_DIR}/cocos/audio/include
   ${CMAKE_CURRENT_SOURCE_DIR}/cocos/2d
+  ${CMAKE_CURRENT_SOURCE_DIR}/cocos/2d/renderer
   ${CMAKE_CURRENT_SOURCE_DIR}/cocos/2d/platform
   ${CMAKE_CURRENT_SOURCE_DIR}/cocos/base
   ${CMAKE_CURRENT_SOURCE_DIR}/cocos/physics
@@ -152,6 +153,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/external
   ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2
   ${CMAKE_CURRENT_SOURCE_DIR}/external/unzip
+  ${CMAKE_CURRENT_SOURCE_DIR}/external/edtaa3func
   ${CMAKE_CURRENT_SOURCE_DIR}/external/chipmunk/include/chipmunk
   ${CMAKE_CURRENT_SOURCE_DIR}/cocos/2d/platform/${PLATFORM_FOLDER}
   ${CMAKE_CURRENT_SOURCE_DIR}/external/jpeg/include/${PLATFORM_FOLDER}
@@ -267,8 +269,6 @@ endif(BUILD_EDITOR_COCOSBUILDER)
 if(BUILD_EDITOR_COCOSTUDIO)
 # cocostudio
 add_subdirectory(cocos/editor-support/cocostudio)
-# jsoncpp library, cocostuido depends on jsoncpp
-add_subdirectory(external/json)
 endif(BUILD_EDITOR_COCOSTUDIO)
 
 if(BUILD_LIBS_LUA)
@@ -284,4 +284,19 @@ add_subdirectory(cocos/scripting)
 endif(BUILD_LIBS_LUA)
 
 # build samples
-add_subdirectory(samples)
+if(BUILD_HelloCpp)
+add_subdirectory(samples/Cpp/HelloCpp)
+endif(BUILD_HelloCpp)
+
+if(BUILD_TestCpp)
+add_subdirectory(samples/Cpp/TestCpp)
+endif(BUILD_TestCpp)
+
+if(BUILD_HelloLua)
+add_subdirectory(samples/Lua/HelloLua)
+endif(BUILD_HelloLua)
+
+if(BUILD_TestLua)
+add_subdirectory(samples/Lua/TestLua)
+endif(BUILD_TestLua)
+
