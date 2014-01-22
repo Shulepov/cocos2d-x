@@ -127,6 +127,9 @@ SpriteBatchNode::SpriteBatchNode()
 SpriteBatchNode::~SpriteBatchNode()
 {
     CC_SAFE_RELEASE(_textureAtlas);
+    for (Sprite *descendant : _descendants) {
+        descendant->setBatchNode(nullptr);
+    }
 }
 
 // override visit
