@@ -62,6 +62,7 @@ TextureCache::TextureCache()
 , _imageInfoQueue(nullptr)
 , _needQuit(false)
 , _asyncRefCount(0)
+, _listener(nullptr)
 {
 }
 
@@ -258,6 +259,10 @@ void TextureCache::addImageAsyncCallBack(float dt)
             texture->retain();
 
             texture->autorelease();
+
+            if (_listener) {
+                _listener->didLoadTexture(texture);
+            }
         }
         else
         {
@@ -320,6 +325,10 @@ Texture2D * TextureCache::addImage(const std::string &path)
 #endif
                 // texture already retained, no need to re-retain it
                 _textures.insert( std::make_pair(fullpath, texture) );
+
+                if (_listener) {
+                    _listener->didLoadTexture(texture);
+                }
             }
             else
             {
@@ -357,6 +366,10 @@ Texture2D* TextureCache::addImage(Image *image, const std::string &key)
             texture->retain();
 
             texture->autorelease();
+
+            if (_listener) {
+                _listener->didLoadTexture(texture);
+            }
         }
         else
         {

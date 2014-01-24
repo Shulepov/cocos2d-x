@@ -48,6 +48,8 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
+class TextureCacheListener;
+
 /**
  * @addtogroup textures
  * @{
@@ -85,6 +87,8 @@ public:
     CC_DEPRECATED_ATTRIBUTE static void reloadAllTextures();
 
 public:
+    CC_SYNTHESIZE(TextureCacheListener *, _listener, Listener);
+
     /**
      * @js ctor
      */

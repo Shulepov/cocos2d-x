@@ -265,6 +265,14 @@ public:
     virtual void updateProjection() = 0;
 };
 
+
+class CC_DLL TextureCacheListener
+{
+public:
+    virtual ~TextureCacheListener() {}
+    virtual void didLoadTexture(Texture2D *texture) = 0;
+};
+
 NS_CC_END
 
 #endif // __CCPROTOCOLS_H__
