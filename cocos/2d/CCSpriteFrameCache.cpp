@@ -407,6 +407,8 @@ void SpriteFrameCache::removeSpriteFramesFromDictionary(ValueMap& dictionary)
     }
 
     _spriteFrames.erase(keysToRemove);
+    // XXX. Since we don't know the .plist file that originated the frame, we must remove all .plist from the cache
+    _loadedFileNames->clear();
 }
 
 void SpriteFrameCache::removeSpriteFramesFromTexture(Texture2D* texture)
@@ -424,6 +426,8 @@ void SpriteFrameCache::removeSpriteFramesFromTexture(Texture2D* texture)
     }
 
     _spriteFrames.erase(keysToRemove);
+    // XXX. Since we don't know the .plist file that originated the frame, we must remove all .plist from the cache
+    _loadedFileNames->clear();
 }
 
 SpriteFrame* SpriteFrameCache::getSpriteFrameByName(const std::string& name)
