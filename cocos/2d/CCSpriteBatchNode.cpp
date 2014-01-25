@@ -361,7 +361,6 @@ void SpriteBatchNode::draw()
 
     _batchCommand.init(
                        _globalZOrder,
-                       _textureAtlas->getTexture()->getName(),
                        _shaderProgram,
                        _blendFunc,
                        _textureAtlas,
