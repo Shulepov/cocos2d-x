@@ -47,31 +47,6 @@ AAssetManager* FileUtilsAndroid::assetmanager = nullptr;
     return path;
  }
 
- std::vector<std::string> FileUtilsAndroid::getDirectoryContents(const std::string &directoryPath) const {
-    std::vector<std::string> fileList;
-    AAssetDir* directory = AAssetManager_openDir(FileUtilsAndroid::assetmanager, directoryPath.c_str());  
-    if(!directory)
-        return fileList;
-    const char* fileName;
-    while((fileName = AAssetDir_getNextFileName(directory))){
-        fileList.push_back(getFileName(fileName));
-    }
-    AAssetDir_close(directory);
-    return fileList;
- }
-
- bool FileUtilsAndroid::isDirectory(const std::string &filePath) const {
-    if (0 == filePath.length()){
-        return false;
-    }
-    AAssetDir* directory = AAssetManager_openDir(FileUtilsAndroid::assetmanager, filePath.c_str());   
-    if(directory){
-        AAssetDir_close(directory);
-        return true;
-    }
-    return false;
- }
-
 void FileUtilsAndroid::setassetmanager(AAssetManager* a) {
     if (nullptr == a) {
         LOGD("setassetmanager : received unexpected nullptr parameter");

@@ -44,8 +44,6 @@ class CC_DLL FileUtilsApple : public FileUtils
 {
 public:
     /* override funtions */
-    virtual bool isDirectory(const std::string &filePath) override;
-    virtual std::vector<std::string> getDirectoryContents(const std::string &directoryPath) override;
     virtual std::string getWritablePath() const override;
     virtual bool isFileExist(const std::string& filePath) const override;
     virtual std::string getFullPathForDirectoryAndFilename(const std::string& directory, const std::string& filename) override;

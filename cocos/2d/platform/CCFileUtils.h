@@ -67,9 +67,6 @@ public:
      */
     virtual ~FileUtils();
 
-    virtual std::vector<std::string> getDirectoryContents(const std::string &directoryPath) = 0;
-    virtual bool isDirectory(const std::string &filePath) = 0;
-
     /**
      *  Purges the file searching cache.
      *

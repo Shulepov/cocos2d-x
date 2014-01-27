@@ -417,35 +417,5 @@ ValueVector FileUtilsApple::getValueVectorFromFile(const std::string& filename)
     return ret;
 }
 
-std::vector<std::string> FileUtilsApple::getDirectoryContents(const std::string &directoryPath) {
-    const std::string absolutePath = fullPathForFilename(directoryPath);
-    std::vector<std::string> ret;
-
-    NSString *nsPath = [NSString stringWithUTF8String: absolutePath.c_str()];
-    NSError *error = nil;
-    NSArray *contents = [s_fileManager contentsOfDirectoryAtPath:nsPath error:&error];
-    if (error) {
-        NSLog(@"Cann't get directoy content: %@", [error description]);
-        return ret;
-    }
-
-    for (NSString *filePath : contents) {
-        ret.push_back([filePath cStringUsingEncoding:NSUTF8StringEncoding]);
-    }
-    return ret;
-}
-
-bool FileUtilsApple::isDirectory(const std::string &filePath) {
-    const std::string absolutePath = fullPathForFilename(filePath);
-    NSString *nsPath = [NSString stringWithUTF8String: absolutePath.c_str()];
-    BOOL isDirectory;
-    bool exists = [s_fileManager fileExistsAtPath:nsPath isDirectory:&isDirectory];
-    if (exists) {
-        return isDirectory;
-    } else {
-        return false;
-    }
-}
-
 NS_CC_END
 
