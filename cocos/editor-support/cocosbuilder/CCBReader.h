@@ -68,6 +68,8 @@ class CCBKeyframe;
 class CCBReader : public cocos2d::Object 
 {
 public:
+    bool assignMemberVariableRecursivelyToTop(cocos2d::Node *target, cocos2d::Node *node, const std::string &propertyName);
+
     enum class PropertyType {
         POSITION = 0,
         SIZE,

@@ -615,6 +615,10 @@ Node * CCBReader::readNodeGraph(Node * pParent)
         node = embeddedNode;
     }
 
+    if (pParent) {
+        pParent->addChild(node);
+    }
+    
 #ifdef CCB_ENABLE_JAVASCRIPT
     /*
      if (memberVarAssignmentType && memberVarAssignmentName && ![memberVarAssignmentName isEqualToString:@""])
@@ -651,6 +655,10 @@ Node * CCBReader::readNodeGraph(Node * pParent)
                     if(!assigned && this->_CCBMemberVariableAssigner != nullptr)
                     {
                         assigned = this->_CCBMemberVariableAssigner->onAssignCCBMemberVariable(target, memberVarAssignmentName.c_str(), node);
+                    }
+
+                    if (!assigned && pParent) {
+                        assigned = assignMemberVariableRecursivelyToTop(pParent, node, memberVarAssignmentName);
                     }
                 }
             }
@@ -709,7 +717,7 @@ Node * CCBReader::readNodeGraph(Node * pParent)
     for(int i = 0; i < numChildren; i++)
     {
         Node * child = this->readNodeGraph(node);
-        node->addChild(child);
+//        node->addChild(child);
     }
 
     // FIX ISSUE #1860: "onNodeLoaded will be called twice if ccb was added as a CCBFile".
@@ -1085,4 +1093,20 @@ void CCBReader::setResolutionScale(float scale)
     __ccbResolutionScale = scale;
 }
 
+bool CCBReader::assignMemberVariableRecursivelyToTop(cocos2d::Node *target, cocos2d::Node *node, const std::string &propertyName) {
+    if (!target) {
+        return false;
+    }
+    CCBMemberVariableAssigner *assigner = dynamic_cast<CCBMemberVariableAssigner *>(target);
+    if (assigner) {
+        bool success = assigner->onAssignCCBMemberVariable(target, propertyName.c_str(), node);
+        if (success) {
+            return true;
+        }
+    }
+
+    return assignMemberVariableRecursivelyToTop(target->getParent(), node, propertyName);
+}
+
 };
+
