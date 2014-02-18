@@ -130,17 +130,17 @@ static void addObjectToNSArray(const Value& value, NSMutableArray *array)
     }
     
     if (value.getType() == Value::Type::DOUBLE) {
-        [array addObject:[NSNumber numberWithChar:value.asDouble()]];
+        [array addObject:[NSNumber numberWithDouble:value.asDouble()]];
         return;
     }
     
     if (value.getType() == Value::Type::FLOAT) {
-        [array addObject:[NSNumber numberWithChar:value.asFloat()]];
+        [array addObject:[NSNumber numberWithFloat:value.asFloat()]];
         return;
     }
     
     if (value.getType() == Value::Type::INTEGER) {
-        [array addObject:[NSNumber numberWithChar:value.asInt()]];
+        [array addObject:[NSNumber numberWithInt:value.asInt()]];
         return;
     }
 }
@@ -241,17 +241,17 @@ static void addObjectToNSDict(const std::string& key, const Value& value, NSMuta
     }
     
     if (value.getType() == Value::Type::DOUBLE) {
-        [dict setObject:[NSNumber numberWithChar:value.asDouble()] forKey:NSkey];
+        [dict setObject:[NSNumber numberWithDouble:value.asDouble()] forKey:NSkey];
         return;
     }
     
     if (value.getType() == Value::Type::FLOAT) {
-        [dict setObject:[NSNumber numberWithChar:value.asFloat()] forKey:NSkey];
+        [dict setObject:[NSNumber numberWithFloat:value.asFloat()] forKey:NSkey];
         return;
     }
     
     if (value.getType() == Value::Type::INTEGER) {
-        [dict setObject:[NSNumber numberWithChar:value.asInt()] forKey:NSkey];
+        [dict setObject:[NSNumber numberWithInt:value.asInt()] forKey:NSkey];
         return;
     }
 }
