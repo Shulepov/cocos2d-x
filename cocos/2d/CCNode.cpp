@@ -859,13 +859,14 @@ void Node::onEnter()
         ScriptEvent scriptEvent(kNodeEvent,(void*)&data);
         ScriptEngineManager::getInstance()->getScriptEngine()->sendEvent(&scriptEvent);
     }
-    
-    for( const auto &child: _children)
+
+    _running = true;
+
+    const auto children = _children;
+    for( const auto &child: children)
         child->onEnter();
 
     this->resume();
-    
-    _running = true;
 
     if (_componentContainer) {
         _componentContainer->nodeOnEnter();
