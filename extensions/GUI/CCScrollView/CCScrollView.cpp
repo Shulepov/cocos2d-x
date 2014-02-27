@@ -241,7 +241,7 @@ void ScrollView::setContentOffsetInDuration(const Point &offset, float dt)
     this->schedule(schedule_selector(ScrollView::performedAnimatedScroll));
 }
 
-Point ScrollView::getContentOffset()
+Point ScrollView::getContentOffset() const
 {
     return _container->getPosition();
 }

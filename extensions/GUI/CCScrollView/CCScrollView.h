@@ -123,7 +123,7 @@ public:
      * @param animated  If true, the view will scroll to the new offset.
      */
     void setContentOffset(Point offset, bool animated = false);
-    Point getContentOffset();
+    Point getContentOffset() const;
     /**
      * Sets a new content offset. It ignores max/min offset. It just sets what's given. (just like UIKit's UIScrollView)
      * You can override the animation duration with this method.
