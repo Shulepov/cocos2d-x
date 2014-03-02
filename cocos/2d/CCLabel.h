@@ -178,6 +178,9 @@ private:
 
     //! used for optimization
     Sprite *_reusedLetter;
+    // Due to skipping illegal characters. valid index may not conform to character position
+    std::vector< std::pair<int, int> > _indicesOffsets;
+
     std::vector<LetterInfo> _lettersInfo;
 
     float _commonLineHeight;

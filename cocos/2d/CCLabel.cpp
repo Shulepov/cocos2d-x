@@ -446,8 +446,10 @@ void Label::alignText()
     }
 
     _reusedLetter->setBatchNode(nullptr);
-   
+
+    _indicesOffsets.clear();
     int vaildIndex = 0;
+    int offset = 0;
     Sprite* child = nullptr;
     Rect uvRect;
     for (int ctr = 0; ctr < strLen; ++ctr)
@@ -464,12 +466,14 @@ void Label::alignText()
 
                 child->setTexture(&_fontAtlas->getTexture(_lettersInfo[ctr].def.textureID));
                 child->setTextureRect(uvRect);              
+            } else {
+                updateSpriteWithLetterDefinition(_reusedLetter,_lettersInfo[ctr].def,&_fontAtlas->getTexture(_lettersInfo[ctr].def.textureID));
+                _reusedLetter->setPosition(_lettersInfo[ctr].position);
+                insertQuadFromSprite(_reusedLetter, vaildIndex++);
             }
-           
-            updateSpriteWithLetterDefinition(_reusedLetter,_lettersInfo[ctr].def,&_fontAtlas->getTexture(_lettersInfo[ctr].def.textureID));
-            _reusedLetter->setPosition(_lettersInfo[ctr].position);
-            insertQuadFromSprite(_reusedLetter,vaildIndex++);
-        }     
+        } else {
+            _indicesOffsets.push_back(std::make_pair(ctr, ++offset));
+        }
     }
 
     updateColor();
@@ -678,8 +682,17 @@ Sprite * Label::getLetter(int ID)
     {       
         if(_lettersInfo[ID].def.validDefinition == false)
             return nullptr;
-       
-        Sprite* sp = static_cast<Sprite*>(this->getChildByTag(ID));
+
+        int indexOffset = 0;
+        for (auto it = _indicesOffsets.rbegin(); it != _indicesOffsets.rend(); ++it) {
+            if (ID >= (*it).first) {
+                indexOffset = (*it).second;
+                break;
+            }
+        }
+
+        const int validIndex = ID - indexOffset;
+        Sprite* sp = static_cast<Sprite*>(this->getChildByTag(validIndex));
 
         if (!sp)
         {
@@ -694,8 +707,8 @@ Sprite * Label::getLetter(int ID)
             sp->setAnchorPoint(Point::ANCHOR_MIDDLE);
             sp->setPosition(Point(_lettersInfo[ID].position.x+uvRect.size.width/2,_lettersInfo[ID].position.y-uvRect.size.height/2));
             sp->setOpacity(_realOpacity);
-         
-            this->addSpriteWithoutQuad(sp, ID, ID);
+            
+            this->addSpriteWithoutQuad(sp, validIndex, validIndex);
         }
         return sp;
     }
