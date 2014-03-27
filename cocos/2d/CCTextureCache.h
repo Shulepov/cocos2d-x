@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include <unordered_map>
 #include <functional>
 
-#include "CCObject.h"
+#include "CCRef.h"
 #include "CCTexture2D.h"
 #include "platform/CCImage.h"
 
@@ -63,7 +63,7 @@ class TextureCacheListener;
 * Once the texture is loaded, the next time it will return
 * a reference of the previously loaded texture reducing GPU & CPU memory
 */
-class CC_DLL TextureCache : public Object
+class CC_DLL TextureCache : public Ref
 {
 public:
     /** Returns the shared instance of the cache */
@@ -137,6 +137,14 @@ public:
     */
     Texture2D* getTextureForKey(const std::string& key) const;
     CC_DEPRECATED_ATTRIBUTE Texture2D* textureForKey(const std::string& key) const { return getTextureForKey(key); }
+
+    /** Reload texture from the image file
+    * If the file image hasn't loaded before, load it.
+    * Otherwise the texture will be reloaded from the file image.
+    * The "filenName" parameter is the related/absolute path of the file image.
+    * Return true if the reloading is succeed, otherwise return false.
+    */
+    bool reloadTexture(const std::string& fileName);
 
     /** Purges the dictionary of loaded textures.
     * Call this method if you receive the "Memory Warning"
@@ -247,6 +255,7 @@ protected:
 
     std::string _fileName;
 
+    bool                      _hasMipmaps;
     Texture2D::TexParams      _texParams;
     std::string               _text;
     FontDefinition            _fontDefinition;
@@ -260,6 +269,7 @@ public:
     static void addDataTexture(Texture2D *tt, void* data, int dataLen, Texture2D::PixelFormat pixelFormat, const Size& contentSize);
     static void addImage(Texture2D *tt, Image *image);
 
+    static void setHasMipmaps(Texture2D *t, bool hasMipmaps);
     static void setTexParameters(Texture2D *t, const Texture2D::TexParams &texParams);
     static void removeTexture(Texture2D *t);
     static void reloadAllTextures();

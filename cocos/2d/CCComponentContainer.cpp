@@ -131,9 +131,11 @@ void ComponentContainer::alloc(void)
 
 void ComponentContainer::visit(float delta)
 {
+	CC_SAFE_RETAIN(_owner);
     for (Component *component : _scheduledComponents) {
         component->update(delta);
     }
+	CC_SAFE_RELEASE(_owner);
 }
 
 void ComponentContainer::nodeOnEnter()
