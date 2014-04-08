@@ -419,11 +419,8 @@ bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
     }
     rootEle->LinkEndChild(innerDict);
     
-
-
-
-    bool ret = tinyxml2::XML_SUCCESS == doc->SaveFile(fullPath.c_str());
-
+    auto status = doc->SaveFile(fullPath.c_str());
+    bool ret = tinyxml2::XML_SUCCESS == status;
 
     if(!ret)
     {
@@ -431,13 +428,11 @@ bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
         std::string fullDirecoryPath;
         if( (idx != std::string::npos) && (fullPath.length() >= idx + 1) )  {
             fullDirecoryPath = fullPath.substr(0, idx);
+            auto status = mkpath(fullDirecoryPath.c_str(), 0777);
             CCLOG("FULLDIRECORY_PATH %s", fullDirecoryPath.c_str());
-          //  mkpath(fullDirecoryPath.c_str(), 0777);
-            CCLOG("FULLDIRECORY_PATH RESULT %d", mkpath(fullDirecoryPath.c_str(), 0777));
-
+            CCLOG("FULLDIRECORY_PATH RESULT %d", status);
             ret = tinyxml2::XML_SUCCESS == doc->SaveFile(fullPath.c_str());
         }
-
     }
     
     delete doc;
