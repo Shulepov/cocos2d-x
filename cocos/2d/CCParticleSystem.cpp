@@ -624,6 +624,12 @@ void ParticleSystem::onEnter()
     this->scheduleUpdateWithPriority(1);
 }
 
+void ParticleSystem::onExit()
+{
+    this->unscheduleUpdate();
+    Node::onExit();
+}
+
 void ParticleSystem::stopSystem()
 {
     _isActive = false;
@@ -685,7 +691,6 @@ void ParticleSystem::update(float dt)
         currentPosition = _position;
     }
 
-    if (_visible)
     {
         while (_particleIdx < _particleCount)
         {
@@ -826,7 +831,9 @@ void ParticleSystem::update(float dt)
         } //while
         _transformSystemDirty = false;
     }
-    if (! _batchNode)
+    
+    // only update gl buffer when visible
+    if (_visible && ! _batchNode)
     {
         postStep();
     }

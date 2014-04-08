@@ -586,6 +586,7 @@ void Console::commandDirector(int fd, const std::string& args)
     {
         const char help[] = "available director directives:\n"
                             "\tpause, pause all scheduled timers, the draw rate will be 4 FPS to reduce CPU consumption\n"
+                            "\tend, exit this app.\n"
                             "\tresume, resume all scheduled timers\n"
                             "\tstop, Stops the animation. Nothing will be drawn.\n"
                             "\tstart, Restart the animation again, Call this function only if [director stop] was called earlier\n";
@@ -615,6 +616,10 @@ void Console::commandDirector(int fd, const std::string& args)
     else if(args == "start")
     {
         director->startAnimation();
+    }
+    else if(args == "end")
+    {
+        director->end();
     }
 
 }
@@ -760,6 +765,8 @@ void Console::commandTouch(int fd, const std::string& args)
     }
 }
 
+static char invalid_filename_char[] = {':', '/', '\\', '?', '%', '*', '<', '>', '"', '|', '\r', '\n', '\t'};
+
 void Console::commandUpload(int fd)
 {
     ssize_t n, rc;
@@ -770,11 +777,20 @@ void Console::commandUpload(int fd)
     {
         if( (rc = recv(fd, &c, 1, 0)) ==1 ) 
         {
-            *ptr++ = c;
+            for(char x : invalid_filename_char)
+            {
+                if(c == x)
+                {
+                    const char err[] = "upload: invalid file name!\n";
+                    send(fd, err, sizeof(err),0);
+                    return;
+                }
+            }
             if(c == ' ') 
             {
                 break;
             }
+            *ptr++ = c;
         } 
         else if( rc == 0 ) 
         {
@@ -870,10 +886,10 @@ bool Console::parseCommand(int fd)
         }
         else
         {
-            const char err[] = "Unknown Command!\n";
-            sendPrompt(fd);
+            const char err[] = "upload: invalid args! Type 'help' for options\n";
             send(fd, err, sizeof(err),0);
-            return false;
+            sendPrompt(fd);
+            return true;
             
         }
     }
@@ -904,7 +920,7 @@ bool Console::parseCommand(int fd)
         const char err[] = "Unknown command. Type 'help' for options\n";
         send(fd, err, sizeof(err),0);
         sendPrompt(fd);
-        return false;
+        return true;
     }
 
     auto it = _commands.find(trim(args[0]));

@@ -205,9 +205,9 @@ std::string FileUtilsApple::getWritablePath() const
     return strRet;
 }
 
-bool FileUtilsApple::isFileExist(const std::string& filePath) const
+bool FileUtilsApple::isFileExistInternal(const std::string& filePath) const
 {
-    if(filePath.length() == 0)
+    if (filePath.empty())
     {
         return false;
     }
