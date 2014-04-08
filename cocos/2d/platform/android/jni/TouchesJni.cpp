@@ -74,7 +74,7 @@ extern "C" {
         switch (keyCode) {
             case KEYCODE_BACK:
                 {
-                    cocos2d::EventKeyboard event(cocos2d::EventKeyboard::KeyCode::KEY_BACKSPACE, false);
+                    cocos2d::EventKeyboard event(cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE, false);
                     cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
                     return JNI_TRUE;
                 }
