@@ -34,6 +34,10 @@ THE SOFTWARE.
 #include <vector>
 #include <unordered_map>
 
+namespace tinyxml2 {
+    class XMLDocument;
+}
+
 NS_CC_BEGIN
 
 /**
@@ -331,6 +335,10 @@ public:
     /** Returns the full path cache */
     const std::unordered_map<std::string, std::string>& getFullPathCache() const { return _fullPathCache; }
 
+    virtual char *dictionaryToData(const ValueMap &dict, size_t &outLength);
+    virtual bool writeDataToFile(const std::string &filePath, char *data, size_t dataLength);
+    virtual ValueMap getValueMapFromData(const char *data, size_t dataLength);
+    
 protected:
     /**
      *  The default constructor.

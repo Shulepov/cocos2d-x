@@ -138,6 +138,16 @@ public:
     ~DictMaker()
     {
     }
+    
+    ValueMap dictionaryWithData(const char *data, size_t length) {
+        _resultType = SAX_RESULT_DICT;
+        SAXParser parser;
+   
+        parser.setDelegator(this);
+        
+        parser.parse(data, length);
+		return _rootDict;
+    }
 
     ValueMap dictionaryWithContentsOfFile(const std::string& fileName)
     {
@@ -381,21 +391,16 @@ ValueVector FileUtils::getValueVectorFromFile(const std::string& filename)
 static tinyxml2::XMLElement* generateElementForArray(const ValueVector& array, tinyxml2::XMLDocument *doc);
 static tinyxml2::XMLElement* generateElementForDict(const ValueMap& dict, tinyxml2::XMLDocument *doc);
 
-/*
- * Use tinyxml2 to write plist files
- */
-bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
-{
-    //CCLOG("tinyxml2 Dictionary %d writeToFile %s", dict->_ID, fullPath.c_str());
+static tinyxml2::XMLDocument *documentForDictionary(const ValueMap &dict) {
     tinyxml2::XMLDocument *doc = new tinyxml2::XMLDocument();
     if (nullptr == doc)
-        return false;
+        return nullptr;
     
     tinyxml2::XMLDeclaration *declaration = doc->NewDeclaration("xml version=\"1.0\" encoding=\"UTF-8\"");
     if (nullptr == declaration)
     {
         delete doc;
-        return false;
+        return nullptr;
     }
     
     doc->LinkEndChild(declaration);
@@ -407,7 +412,7 @@ bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
     if (nullptr == rootEle)
     {
         delete doc;
-        return false;
+        return nullptr;
     }
     doc->LinkEndChild(rootEle);
     
@@ -415,9 +420,33 @@ bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
     if (nullptr == innerDict )
     {
         delete doc;
-        return false;
+        return nullptr;
     }
     rootEle->LinkEndChild(innerDict);
+    return doc;
+}
+
+static char *xmlToData(tinyxml2::XMLDocument *doc, size_t &outLength) {
+    tinyxml2::XMLPrinter stream( 0, true );
+    doc->Print( &stream );
+    outLength = stream.CStrSize();
+    const char *data = stream.CStr();
+    const size_t dataSize = outLength * sizeof(char);
+    char *ret = (char *)malloc(dataSize);
+    memcpy(ret, data, dataSize);
+    return ret;
+}
+
+/*
+ * Use tinyxml2 to write plist files
+ */
+bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
+{
+    //CCLOG("tinyxml2 Dictionary %d writeToFile %s", dict->_ID, fullPath.c_str());
+    tinyxml2::XMLDocument *doc = documentForDictionary(dict);
+    if (!doc) {
+        return false;
+    }
     
     auto status = doc->SaveFile(fullPath.c_str());
     bool ret = tinyxml2::XML_SUCCESS == status;
@@ -438,6 +467,7 @@ bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
     delete doc;
     return ret;
 }
+
 
 /*
  * Generate tinyxml2::XMLElement for Object through a tinyxml2::XMLDocument
@@ -526,6 +556,42 @@ static tinyxml2::XMLElement* generateElementForArray(const ValueVector& array, t
     return rootNode;
 }
 
+char *FileUtils::dictionaryToData(const ValueMap &dict, size_t &outLength) {
+    tinyxml2::XMLDocument *doc = documentForDictionary(dict);
+    if (!doc) {
+        outLength = 0;
+        return nullptr;
+    }
+    return xmlToData(doc, outLength);
+}
+
+bool FileUtils::writeDataToFile(const std::string &filePath, char *data, size_t dataLength) {
+    const char *mode = "wb";
+    FILE *fp = fopen(filePath.c_str(), mode);
+    if (!fp) {
+        std::string::size_type idx = filePath.rfind('/');
+        std::string fullDirecoryPath;
+        if( (idx != std::string::npos) && (filePath.length() >= idx + 1) )  {
+            fullDirecoryPath = filePath.substr(0, idx);
+            auto status = mkpath(fullDirecoryPath.c_str(), 0777);
+            fp = fopen(filePath.c_str(), mode);
+            if (!fp) {
+                cocos2d::log("Can't write to file %s", filePath.c_str());
+                return false;
+            }
+        }
+    }
+    
+    auto ret = fwrite(data, sizeof(char), sizeof(char) * dataLength, fp);
+    fclose(fp);
+    return ret == dataLength;
+}
+
+ValueMap FileUtils::getValueMapFromData(const char *data, size_t dataLength) {
+    DictMaker tMaker;
+    return tMaker.dictionaryWithData(data, dataLength);
+}
+
 
 #else
 NS_CC_BEGIN
@@ -534,6 +600,9 @@ NS_CC_BEGIN
 ValueMap FileUtils::getValueMapFromFile(const std::string& filename) {return ValueMap();}
 ValueVector FileUtils::getValueVectorFromFile(const std::string& filename) {return ValueVector();}
 bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath) {return false;}
+char *FileUtils::dictionaryToData(const ValueMap &dict, size_t &outLength) { outLength = 0; return nullptr; }
+bool FileUtils::writeDataToFile(const std::string &filePath, char *data, size_t dataLength) { return false; }
+ValueMap FileUtils::getValueMapFromData(const char *data, size_t dataLength) { return ValueMap(); }
 
 #endif /* (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC) */
 
