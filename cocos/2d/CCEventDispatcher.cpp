@@ -351,6 +351,7 @@ void EventDispatcher::removeEventListenersForTarget(Node* target, bool recursive
             
         if (listener->getSceneGraphPriority() == target)
         {
+            listener->setSceneGraphPriority(nullptr);   // Ensure no dangling ptr to the target node.
             listener->setRegistered(false);
             listener->release();
             iter = _toAddedListeners.erase(iter);
@@ -1369,6 +1370,13 @@ void EventDispatcher::setDirtyForNode(Node* node)
     if (_nodeListenersMap.find(node) != _nodeListenersMap.end())
     {
         _dirtyNodes.insert(node);
+    }
+
+    // Also set the dirty flag for node's children
+    const auto& children = node->getChildren();
+    for (const auto& child : children)
+    {
+        setDirtyForNode(child);
     }
 }
 
