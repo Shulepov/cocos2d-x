@@ -61,6 +61,10 @@ public:
 
     /** Remove all living segments of the ribbon */
     void reset();
+    
+    float getFadeDuration() {
+        return 1.0f / _fadeDelta;
+    }
 
     /** When fast mode is enabled, new points are added faster but with lower precision */
     inline bool isFastMode() const { return _fastMode; }
