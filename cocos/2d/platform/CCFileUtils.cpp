@@ -565,7 +565,7 @@ char *FileUtils::dictionaryToData(const ValueMap &dict, size_t &outLength) {
     return xmlToData(doc, outLength);
 }
 
-bool FileUtils::writeDataToFile(const std::string &filePath, char *data, size_t dataLength) {
+bool FileUtils::writeDataToFile(const std::string &filePath, const char *data, size_t dataLength) {
     const char *mode = "wb";
     FILE *fp = fopen(filePath.c_str(), mode);
     if (!fp) {
@@ -601,7 +601,7 @@ ValueMap FileUtils::getValueMapFromFile(const std::string& filename) {return Val
 ValueVector FileUtils::getValueVectorFromFile(const std::string& filename) {return ValueVector();}
 bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath) {return false;}
 char *FileUtils::dictionaryToData(const ValueMap &dict, size_t &outLength) { outLength = 0; return nullptr; }
-bool FileUtils::writeDataToFile(const std::string &filePath, char *data, size_t dataLength) { return false; }
+bool FileUtils::writeDataToFile(const std::string &filePath, const char *data, size_t dataLength) { return false; }
 ValueMap FileUtils::getValueMapFromData(const char *data, size_t dataLength) { return ValueMap(); }
 
 #endif /* (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC) */
