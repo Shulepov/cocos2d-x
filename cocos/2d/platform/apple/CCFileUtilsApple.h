@@ -48,9 +48,11 @@ public:
     virtual std::string getFullPathForDirectoryAndFilename(const std::string& directory, const std::string& filename) override;
     
     virtual ValueMap getValueMapFromFile(const std::string& filename) override;
-    virtual bool writeToFile(ValueMap& dict, const std::string& fullPath) override;
+    virtual bool writeToFile(const ValueMap& dict, const std::string& fullPath) override;
     
     virtual ValueVector getValueVectorFromFile(const std::string& filename) override;
+    virtual bool writeDataToFile(const std::string &filePath, const char *data, size_t dataLength) override;
+    
 private:
     virtual bool isFileExistInternal(const std::string& filePath) const override;
 };

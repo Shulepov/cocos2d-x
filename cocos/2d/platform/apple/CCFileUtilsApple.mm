@@ -31,7 +31,6 @@ THE SOFTWARE.
 #include "CCFileUtils.h"
 #include "base/CCDirector.h"
 #include "CCSAXParser.h"
-#include "CCDictionary.h"
 #include "unzip.h"
 
 #include "CCFileUtilsApple.h"
@@ -415,7 +414,7 @@ ValueMap FileUtilsApple::getValueMapFromFile(const std::string& filename)
     return ret;
 }
 
-bool FileUtilsApple::writeToFile(ValueMap& dict, const std::string &fullPath)
+bool FileUtilsApple::writeToFile(const ValueMap& dict, const std::string &fullPath)
 {
     //CCLOG("iOS||Mac Dictionary %d write to file %s", dict->_ID, fullPath.c_str());
     NSMutableDictionary *nsDict = [NSMutableDictionary dictionary];
@@ -426,6 +425,14 @@ bool FileUtilsApple::writeToFile(ValueMap& dict, const std::string &fullPath)
     }
     
     NSString *file = [NSString stringWithUTF8String:fullPath.c_str()];
+    NSString *directory = [file stringByDeletingLastPathComponent];
+    bool directoryExists =[s_fileManager fileExistsAtPath:directory];
+    if (!directoryExists) {
+        [s_fileManager createDirectoryAtPath:directory
+                 withIntermediateDirectories:YES
+                                  attributes:nil
+                                       error:nil];
+    };
     // do it atomically
     [nsDict writeToFile:file atomically:YES];
     
@@ -451,6 +458,12 @@ ValueVector FileUtilsApple::getValueVectorFromFile(const std::string& filename)
     }
     
     return ret;
+}
+
+bool FileUtilsApple::writeDataToFile(const std::string &filePath, const char *rawData, size_t dataLength) {
+    NSString *pathStr = [NSString stringWithUTF8String:filePath.c_str()];
+    NSData *data = [NSData dataWithBytes:rawData length:dataLength];
+    return [data writeToFile:pathStr atomically:YES];
 }
 
 NS_CC_END

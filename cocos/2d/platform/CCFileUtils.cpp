@@ -31,12 +31,67 @@ THE SOFTWARE.
 #include "tinyxml2.h"
 #include "unzip.h"
 #include <stack>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 using namespace std;
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
 
 NS_CC_BEGIN
+
+static int do_mkdir(const char *path, mode_t mode)
+{
+    struct stat            st;
+    int             status = 0;
+    
+    if (stat(path, &st) != 0)
+    {
+        /* Directory does not exist. EEXIST for race condition */
+        if (mkdir(path, mode) != 0 && errno != EEXIST)
+            status = -1;
+    }
+    else if (!S_ISDIR(st.st_mode))
+    {
+        errno = ENOTDIR;
+        status = -1;
+    }
+    
+    return(status);
+}
+
+/**
+ ** mkpath - ensure all directories in path exist
+ ** Algorithm takes the pessimistic view and works top-down to ensure
+ ** each directory in path exists, rather than optimistically creating
+ ** the last element and working backwards.
+ */
+static int mkpath(const char *path, mode_t mode)
+{
+    char           *pp;
+    char           *sp;
+    int             status;
+    char           *copypath = strdup(path);
+    
+    status = 0;
+    pp = copypath;
+    while (status == 0 && (sp = strchr(pp, '/')) != 0)
+    {
+        if (sp != pp)
+        {
+            /* Neither root nor double slash in path */
+            *sp = '\0';
+            status = do_mkdir(copypath, mode);
+            *sp = '/';
+        }
+        pp = sp + 1;
+    }
+    if (status == 0)
+        status = do_mkdir(path, mode);
+    free(copypath);
+    return (status);
+}
+
 
 typedef enum 
 {
@@ -329,7 +384,7 @@ static tinyxml2::XMLElement* generateElementForDict(const ValueMap& dict, tinyxm
 /*
  * Use tinyxml2 to write plist files
  */
-bool FileUtils::writeToFile(ValueMap& dict, const std::string &fullPath)
+bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath)
 {
     //CCLOG("tinyxml2 Dictionary %d writeToFile %s", dict->_ID, fullPath.c_str());
     tinyxml2::XMLDocument *doc = new tinyxml2::XMLDocument();
@@ -365,6 +420,19 @@ bool FileUtils::writeToFile(ValueMap& dict, const std::string &fullPath)
     rootEle->LinkEndChild(innerDict);
     
     bool ret = tinyxml2::XML_SUCCESS == doc->SaveFile(fullPath.c_str());
+    
+    if(!ret)
+    {
+        std::string::size_type idx = fullPath.rfind('/');
+        std::string fullDirecoryPath;
+        if( (idx != std::string::npos) && (fullPath.length() >= idx + 1) )  {
+            fullDirecoryPath = fullPath.substr(0, idx);
+            auto status = mkpath(fullDirecoryPath.c_str(), 0777);
+            CCLOG("FULLDIRECORY_PATH %s", fullDirecoryPath.c_str());
+            CCLOG("FULLDIRECORY_PATH RESULT %d", status);
+            ret = tinyxml2::XML_SUCCESS == doc->SaveFile(fullPath.c_str());
+        }
+    }
     
     delete doc;
     return ret;
@@ -457,6 +525,28 @@ static tinyxml2::XMLElement* generateElementForArray(const ValueVector& array, t
     return rootNode;
 }
 
+bool FileUtils::writeDataToFile(const std::string &filePath, const char *data, size_t dataLength) {
+    const char *mode = "wb";
+    FILE *fp = fopen(filePath.c_str(), mode);
+    if (!fp) {
+        std::string::size_type idx = filePath.rfind('/');
+        std::string fullDirecoryPath;
+        if( (idx != std::string::npos) && (filePath.length() >= idx + 1) )  {
+            fullDirecoryPath = filePath.substr(0, idx);
+            auto status = mkpath(fullDirecoryPath.c_str(), 0777);
+            fp = fopen(filePath.c_str(), mode);
+            if (!fp) {
+                cocos2d::log("Can't write to file %s", filePath.c_str());
+                return false;
+            }
+        }
+    }
+    
+    auto ret = fwrite(data, sizeof(char), sizeof(char) * dataLength, fp);
+    fclose(fp);
+    return ret == dataLength;
+}
+
 
 #else
 NS_CC_BEGIN
@@ -464,7 +554,8 @@ NS_CC_BEGIN
 /* The subclass FileUtilsApple should override these two method. */
 ValueMap FileUtils::getValueMapFromFile(const std::string& filename) {return ValueMap();}
 ValueVector FileUtils::getValueVectorFromFile(const std::string& filename) {return ValueVector();}
-bool FileUtils::writeToFile(ValueMap& dict, const std::string &fullPath) {return false;}
+bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath) {return false;}
+bool FileUtils::writeDataToFile(const std::string &filePath, const char *data, size_t dataLength) {return false;}
 
 #endif /* (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC) */
 
@@ -548,6 +639,33 @@ static Data getData(const std::string& filename, bool forString)
     {
         ret.fastSet(buffer, size);
     }
+    
+    return ret;
+}
+
+std::vector<char> FileUtils::getCharDataFromFile(const std::string &filename) {
+    std::vector<char> ret;
+    if (filename.empty()) {
+        return ret;
+    }
+    
+    ssize_t size = 0;
+    const char* mode = "rb";
+    
+    do {
+        // Read the file from hardware
+        std::string fullPath = FileUtils::getInstance()->fullPathForFilename(filename);
+        FILE *fp = fopen(fullPath.c_str(), mode);
+        CC_BREAK_IF(!fp);
+        fseek(fp,0,SEEK_END);
+        size = ftell(fp);
+        fseek(fp,0,SEEK_SET);
+        
+        ret.resize(size, '\0');
+        
+        size = fread(&ret[0], sizeof(char), size, fp);
+        fclose(fp);
+    } while (0);
     
     return ret;
 }
@@ -919,6 +1037,11 @@ void FileUtils::setPopupNotify(bool notify)
 bool FileUtils::isPopupNotify()
 {
     return s_popupNotify;
+}
+
+void FileUtils::renameFile(const std::string &from, const std::string &to) {
+    CC_ASSERT(isAbsolutePath(from));
+    rename(from.c_str(), to.c_str());
 }
 
 NS_CC_END

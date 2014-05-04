@@ -88,6 +88,7 @@ public:
      *  @return A data object.
      */
     virtual Data getDataFromFile(const std::string& filename);
+    virtual std::vector<char> getCharDataFromFile(const std::string &fileName);
     
     /**
      *  Gets resource file data
@@ -320,7 +321,7 @@ public:
      *  Write a ValueMap to a plist file.
      *  @note This method is used internally.
      */
-    virtual bool writeToFile(ValueMap& dict, const std::string& fullPath);
+    virtual bool writeToFile(const ValueMap& dict, const std::string& fullPath);
     
     /**
      *  Converts the contents of a file to a ValueVector.
@@ -330,7 +331,10 @@ public:
 
     /** Returns the full path cache */
     const std::unordered_map<std::string, std::string>& getFullPathCache() const { return _fullPathCache; }
-
+  
+    virtual bool writeDataToFile(const std::string &filePath, const char *data, size_t dataLength);
+    void renameFile(const std::string &from, const std::string &to);
+    
 protected:
     /**
      *  The default constructor.
