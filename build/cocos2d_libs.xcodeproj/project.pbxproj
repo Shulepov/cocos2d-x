@@ -1392,6 +1392,56 @@
 		B3AF01A21842FBA400A98B85 /* b2MotorJoint.h in Headers */ = {isa = PBXBuildFile; fileRef = B3AF019F1842FBA400A98B85 /* b2MotorJoint.h */; };
 		B3AF01A31842FBA400A98B85 /* b2MotorJoint.h in Headers */ = {isa = PBXBuildFile; fileRef = B3AF019F1842FBA400A98B85 /* b2MotorJoint.h */; };
 		B3B12A5A17E7F44000026B4A /* libchipmunk Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A03F2CB81780BD04006731B9 /* libchipmunk Mac.a */; };
+		BBCBD8831916A148009BDBE3 /* CCControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD86A1916A148009BDBE3 /* CCControl.cpp */; };
+		BBCBD8841916A148009BDBE3 /* CCControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD86A1916A148009BDBE3 /* CCControl.cpp */; };
+		BBCBD8851916A148009BDBE3 /* CCControl.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD86B1916A148009BDBE3 /* CCControl.h */; };
+		BBCBD8861916A148009BDBE3 /* CCControl.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD86B1916A148009BDBE3 /* CCControl.h */; };
+		BBCBD8871916A148009BDBE3 /* CCControlButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD86C1916A148009BDBE3 /* CCControlButton.cpp */; };
+		BBCBD8881916A148009BDBE3 /* CCControlButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD86C1916A148009BDBE3 /* CCControlButton.cpp */; };
+		BBCBD8891916A148009BDBE3 /* CCControlButton.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD86D1916A148009BDBE3 /* CCControlButton.h */; };
+		BBCBD88A1916A148009BDBE3 /* CCControlButton.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD86D1916A148009BDBE3 /* CCControlButton.h */; };
+		BBCBD88B1916A148009BDBE3 /* CCControlColourPicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD86E1916A148009BDBE3 /* CCControlColourPicker.cpp */; };
+		BBCBD88C1916A148009BDBE3 /* CCControlColourPicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD86E1916A148009BDBE3 /* CCControlColourPicker.cpp */; };
+		BBCBD88D1916A148009BDBE3 /* CCControlColourPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD86F1916A148009BDBE3 /* CCControlColourPicker.h */; };
+		BBCBD88E1916A148009BDBE3 /* CCControlColourPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD86F1916A148009BDBE3 /* CCControlColourPicker.h */; };
+		BBCBD88F1916A148009BDBE3 /* CCControlExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8701916A148009BDBE3 /* CCControlExtensions.h */; };
+		BBCBD8901916A148009BDBE3 /* CCControlExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8701916A148009BDBE3 /* CCControlExtensions.h */; };
+		BBCBD8911916A148009BDBE3 /* CCControlHuePicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8711916A148009BDBE3 /* CCControlHuePicker.cpp */; };
+		BBCBD8921916A148009BDBE3 /* CCControlHuePicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8711916A148009BDBE3 /* CCControlHuePicker.cpp */; };
+		BBCBD8931916A148009BDBE3 /* CCControlHuePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8721916A148009BDBE3 /* CCControlHuePicker.h */; };
+		BBCBD8941916A148009BDBE3 /* CCControlHuePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8721916A148009BDBE3 /* CCControlHuePicker.h */; };
+		BBCBD8951916A148009BDBE3 /* CCControlPotentiometer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8731916A148009BDBE3 /* CCControlPotentiometer.cpp */; };
+		BBCBD8961916A148009BDBE3 /* CCControlPotentiometer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8731916A148009BDBE3 /* CCControlPotentiometer.cpp */; };
+		BBCBD8971916A148009BDBE3 /* CCControlPotentiometer.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8741916A148009BDBE3 /* CCControlPotentiometer.h */; };
+		BBCBD8981916A148009BDBE3 /* CCControlPotentiometer.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8741916A148009BDBE3 /* CCControlPotentiometer.h */; };
+		BBCBD8991916A148009BDBE3 /* CCControlSaturationBrightnessPicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8751916A148009BDBE3 /* CCControlSaturationBrightnessPicker.cpp */; };
+		BBCBD89A1916A148009BDBE3 /* CCControlSaturationBrightnessPicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8751916A148009BDBE3 /* CCControlSaturationBrightnessPicker.cpp */; };
+		BBCBD89B1916A148009BDBE3 /* CCControlSaturationBrightnessPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8761916A148009BDBE3 /* CCControlSaturationBrightnessPicker.h */; };
+		BBCBD89C1916A148009BDBE3 /* CCControlSaturationBrightnessPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8761916A148009BDBE3 /* CCControlSaturationBrightnessPicker.h */; };
+		BBCBD89D1916A148009BDBE3 /* CCControlSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8771916A148009BDBE3 /* CCControlSlider.cpp */; };
+		BBCBD89E1916A148009BDBE3 /* CCControlSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8771916A148009BDBE3 /* CCControlSlider.cpp */; };
+		BBCBD89F1916A148009BDBE3 /* CCControlSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8781916A148009BDBE3 /* CCControlSlider.h */; };
+		BBCBD8A01916A148009BDBE3 /* CCControlSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8781916A148009BDBE3 /* CCControlSlider.h */; };
+		BBCBD8A11916A148009BDBE3 /* CCControlStepper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8791916A148009BDBE3 /* CCControlStepper.cpp */; };
+		BBCBD8A21916A148009BDBE3 /* CCControlStepper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8791916A148009BDBE3 /* CCControlStepper.cpp */; };
+		BBCBD8A31916A148009BDBE3 /* CCControlStepper.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD87A1916A148009BDBE3 /* CCControlStepper.h */; };
+		BBCBD8A41916A148009BDBE3 /* CCControlStepper.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD87A1916A148009BDBE3 /* CCControlStepper.h */; };
+		BBCBD8A51916A148009BDBE3 /* CCControlSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD87B1916A148009BDBE3 /* CCControlSwitch.cpp */; };
+		BBCBD8A61916A148009BDBE3 /* CCControlSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD87B1916A148009BDBE3 /* CCControlSwitch.cpp */; };
+		BBCBD8A71916A148009BDBE3 /* CCControlSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD87C1916A148009BDBE3 /* CCControlSwitch.h */; };
+		BBCBD8A81916A148009BDBE3 /* CCControlSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD87C1916A148009BDBE3 /* CCControlSwitch.h */; };
+		BBCBD8A91916A148009BDBE3 /* CCControlUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD87D1916A148009BDBE3 /* CCControlUtils.cpp */; };
+		BBCBD8AA1916A148009BDBE3 /* CCControlUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD87D1916A148009BDBE3 /* CCControlUtils.cpp */; };
+		BBCBD8AB1916A148009BDBE3 /* CCControlUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD87E1916A148009BDBE3 /* CCControlUtils.h */; };
+		BBCBD8AC1916A148009BDBE3 /* CCControlUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD87E1916A148009BDBE3 /* CCControlUtils.h */; };
+		BBCBD8AD1916A148009BDBE3 /* CCInvocation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD87F1916A148009BDBE3 /* CCInvocation.cpp */; };
+		BBCBD8AE1916A148009BDBE3 /* CCInvocation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD87F1916A148009BDBE3 /* CCInvocation.cpp */; };
+		BBCBD8AF1916A148009BDBE3 /* CCInvocation.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8801916A148009BDBE3 /* CCInvocation.h */; };
+		BBCBD8B01916A148009BDBE3 /* CCInvocation.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8801916A148009BDBE3 /* CCInvocation.h */; };
+		BBCBD8B11916A148009BDBE3 /* CCScale9Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8811916A148009BDBE3 /* CCScale9Sprite.cpp */; };
+		BBCBD8B21916A148009BDBE3 /* CCScale9Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBCBD8811916A148009BDBE3 /* CCScale9Sprite.cpp */; };
+		BBCBD8B31916A148009BDBE3 /* CCScale9Sprite.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8821916A148009BDBE3 /* CCScale9Sprite.h */; };
+		BBCBD8B41916A148009BDBE3 /* CCScale9Sprite.h in Headers */ = {isa = PBXBuildFile; fileRef = BBCBD8821916A148009BDBE3 /* CCScale9Sprite.h */; };
 		ED9C6A9418599AD8000A5232 /* CCNodeGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED9C6A9218599AD8000A5232 /* CCNodeGrid.cpp */; };
 		ED9C6A9518599AD8000A5232 /* CCNodeGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED9C6A9218599AD8000A5232 /* CCNodeGrid.cpp */; };
 		ED9C6A9618599AD8000A5232 /* CCNodeGrid.h in Headers */ = {isa = PBXBuildFile; fileRef = ED9C6A9318599AD8000A5232 /* CCNodeGrid.h */; };
@@ -2267,6 +2317,31 @@
 		B2AF2FB018EBBDA100C5807C /* CCMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMath.h; sourceTree = "<group>"; };
 		B3AF019E1842FBA400A98B85 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		B3AF019F1842FBA400A98B85 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
+		BBCBD86A1916A148009BDBE3 /* CCControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControl.cpp; sourceTree = "<group>"; };
+		BBCBD86B1916A148009BDBE3 /* CCControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControl.h; sourceTree = "<group>"; };
+		BBCBD86C1916A148009BDBE3 /* CCControlButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControlButton.cpp; sourceTree = "<group>"; };
+		BBCBD86D1916A148009BDBE3 /* CCControlButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlButton.h; sourceTree = "<group>"; };
+		BBCBD86E1916A148009BDBE3 /* CCControlColourPicker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControlColourPicker.cpp; sourceTree = "<group>"; };
+		BBCBD86F1916A148009BDBE3 /* CCControlColourPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlColourPicker.h; sourceTree = "<group>"; };
+		BBCBD8701916A148009BDBE3 /* CCControlExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlExtensions.h; sourceTree = "<group>"; };
+		BBCBD8711916A148009BDBE3 /* CCControlHuePicker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControlHuePicker.cpp; sourceTree = "<group>"; };
+		BBCBD8721916A148009BDBE3 /* CCControlHuePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlHuePicker.h; sourceTree = "<group>"; };
+		BBCBD8731916A148009BDBE3 /* CCControlPotentiometer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControlPotentiometer.cpp; sourceTree = "<group>"; };
+		BBCBD8741916A148009BDBE3 /* CCControlPotentiometer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlPotentiometer.h; sourceTree = "<group>"; };
+		BBCBD8751916A148009BDBE3 /* CCControlSaturationBrightnessPicker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControlSaturationBrightnessPicker.cpp; sourceTree = "<group>"; };
+		BBCBD8761916A148009BDBE3 /* CCControlSaturationBrightnessPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlSaturationBrightnessPicker.h; sourceTree = "<group>"; };
+		BBCBD8771916A148009BDBE3 /* CCControlSlider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControlSlider.cpp; sourceTree = "<group>"; };
+		BBCBD8781916A148009BDBE3 /* CCControlSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlSlider.h; sourceTree = "<group>"; };
+		BBCBD8791916A148009BDBE3 /* CCControlStepper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControlStepper.cpp; sourceTree = "<group>"; };
+		BBCBD87A1916A148009BDBE3 /* CCControlStepper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlStepper.h; sourceTree = "<group>"; };
+		BBCBD87B1916A148009BDBE3 /* CCControlSwitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControlSwitch.cpp; sourceTree = "<group>"; };
+		BBCBD87C1916A148009BDBE3 /* CCControlSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlSwitch.h; sourceTree = "<group>"; };
+		BBCBD87D1916A148009BDBE3 /* CCControlUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCControlUtils.cpp; sourceTree = "<group>"; };
+		BBCBD87E1916A148009BDBE3 /* CCControlUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlUtils.h; sourceTree = "<group>"; };
+		BBCBD87F1916A148009BDBE3 /* CCInvocation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCInvocation.cpp; sourceTree = "<group>"; };
+		BBCBD8801916A148009BDBE3 /* CCInvocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCInvocation.h; sourceTree = "<group>"; };
+		BBCBD8811916A148009BDBE3 /* CCScale9Sprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCScale9Sprite.cpp; sourceTree = "<group>"; };
+		BBCBD8821916A148009BDBE3 /* CCScale9Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCScale9Sprite.h; sourceTree = "<group>"; };
 		ED9C6A9218599AD8000A5232 /* CCNodeGrid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = CCNodeGrid.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		ED9C6A9318599AD8000A5232 /* CCNodeGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCNodeGrid.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -3409,6 +3484,7 @@
 		46A168331807AF4E005B8026 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
+				BBCBD8691916A148009BDBE3 /* CCControlExtension */,
 				46A1684E1807AF4E005B8026 /* CCEditBox */,
 			);
 			path = GUI;
@@ -4100,6 +4176,38 @@
 			name = ios;
 			sourceTree = "<group>";
 		};
+		BBCBD8691916A148009BDBE3 /* CCControlExtension */ = {
+			isa = PBXGroup;
+			children = (
+				BBCBD86A1916A148009BDBE3 /* CCControl.cpp */,
+				BBCBD86B1916A148009BDBE3 /* CCControl.h */,
+				BBCBD86C1916A148009BDBE3 /* CCControlButton.cpp */,
+				BBCBD86D1916A148009BDBE3 /* CCControlButton.h */,
+				BBCBD86E1916A148009BDBE3 /* CCControlColourPicker.cpp */,
+				BBCBD86F1916A148009BDBE3 /* CCControlColourPicker.h */,
+				BBCBD8701916A148009BDBE3 /* CCControlExtensions.h */,
+				BBCBD8711916A148009BDBE3 /* CCControlHuePicker.cpp */,
+				BBCBD8721916A148009BDBE3 /* CCControlHuePicker.h */,
+				BBCBD8731916A148009BDBE3 /* CCControlPotentiometer.cpp */,
+				BBCBD8741916A148009BDBE3 /* CCControlPotentiometer.h */,
+				BBCBD8751916A148009BDBE3 /* CCControlSaturationBrightnessPicker.cpp */,
+				BBCBD8761916A148009BDBE3 /* CCControlSaturationBrightnessPicker.h */,
+				BBCBD8771916A148009BDBE3 /* CCControlSlider.cpp */,
+				BBCBD8781916A148009BDBE3 /* CCControlSlider.h */,
+				BBCBD8791916A148009BDBE3 /* CCControlStepper.cpp */,
+				BBCBD87A1916A148009BDBE3 /* CCControlStepper.h */,
+				BBCBD87B1916A148009BDBE3 /* CCControlSwitch.cpp */,
+				BBCBD87C1916A148009BDBE3 /* CCControlSwitch.h */,
+				BBCBD87D1916A148009BDBE3 /* CCControlUtils.cpp */,
+				BBCBD87E1916A148009BDBE3 /* CCControlUtils.h */,
+				BBCBD87F1916A148009BDBE3 /* CCInvocation.cpp */,
+				BBCBD8801916A148009BDBE3 /* CCInvocation.h */,
+				BBCBD8811916A148009BDBE3 /* CCScale9Sprite.cpp */,
+				BBCBD8821916A148009BDBE3 /* CCScale9Sprite.h */,
+			);
+			path = CCControlExtension;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -4483,9 +4591,22 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBCBD8891916A148009BDBE3 /* CCControlButton.h in Headers */,
+				BBCBD89F1916A148009BDBE3 /* CCControlSlider.h in Headers */,
 				460E47B11808090B000CDD6D /* CCEditBoxImpl.h in Headers */,
+				BBCBD89B1916A148009BDBE3 /* CCControlSaturationBrightnessPicker.h in Headers */,
+				BBCBD8931916A148009BDBE3 /* CCControlHuePicker.h in Headers */,
+				BBCBD88F1916A148009BDBE3 /* CCControlExtensions.h in Headers */,
+				BBCBD8A71916A148009BDBE3 /* CCControlSwitch.h in Headers */,
+				BBCBD88D1916A148009BDBE3 /* CCControlColourPicker.h in Headers */,
+				BBCBD8851916A148009BDBE3 /* CCControl.h in Headers */,
 				460E47B31808090B000CDD6D /* CCEditBoxImplAndroid.h in Headers */,
+				BBCBD8AB1916A148009BDBE3 /* CCControlUtils.h in Headers */,
+				BBCBD8B31916A148009BDBE3 /* CCScale9Sprite.h in Headers */,
 				460E47B61808090B000CDD6D /* CCEditBoxImplMac.h in Headers */,
+				BBCBD8AF1916A148009BDBE3 /* CCInvocation.h in Headers */,
+				BBCBD8A31916A148009BDBE3 /* CCControlStepper.h in Headers */,
+				BBCBD8971916A148009BDBE3 /* CCControlPotentiometer.h in Headers */,
 				460E477B180808F5000CDD6D /* ExtensionMacros.h in Headers */,
 				460E47B41808090B000CDD6D /* CCEditBoxImplIOS.h in Headers */,
 				460E47B01808090B000CDD6D /* CCEditBox.h in Headers */,
@@ -4777,9 +4898,22 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBCBD88A1916A148009BDBE3 /* CCControlButton.h in Headers */,
+				BBCBD8A01916A148009BDBE3 /* CCControlSlider.h in Headers */,
 				460E47C41808090D000CDD6D /* CCEditBoxImplMac.h in Headers */,
+				BBCBD89C1916A148009BDBE3 /* CCControlSaturationBrightnessPicker.h in Headers */,
+				BBCBD8941916A148009BDBE3 /* CCControlHuePicker.h in Headers */,
+				BBCBD8901916A148009BDBE3 /* CCControlExtensions.h in Headers */,
+				BBCBD8A81916A148009BDBE3 /* CCControlSwitch.h in Headers */,
+				BBCBD88E1916A148009BDBE3 /* CCControlColourPicker.h in Headers */,
+				BBCBD8861916A148009BDBE3 /* CCControl.h in Headers */,
 				460E47BF1808090D000CDD6D /* CCEditBoxImpl.h in Headers */,
+				BBCBD8AC1916A148009BDBE3 /* CCControlUtils.h in Headers */,
+				BBCBD8B41916A148009BDBE3 /* CCScale9Sprite.h in Headers */,
 				460E477C180808F7000CDD6D /* ExtensionMacros.h in Headers */,
+				BBCBD8B01916A148009BDBE3 /* CCInvocation.h in Headers */,
+				BBCBD8A41916A148009BDBE3 /* CCControlStepper.h in Headers */,
+				BBCBD8981916A148009BDBE3 /* CCControlPotentiometer.h in Headers */,
 				460E47C11808090D000CDD6D /* CCEditBoxImplAndroid.h in Headers */,
 				460E47CA1808090D000CDD6D /* CCEditBoxImplWin.h in Headers */,
 				460E47BE1808090D000CDD6D /* CCEditBox.h in Headers */,
@@ -5436,13 +5570,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBCBD89D1916A148009BDBE3 /* CCControlSlider.cpp in Sources */,
+				BBCBD8A11916A148009BDBE3 /* CCControlStepper.cpp in Sources */,
 				460E47BB1808090B000CDD6D /* CCEditBoxImplWin.cpp in Sources */,
+				BBCBD8951916A148009BDBE3 /* CCControlPotentiometer.cpp in Sources */,
+				BBCBD8871916A148009BDBE3 /* CCControlButton.cpp in Sources */,
 				460E47B21808090B000CDD6D /* CCEditBoxImplAndroid.cpp in Sources */,
+				BBCBD8B11916A148009BDBE3 /* CCScale9Sprite.cpp in Sources */,
 				460E47B81808090B000CDD6D /* CCEditBoxImplNone.cpp in Sources */,
 				460E47B51808090B000CDD6D /* CCEditBoxImplIOS.mm in Sources */,
 				460E47B71808090B000CDD6D /* CCEditBoxImplMac.mm in Sources */,
+				BBCBD8AD1916A148009BDBE3 /* CCInvocation.cpp in Sources */,
+				BBCBD8991916A148009BDBE3 /* CCControlSaturationBrightnessPicker.cpp in Sources */,
+				BBCBD8A91916A148009BDBE3 /* CCControlUtils.cpp in Sources */,
+				BBCBD8831916A148009BDBE3 /* CCControl.cpp in Sources */,
+				BBCBD88B1916A148009BDBE3 /* CCControlColourPicker.cpp in Sources */,
 				460E47AF1808090B000CDD6D /* CCEditBox.cpp in Sources */,
+				BBCBD8A51916A148009BDBE3 /* CCControlSwitch.cpp in Sources */,
 				1AAF5353180E3060000584C8 /* AssetsManager.cpp in Sources */,
+				BBCBD8911916A148009BDBE3 /* CCControlHuePicker.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5683,13 +5829,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBCBD89E1916A148009BDBE3 /* CCControlSlider.cpp in Sources */,
+				BBCBD8A21916A148009BDBE3 /* CCControlStepper.cpp in Sources */,
 				460E47C01808090D000CDD6D /* CCEditBoxImplAndroid.cpp in Sources */,
+				BBCBD8961916A148009BDBE3 /* CCControlPotentiometer.cpp in Sources */,
+				BBCBD8881916A148009BDBE3 /* CCControlButton.cpp in Sources */,
 				460E47BD1808090D000CDD6D /* CCEditBox.cpp in Sources */,
+				BBCBD8B21916A148009BDBE3 /* CCScale9Sprite.cpp in Sources */,
 				460E47C61808090D000CDD6D /* CCEditBoxImplNone.cpp in Sources */,
 				460E47C91808090D000CDD6D /* CCEditBoxImplWin.cpp in Sources */,
 				460E47C51808090D000CDD6D /* CCEditBoxImplMac.mm in Sources */,
+				BBCBD8AE1916A148009BDBE3 /* CCInvocation.cpp in Sources */,
+				BBCBD89A1916A148009BDBE3 /* CCControlSaturationBrightnessPicker.cpp in Sources */,
+				BBCBD8AA1916A148009BDBE3 /* CCControlUtils.cpp in Sources */,
+				BBCBD8841916A148009BDBE3 /* CCControl.cpp in Sources */,
+				BBCBD88C1916A148009BDBE3 /* CCControlColourPicker.cpp in Sources */,
 				460E47C31808090D000CDD6D /* CCEditBoxImplIOS.mm in Sources */,
+				BBCBD8A61916A148009BDBE3 /* CCControlSwitch.cpp in Sources */,
 				1AAF5354180E3060000584C8 /* AssetsManager.cpp in Sources */,
+				BBCBD8921916A148009BDBE3 /* CCControlHuePicker.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
