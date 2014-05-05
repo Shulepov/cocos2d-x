@@ -24,7 +24,8 @@ THE SOFTWARE.
 
 #include "audio/include/SimpleAudioEngine.h"
 #include "SimpleAudioEngine_objc.h"
-#include "cocos2d.h"
+#include "2d/platform/CCFileUtils.h"
+
 USING_NS_CC;
 
 static void static_end()

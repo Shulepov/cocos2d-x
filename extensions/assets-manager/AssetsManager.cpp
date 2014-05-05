@@ -22,7 +22,10 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "AssetsManager.h"
-#include "cocos2d.h"
+#include "base/CCDirector.h"
+#include "base/CCScheduler.h"
+#include "2d/CCUserDefault.h"
+#include "2d/platform/CCFileUtils.h"
 
 #include <curl/curl.h>
 #include <curl/easy.h>

@@ -1,5 +1,6 @@
 
 
+#include "base/CCDirector.h"
 #include "WidgetReader.h"
 
 USING_NS_CC;
@@ -54,7 +55,7 @@ namespace cocostudio
         bool adaptScrenn = DICTOOL->getBooleanValue_json(options, "adaptScreen");
         if (adaptScrenn)
         {
-            Size screenSize = CCDirector::getInstance()->getWinSize();
+            Size screenSize = Director::getInstance()->getWinSize();
             w = screenSize.width;
             h = screenSize.height;
         }

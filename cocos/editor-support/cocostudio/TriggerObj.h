@@ -25,7 +25,6 @@ THE SOFTWARE.
 #ifndef __TRIGGEROBJ_H__
 #define __TRIGGEROBJ_H__
 
-#include "cocos2d.h"
 #include "CocoStudio.h"
 #include <vector>
 

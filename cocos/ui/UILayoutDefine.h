@@ -25,9 +25,8 @@ THE SOFTWARE.
 #ifndef __UILAYOUTDEFINE_H__
 #define __UILAYOUTDEFINE_H__
 
-#include "cocos2d.h"
 
-NS_CC_BEGIN
+namespace cocos2d {
 
 namespace ui {
 /**
@@ -92,5 +91,5 @@ typedef enum
 }RelativeAlign;
 
 }
-NS_CC_END
+}
 #endif /* defined(__UILayoutDefine__) */

@@ -25,6 +25,8 @@ THE SOFTWARE.
 #ifndef __CC_EXTENTIONS_CCCOMATTRIBUTE_H__
 #define __CC_EXTENTIONS_CCCOMATTRIBUTE_H__
 
+#include "2d/CCComponent.h"
+#include "base/CCValue.h"
 #include "CCComBase.h"
 
 namespace cocostudio {

@@ -25,9 +25,16 @@ THE SOFTWARE.
 #ifndef __LAYOUT_H__
 #define __LAYOUT_H__
 
+#include "renderer/CCGroupCommand.h"
+#include "renderer/CCCustomCommand.h"
+
 #include "ui/UIWidget.h"
 
 NS_CC_BEGIN
+
+class LayerColor;
+class LayerGradient;
+class DrawNode;
 
 namespace ui {
 

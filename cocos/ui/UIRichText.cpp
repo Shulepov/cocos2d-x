@@ -22,6 +22,10 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include "2d/platform/CCFileUtils.h"
+#include "2d/CCLabel.h"
+#include "2d/CCSprite.h"
+
 #include "UIRichText.h"
 
 

@@ -24,6 +24,11 @@ THE SOFTWARE.
 
 #include "cocostudio/CCComRender.h"
 #include "cocostudio/CocoStudio.h"
+#include "2d/platform/CCFileUtils.h"
+#include "2d/CCSprite.h"
+#include "2d/CCSpriteFrameCache.h"
+#include "2d/CCTMXTiledMap.h"
+#include "2d/CCParticleSystemQuad.h"
 
 using namespace cocos2d;
 
@@ -115,11 +120,11 @@ bool ComRender::serialize(void* r)
 		std::string plistPath;
 		if (file != nullptr)
 		{
-			filePath.assign(cocos2d::CCFileUtils::getInstance()->fullPathForFilename(file));
+			filePath.assign(cocos2d::FileUtils::getInstance()->fullPathForFilename(file));
 		}
 		if (plist != nullptr)
 		{
-			plistPath.assign(cocos2d::CCFileUtils::getInstance()->fullPathForFilename(plist));
+			plistPath.assign(cocos2d::FileUtils::getInstance()->fullPathForFilename(plist));
 		}
 		int resType = DICTOOL->getIntValue_json(fileData, "resourceType", -1);
 		if (resType == 0)

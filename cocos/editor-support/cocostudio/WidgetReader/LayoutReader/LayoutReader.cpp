@@ -2,6 +2,7 @@
 
 #include "LayoutReader.h"
 #include "ui/UILayout.h"
+#include "base/CCDirector.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -42,7 +43,7 @@ namespace cocostudio
         bool adaptScrenn = DICTOOL->getBooleanValue_json(options, "adaptScreen");
         if (adaptScrenn)
         {
-            Size screenSize = CCDirector::getInstance()->getWinSize();
+            Size screenSize = Director::getInstance()->getWinSize();
             w = screenSize.width;
             h = screenSize.height;
         }

@@ -26,11 +26,9 @@
 #define __AssetsManager__
 
 #include <string>
-
 #include <mutex>
-
-#include "cocos2d.h"
 #include "extensions/ExtensionMacros.h"
+#include "CCNode.h"
 
 NS_CC_EXT_BEGIN
 

@@ -29,6 +29,8 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
+class Sprite;
+
 namespace ui {
 
 typedef enum

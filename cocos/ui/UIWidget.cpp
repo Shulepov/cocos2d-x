@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
+#include "base/CCEventListenerTouch.h"
+
 #include "ui/UIWidget.h"
 #include "ui/UILayout.h"
 #include "ui/UIHelper.h"

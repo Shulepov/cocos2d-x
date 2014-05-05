@@ -27,6 +27,10 @@ THE SOFTWARE.
 #include "extensions/GUI/CCControlExtension/CCScale9Sprite.h"
 #include "2d/CCGLProgram.h"
 #include "2d/CCShaderCache.h"
+#include "2d/CCDrawNode.h"
+#include "2d/CCLayer.h"
+#include "2d/CCSprite.h"
+#include "2d/platform/CCGLViewProtocol.h"
 #include "base/CCDirector.h"
 #include "2d/CCDrawingPrimitives.h"
 #include "renderer/CCRenderer.h"
@@ -882,7 +886,7 @@ void Layout::onBeforeVisitScissor()
 {
     Rect clippingRect = getClippingRect();
     glEnable(GL_SCISSOR_TEST);
-    auto glview = Director::getInstance()->getOpenGLView();
+    GLViewProtocol *glview = (GLViewProtocol *)Director::getInstance()->getOpenGLView();
     glview->setScissorInPoints(clippingRect.origin.x, clippingRect.origin.y, clippingRect.size.width, clippingRect.size.height);
 }
 

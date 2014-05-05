@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
+#include "2d/CCLabel.h"
+
 #include "ui/UIText.h"
 
 NS_CC_BEGIN

@@ -23,6 +23,10 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "cocostudio/CCSGUIReader.h"
 #include "ui/CocosGUI.h"
+#include "2d/platform/CCFileUtils.h"
+#include "base/CCDirector.h"
+#include "2d/CCSprite.h"
+#include "2d/CCSpriteFrameCache.h"
 #include "cocostudio/CCActionManagerEx.h"
 #include <fstream>
 #include <iostream>
@@ -181,7 +185,7 @@ Widget* GUIReader::widgetFromJsonFile(const char *fileName)
 {
 	std::string jsonpath;
 	rapidjson::Document jsonDict;
-    jsonpath = CCFileUtils::getInstance()->fullPathForFilename(fileName);
+    jsonpath = FileUtils::getInstance()->fullPathForFilename(fileName);
     size_t pos = jsonpath.find_last_of('/');
 	m_strFilePath = jsonpath.substr(0,pos+1);
     std::string contentStr = FileUtils::getInstance()->getStringFromFile(jsonpath);
@@ -229,7 +233,7 @@ Widget* WidgetPropertiesReader0250::createWidget(const rapidjson::Value& data, c
         const char* file = DICTOOL->getStringValueFromArray_json(data, "textures", i);
         std::string tp = fullPath;
         tp.append(file);
-        CCSpriteFrameCache::getInstance()->addSpriteFramesWithFile(tp.c_str());
+        SpriteFrameCache::getInstance()->addSpriteFramesWithFile(tp.c_str());
     }
     float fileDesignWidth = DICTOOL->getFloatValue_json(data, "designWidth");
     float fileDesignHeight = DICTOOL->getFloatValue_json(data, "designHeight");
@@ -1621,7 +1625,7 @@ void WidgetPropertiesReader0300::setPropsForLayoutFromJsonDictionary(Widget*widg
     bool adaptScrenn = DICTOOL->getBooleanValue_json(options, "adaptScreen");
     if (adaptScrenn)
     {
-        Size screenSize = CCDirector::getInstance()->getWinSize();
+        Size screenSize = Director::getInstance()->getWinSize();
         w = screenSize.width;
         h = screenSize.height;
     }

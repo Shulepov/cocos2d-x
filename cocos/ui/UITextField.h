@@ -25,6 +25,8 @@ THE SOFTWARE.
 #ifndef __UITEXTFIELD_H__
 #define __UITEXTFIELD_H__
 
+#include "2d/CCTextFieldTTF.h"
+
 #include "ui/UIWidget.h"
 
 NS_CC_BEGIN
@@ -39,7 +41,7 @@ class UICCTextField: public TextFieldTTF, public TextFieldDelegate
 {
 public:
     UICCTextField();
-    ~UICCTextField();
+    virtual ~UICCTextField();
     
     virtual void onEnter() override;
     

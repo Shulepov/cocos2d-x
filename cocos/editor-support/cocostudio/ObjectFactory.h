@@ -25,12 +25,14 @@ THE SOFTWARE.
 #ifndef __TRIGGERFACTORY_H__
 #define __TRIGGERFACTORY_H__
 
-#include "cocos2d.h"
 #include <string>
 #include <unordered_map>
 
+#include "CCRef.h"
+
 namespace cocos2d
 {
+    class Component;
     namespace ui
     {
         class Widget;

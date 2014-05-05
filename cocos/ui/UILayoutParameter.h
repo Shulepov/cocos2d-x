@@ -25,9 +25,11 @@
 #ifndef __LAYOUTPARMETER_H__
 #define __LAYOUTPARMETER_H__
 
+#include <string>
+#include "base/CCRef.h"
 #include "ui/UILayoutDefine.h"
 
-NS_CC_BEGIN
+namespace cocos2d {
 
 namespace ui {
 
@@ -221,6 +223,6 @@ protected:
 
 }
 
-NS_CC_END
+}
 
 #endif /* defined(__LayoutParameter__) */

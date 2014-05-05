@@ -25,6 +25,8 @@ THE SOFTWARE.
 #ifndef __CCSGUIREADER_H__
 #define __CCSGUIREADER_H__
 
+#include "base/CCValue.h"
+
 #include "ui/UIWidget.h"
 #include "cocostudio/DictionaryHelper.h"
 #include "WidgetReader/WidgetReaderProtocol.h"

@@ -29,6 +29,8 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
+class LabelAtlas;
+
 namespace ui {
     
 /**

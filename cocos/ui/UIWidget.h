@@ -25,12 +25,15 @@ THE SOFTWARE.
 #ifndef __UIWIDGET_H__
 #define __UIWIDGET_H__
 
+#include "CCMap.h"
 #include "ui/CCProtectedNode.h"
 #include "ui/UILayoutDefine.h"
 #include "ui/UILayoutParameter.h"
 #include "ui/GUIDefine.h"
 
 NS_CC_BEGIN
+
+class EventListenerTouchOneByOne;
 
 namespace ui {
 

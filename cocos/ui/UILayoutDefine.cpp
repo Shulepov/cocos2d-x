@@ -23,7 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "UILayoutDefine.h"
 
-NS_CC_BEGIN
+namespace cocos2d {
 
 namespace ui {
 
@@ -61,4 +61,4 @@ bool Margin::equals(const Margin &target) const
 
 }
 
-NS_CC_END
+}
