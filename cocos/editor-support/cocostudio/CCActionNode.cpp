@@ -25,8 +25,10 @@ THE SOFTWARE.
 #include "cocostudio/CCActionNode.h"
 #include "cocostudio/CCActionFrameEasing.h"
 #include "cocostudio/DictionaryHelper.h"
+#include "cocostudio/CCActionFrame.h"
 #include "ui/UIWidget.h"
 #include "ui/UIHelper.h"
+#include "2d/CCActionInterval.h"
 
 using namespace cocos2d;
 using namespace ui;

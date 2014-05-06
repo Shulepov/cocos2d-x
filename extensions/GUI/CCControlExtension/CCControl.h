@@ -30,6 +30,7 @@
 #ifndef __CCCONTROL_H__
 #define __CCCONTROL_H__
 
+#include <unordered_map>
 #include "CCControlUtils.h"
 #include "2d/CCLayer.h"
 

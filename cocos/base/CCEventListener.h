@@ -31,7 +31,6 @@
 #include <functional>
 #include <string>
 #include <memory>
-#include <set>
 
 NS_CC_BEGIN
 

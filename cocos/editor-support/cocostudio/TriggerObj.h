@@ -25,8 +25,8 @@ THE SOFTWARE.
 #ifndef __TRIGGEROBJ_H__
 #define __TRIGGEROBJ_H__
 
-#include "CocoStudio.h"
-#include <vector>
+#include "json/document.h"
+#include "base/CCVector.h"
 
 namespace cocos2d {
 class EventListenerCustom;

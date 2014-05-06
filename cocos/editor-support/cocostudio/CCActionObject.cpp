@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #include "cocostudio/CCActionObject.h"
 #include "cocostudio/DictionaryHelper.h"
+#include "cocostudio/CCActionNode.h"
 
 #include "base/CCDirector.h"
 #include "base/CCScheduler.h"

@@ -26,8 +26,8 @@ THE SOFTWARE.
 #ifndef __CCANIMATION_H__
 #define __CCANIMATION_H__
 
+#include "base/CCVector.h"
 #include "cocostudio/CCProcessBase.h"
-#include "cocostudio/CCTween.h"
 #include <queue>
 
 namespace cocostudio {
@@ -43,7 +43,10 @@ enum MovementEventType
 
 class Armature;
 class Bone;
-
+class Tween;
+class AnimationData;
+class MovementData;
+    
 typedef void (cocos2d::Ref::*SEL_MovementEventCallFunc)(Armature *, MovementEventType, const std::string&);
 typedef void (cocos2d::Ref::*SEL_FrameEventCallFunc)(Bone *, const std::string&, int, int);
 
@@ -195,15 +198,7 @@ public:
     void setMovementEventCallFunc(std::function<void(Armature *armature, MovementEventType movementType, const std::string& movementID)> listener);
     void setFrameEventCallFunc(std::function<void(Bone *bone, const std::string& frameEventName, int originFrameIndex, int currentFrameIndex)> listener);
 
-    virtual void setAnimationData(AnimationData *data) 
-    {
-        if (_animationData != data)
-        {
-            CC_SAFE_RETAIN(data);
-            CC_SAFE_RELEASE(_animationData);
-            _animationData = data; 
-        }
-    }
+    virtual void setAnimationData(AnimationData *data);
     virtual AnimationData *getAnimationData() const { return _animationData; }
 
 

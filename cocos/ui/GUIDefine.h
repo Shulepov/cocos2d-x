@@ -25,7 +25,6 @@
 #ifndef __TestCpp__GUIDefine__
 #define __TestCpp__GUIDefine__
 
-#include "../../extensions/ExtensionMacros.h"
 #include <string>
 #include "cocostudio/ObjectFactory.h"
 

@@ -25,6 +25,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "2d/CCMenu.h"
 #include "base/CCDirector.h"
+#include "base/CCEventDispatcher.h"
 #include "CCApplication.h"
 #include "base/CCTouch.h"
 #include "CCStdC.h"

@@ -25,8 +25,9 @@ THE SOFTWARE.
 #ifndef __CCPROCESSBASE_H__
 #define __CCPROCESSBASE_H__
 
+#include "base/CCRef.h"
+#include "2d/CCTweenFunction.h"
 #include "cocostudio/CCArmatureDefine.h"
-#include "cocostudio/CCDatas.h"
 
 namespace cocostudio {
 

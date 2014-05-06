@@ -25,9 +25,11 @@
 
 #include "2d/CCLabel.h"
 #include "2d/CCFontAtlasCache.h"
+#include "2d/ccGLStateCache.h"
 #include "CCLabelTextFormatter.h"
 #include "2d/CCSprite.h"
 #include "2d/CCShaderCache.h"
+#include "2d/CCGLProgram.h"
 #include "ccUTF8.h"
 #include "2d/CCSpriteFrame.h"
 #include "base/CCDirector.h"

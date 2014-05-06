@@ -27,6 +27,7 @@ THE SOFTWARE.
 
 #include "2d/CCTransition.h"
 #include "base/CCDirector.h"
+#include "base/CCEventDispatcher.h"
 #include "2d/CCActionInterval.h"
 #include "2d/CCActionInstant.h"
 #include "2d/CCActionEase.h"

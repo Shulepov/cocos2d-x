@@ -26,10 +26,12 @@ THE SOFTWARE.
 #define __CCTRANSFORMHELP_H__
 
 #include "cocostudio/CCArmatureDefine.h"
-#include "cocostudio/CCDatas.h"
+#include "math/CCAffineTransform.h"
 
 namespace cocostudio {
 
+class BaseData;
+    
 USING_NS_CC_MATH;
 
 /*

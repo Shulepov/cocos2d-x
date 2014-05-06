@@ -28,6 +28,7 @@ THE SOFTWARE.
 #include "cocostudio/CCTransformHelp.h"
 #include "cocostudio/CCDataReaderHelper.h"
 #include "cocostudio/CCSpriteFrameCacheHelper.h"
+#include "cocostudio/CCDatas.h"
 
 using namespace cocos2d;
 
@@ -250,7 +251,7 @@ const cocos2d::Map<std::string, TextureData*>& ArmatureDataManager::getTextureDa
     return _textureDatas;
 }
 
-void CCArmatureDataManager::addRelativeData(const std::string& configFilePath)
+void ArmatureDataManager::addRelativeData(const std::string& configFilePath)
 {
     if (_relativeDatas.find(configFilePath) == _relativeDatas.end())
     {
@@ -258,7 +259,7 @@ void CCArmatureDataManager::addRelativeData(const std::string& configFilePath)
     }
 }
 
-RelativeData *CCArmatureDataManager::getRelativeData(const std::string&  configFilePath)
+RelativeData *ArmatureDataManager::getRelativeData(const std::string&  configFilePath)
 {
     return &_relativeDatas[configFilePath];
 }

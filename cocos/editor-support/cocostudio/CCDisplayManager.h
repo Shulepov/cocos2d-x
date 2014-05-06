@@ -32,6 +32,8 @@ THE SOFTWARE.
 namespace cocostudio {
 
 class Bone;
+class BoneData;
+
 
 /**! DisplayManager manages Bone's display
  *  @js NA

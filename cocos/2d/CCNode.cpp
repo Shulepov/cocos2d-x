@@ -31,7 +31,6 @@ THE SOFTWARE.
 #include <algorithm>
 
 #include "deprecated/CCString.h"
-#include "2d/ccCArray.h"
 #include "math/TransformUtils.h"
 #include "2d/CCGrid.h"
 #include "base/CCDirector.h"
@@ -1819,11 +1818,6 @@ void Node::disableCascadeColor()
     for(auto child : _children){
         child->updateDisplayedColor(Color3B::WHITE);
     }
-}
-
-__NodeRGBA::__NodeRGBA()
-{
-    CCLOG("NodeRGBA deprecated.");
 }
 
 NS_CC_END

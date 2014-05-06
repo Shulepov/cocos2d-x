@@ -23,11 +23,15 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "TriggerMng.h"
+#include "CCArmature.h"
+#include "DictionaryHelper.h"
+#include "TriggerObj.h"
 #include "json/filestream.h"
 #include "json/prettywriter.h"
 #include "json/stringbuffer.h"
 #include "base/CCDirector.h"
 #include "base/CCEventCustom.h"
+#include "base/CCEventDispatcher.h"
 
 using namespace cocos2d;
 

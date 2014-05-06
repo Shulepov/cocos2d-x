@@ -27,7 +27,6 @@ THE SOFTWARE.
 
 #include "cocostudio/CCArmatureDefine.h"
 #include "cocostudio/CCDisplayFactory.h"
-#include "cocostudio/CCDatas.h"
 
 
 #if ENABLE_PHYSICS_BOX2D_DETECT || ENABLE_PHYSICS_CHIPMUNK_DETECT || ENABLE_PHYSICS_SAVE_CALCULATED_VERTEX
@@ -56,15 +55,7 @@ public:
     virtual void setDisplay(cocos2d::Node *display);
     virtual cocos2d::Node *getDisplay() const { return _display; }
 
-    virtual void setDisplayData(DisplayData *data)
-    {
-        if (_displayData != data)
-        {
-            CC_SAFE_RETAIN(data);
-            CC_SAFE_RELEASE(_displayData);
-            _displayData = data; 
-        }
-    }
+    virtual void setDisplayData(DisplayData *data);
     virtual DisplayData *getDisplayData() const { return _displayData; }
 
 #if ENABLE_PHYSICS_BOX2D_DETECT || ENABLE_PHYSICS_CHIPMUNK_DETECT || ENABLE_PHYSICS_SAVE_CALCULATED_VERTEX

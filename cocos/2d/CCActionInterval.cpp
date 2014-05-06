@@ -27,9 +27,9 @@ THE SOFTWARE.
 
 #include "2d/CCActionInterval.h"
 #include "2d/CCSprite.h"
-#include "2d/CCNode.h"
 #include "CCStdC.h"
 #include "2d/CCActionInstant.h"
+#include "2d/CCSpriteFrame.h"
 #include <stdarg.h>
 
 NS_CC_BEGIN

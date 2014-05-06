@@ -27,6 +27,7 @@
 #include "2d/ccGLStateCache.h"
 #include "2d/CCTextureAtlas.h"
 #include "2d/CCTexture2D.h"
+#include "2d/CCGLProgram.h"
 
 NS_CC_BEGIN
 

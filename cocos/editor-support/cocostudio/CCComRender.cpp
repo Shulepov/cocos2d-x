@@ -23,7 +23,10 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "cocostudio/CCComRender.h"
-#include "cocostudio/CocoStudio.h"
+#include "cocostudio/CCArmature.h"
+#include "cocostudio/CCSGUIReader.h"
+#include "cocostudio/CCArmatureAnimation.h"
+#include "cocostudio/CCArmatureDataManager.h"
 #include "2d/platform/CCFileUtils.h"
 #include "2d/CCSprite.h"
 #include "2d/CCSpriteFrameCache.h"

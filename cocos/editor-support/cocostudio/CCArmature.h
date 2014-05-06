@@ -25,49 +25,50 @@ THE SOFTWARE.
 #ifndef __CCARMATURE_H__
 #define __CCARMATURE_H__
 
+#include "2d/CCNode.h"
+#include "base/CCMap.h"
 #include "cocostudio/CCArmatureDefine.h"
-#include "cocostudio/CCBone.h"
-#include "cocostudio/CCBatchNode.h"
-#include "cocostudio/CCArmatureAnimation.h"
-#include "cocostudio/CCSpriteFrameCacheHelper.h"
-#include "cocostudio/CCArmatureDataManager.h"
-#include "math/CCMath.h"
 
 class b2Body;
 struct cpBody;
 
 namespace cocostudio {
 
+class ArmatureData;
+class BatchNode;
+class Bone;
+class ArmatureAnimation;
+    
 USING_NS_CC_MATH;
 
-CC_DEPRECATED_ATTRIBUTE typedef ProcessBase CCProcessBase;
-CC_DEPRECATED_ATTRIBUTE typedef BaseData CCBaseData;
-CC_DEPRECATED_ATTRIBUTE typedef DisplayData CCDisplayData;
-CC_DEPRECATED_ATTRIBUTE typedef SpriteDisplayData CCSpriteDisplayData;
-CC_DEPRECATED_ATTRIBUTE typedef ArmatureDisplayData CCArmatureDisplayData;
-CC_DEPRECATED_ATTRIBUTE typedef ParticleDisplayData CCParticleDisplayData;
-CC_DEPRECATED_ATTRIBUTE typedef BoneData CCBoneData;
-CC_DEPRECATED_ATTRIBUTE typedef FrameData CCFrameData;
-CC_DEPRECATED_ATTRIBUTE typedef MovementBoneData CCMovementBoneData;
-CC_DEPRECATED_ATTRIBUTE typedef MovementData CCMovementData;
-CC_DEPRECATED_ATTRIBUTE typedef AnimationData CCAnimationData;
-CC_DEPRECATED_ATTRIBUTE typedef ContourData CCContourData;
-CC_DEPRECATED_ATTRIBUTE typedef TextureData CCTextureData;
-CC_DEPRECATED_ATTRIBUTE typedef DecorativeDisplay CCDecorativeDisplay;
-CC_DEPRECATED_ATTRIBUTE typedef DisplayData CCDisplayData;
-CC_DEPRECATED_ATTRIBUTE typedef DisplayFactory CCDisplayFactory;
-CC_DEPRECATED_ATTRIBUTE typedef BatchNode CCBatchNode;
-CC_DEPRECATED_ATTRIBUTE typedef DecorativeDisplay CCDecorativeDisplay;
-CC_DEPRECATED_ATTRIBUTE typedef DisplayManager CCDisplayManager;
-CC_DEPRECATED_ATTRIBUTE typedef ColliderBody CCColliderBody;
-CC_DEPRECATED_ATTRIBUTE typedef ColliderDetector CCColliderDetector;
-CC_DEPRECATED_ATTRIBUTE typedef SpriteFrameCacheHelper CCSpriteFrameCacheHelper;
-CC_DEPRECATED_ATTRIBUTE typedef ArmatureData CCArmatureData;
-CC_DEPRECATED_ATTRIBUTE typedef Bone CCBone;
-CC_DEPRECATED_ATTRIBUTE typedef ArmatureAnimation CCArmatureAnimation;
-CC_DEPRECATED_ATTRIBUTE typedef Armature CCArmature;
-CC_DEPRECATED_ATTRIBUTE typedef ArmatureDataManager CCArmatureDataManager;
-CC_DEPRECATED_ATTRIBUTE typedef cocos2d::tweenfunc::TweenType CCTweenType;
+//CC_DEPRECATED_ATTRIBUTE typedef ProcessBase CCProcessBase;
+//CC_DEPRECATED_ATTRIBUTE typedef BaseData CCBaseData;
+//CC_DEPRECATED_ATTRIBUTE typedef DisplayData CCDisplayData;
+//CC_DEPRECATED_ATTRIBUTE typedef SpriteDisplayData CCSpriteDisplayData;
+//CC_DEPRECATED_ATTRIBUTE typedef ArmatureDisplayData CCArmatureDisplayData;
+//CC_DEPRECATED_ATTRIBUTE typedef ParticleDisplayData CCParticleDisplayData;
+//CC_DEPRECATED_ATTRIBUTE typedef BoneData CCBoneData;
+//CC_DEPRECATED_ATTRIBUTE typedef FrameData CCFrameData;
+//CC_DEPRECATED_ATTRIBUTE typedef MovementBoneData CCMovementBoneData;
+//CC_DEPRECATED_ATTRIBUTE typedef MovementData CCMovementData;
+//CC_DEPRECATED_ATTRIBUTE typedef AnimationData CCAnimationData;
+//CC_DEPRECATED_ATTRIBUTE typedef ContourData CCContourData;
+//CC_DEPRECATED_ATTRIBUTE typedef TextureData CCTextureData;
+//CC_DEPRECATED_ATTRIBUTE typedef DecorativeDisplay CCDecorativeDisplay;
+//CC_DEPRECATED_ATTRIBUTE typedef DisplayData CCDisplayData;
+//CC_DEPRECATED_ATTRIBUTE typedef DisplayFactory CCDisplayFactory;
+//CC_DEPRECATED_ATTRIBUTE typedef BatchNode CCBatchNode;
+//CC_DEPRECATED_ATTRIBUTE typedef DecorativeDisplay CCDecorativeDisplay;
+//CC_DEPRECATED_ATTRIBUTE typedef DisplayManager CCDisplayManager;
+//CC_DEPRECATED_ATTRIBUTE typedef ColliderBody CCColliderBody;
+//CC_DEPRECATED_ATTRIBUTE typedef ColliderDetector CCColliderDetector;
+//CC_DEPRECATED_ATTRIBUTE typedef SpriteFrameCacheHelper CCSpriteFrameCacheHelper;
+//CC_DEPRECATED_ATTRIBUTE typedef ArmatureData CCArmatureData;
+//CC_DEPRECATED_ATTRIBUTE typedef Bone CCBone;
+//CC_DEPRECATED_ATTRIBUTE typedef ArmatureAnimation CCArmatureAnimation;
+//CC_DEPRECATED_ATTRIBUTE typedef Armature CCArmature;
+//CC_DEPRECATED_ATTRIBUTE typedef ArmatureDataManager CCArmatureDataManager;
+//CC_DEPRECATED_ATTRIBUTE typedef cocos2d::tweenfunc::TweenType CCTweenType;
 
 class  Armature : public cocos2d::Node, public cocos2d::BlendProtocol
 {

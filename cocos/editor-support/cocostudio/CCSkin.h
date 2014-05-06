@@ -29,10 +29,15 @@ THE SOFTWARE.
 #include "renderer/CCQuadCommand.h"
 
 #include "cocostudio/CCArmatureDefine.h"
-#include "cocostudio/CCBone.h"
+#include "cocostudio/CCDatas.h"
 
 namespace cocostudio {
 
+class Bone;
+class Armature;
+
+USING_NS_CC_MATH;
+    
 class Skin : public cocos2d::Sprite
 {
 public:

@@ -32,6 +32,7 @@
 #include "renderer/CCGroupCommand.h"
 #include "2d/CCShaderCache.h"
 #include "2d/ccGLStateCache.h"
+#include "2d/CCGLProgram.h"
 #include "base/CCConfiguration.h"
 #include "base/CCDirector.h"
 #include "base/CCEventDispatcher.h"

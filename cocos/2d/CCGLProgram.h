@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "base/ccMacros.h"
 #include "base/CCRef.h"
 #include "CCGL.h"
-#include "math/CCMath.h"
+#include "math/Matrix.h"
 #include <set>
 
 NS_CC_BEGIN

@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 #include "2d/CCAction.h"
 #include "base/CCVector.h"
-#include "base/CCRef.h"
 
 NS_CC_BEGIN
 

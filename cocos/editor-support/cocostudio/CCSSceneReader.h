@@ -25,8 +25,14 @@ THE SOFTWARE.
 #ifndef __CCSSCENEREADER_H__
 #define __CCSSCENEREADER_H__
 
+#include <string>
+#include <functional>
 #include "cocostudio/DictionaryHelper.h"
 
+namespace cocos2d {
+    class Node;
+    class Ref;
+}
 
 namespace cocostudio {
 

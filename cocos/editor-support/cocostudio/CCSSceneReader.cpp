@@ -22,11 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "cocostudio/CocoStudio.h"
-#include "ui/CocosGUI.h"
+#include "CCSSceneReader.h"
+#include "2d/CCNode.h"
 #include "audio/include/SimpleAudioEngine.h"
 #include "ObjectFactory.h"
 #include "2d/platform/CCFileUtils.h"
+#include "CCComAttribute.h"
+#include "CCComRender.h"
+#include "CCComAudio.h"
+#include "CCComController.h"
+#include "TriggerMng.h"
 
 using namespace cocos2d;
 using namespace ui;

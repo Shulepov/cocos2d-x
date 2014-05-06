@@ -28,11 +28,14 @@ THE SOFTWARE.
 #include "cocostudio/CCDataReaderHelper.h"
 #include "cocostudio/CCDatas.h"
 #include "cocostudio/CCSkin.h"
+#include "cocostudio/CCArmatureAnimation.h"
+#include "cocostudio/CCBone.h"
 
 #include "renderer/CCRenderer.h"
 #include "renderer/CCGroupCommand.h"
 #include "2d/CCShaderCache.h"
 #include "2d/CCDrawingPrimitives.h"
+#include "2d/CCGLProgram.h"
 #include "base/CCDirector.h"
 
 #if ENABLE_PHYSICS_BOX2D_DETECT
@@ -558,7 +561,7 @@ void CCArmature::setColliderFilter(ColliderFilter *filter)
 }
 #elif ENABLE_PHYSICS_SAVE_CALCULATED_VERTEX
 
-void CCArmature::drawContour()
+void Armature::drawContour()
 {
     for(auto& element : _boneDic)
     {

@@ -33,6 +33,10 @@ namespace cocostudio {
 
 class Bone;
 class ArmatureAnimation;
+class MovementBoneData;
+class FrameData;
+
+    
 using cocos2d::tweenfunc::TweenType;
 
 /**

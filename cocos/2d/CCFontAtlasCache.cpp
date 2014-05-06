@@ -24,6 +24,7 @@
  ****************************************************************************/
 
 #include <sstream>
+#include <iostream>
 
 #include "2d/CCFontAtlasCache.h"
 

@@ -28,7 +28,6 @@
 
 #include "base/CCRef.h"
 #include "CCRenderCommand.h"
-#include "CCRenderCommandPool.h"
 
 #include <unordered_map>
 

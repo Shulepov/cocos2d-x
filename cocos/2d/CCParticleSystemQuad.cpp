@@ -39,7 +39,6 @@ THE SOFTWARE.
 #include "base/CCEventType.h"
 #include "base/CCConfiguration.h"
 #include "renderer/CCRenderer.h"
-#include "renderer/CCQuadCommand.h"
 #include "renderer/CCCustomCommand.h"
 
 // extern

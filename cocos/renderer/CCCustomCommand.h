@@ -27,7 +27,6 @@
 #define _CC_CUSTOMCOMMAND_H_
 
 #include "CCRenderCommand.h"
-#include "CCRenderCommandPool.h"
 
 NS_CC_BEGIN
 

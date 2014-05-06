@@ -26,11 +26,14 @@ THE SOFTWARE.
 #define __CCARMATUREDATAMANAGER_H__
 
 #include "cocostudio/CCArmatureDefine.h"
-#include "cocostudio/CCDatas.h"
-
+#include "base/CCMap.h"
 
 namespace cocostudio {
 
+    class ArmatureData;
+    class AnimationData;
+    class TextureData;
+    
 struct RelativeData
 {
     std::vector<std::string> plistFiles;

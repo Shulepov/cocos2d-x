@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #include "cocostudio/CCInputDelegate.h"
 #include "base/CCDirector.h"
+#include "base/CCEventDispatcher.h"
 #include "2d/platform/CCDevice.h"
 #include "base/CCEventListenerTouch.h"
 #include "base/CCEventListenerAcceleration.h"

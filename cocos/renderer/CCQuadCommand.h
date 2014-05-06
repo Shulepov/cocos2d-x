@@ -26,10 +26,10 @@
 #define _CC_QUADCOMMAND_H_
 
 #include "CCRenderCommand.h"
-#include "2d/CCGLProgram.h"
-#include "CCRenderCommandPool.h"
 
 NS_CC_BEGIN
+
+class GLProgram;
 
 #define CC_NO_TEXTURE 0
 

@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "cocostudio/CCTransformHelp.h"
 #include "cocostudio/CCSpriteFrameCacheHelper.h"
 #include "cocostudio/CCArmature.h"
-
+#include "cocostudio/CCBone.h"
 
 using namespace cocos2d;
 

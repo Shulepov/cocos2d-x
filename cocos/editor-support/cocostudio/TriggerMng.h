@@ -24,15 +24,21 @@ THE SOFTWARE.
 #ifndef __TRIGGERMNG_H__
 #define __TRIGGERMNG_H__
 
-#include "CocoStudio.h"
+#include <unordered_map>
+#include "base/CCRef.h"
+#include "cocostudio/CCArmatureAnimation.h"
+#include "json/document.h"
 
 namespace cocos2d {
 class EventDispatcher;
 class EventListener;
+class EventCustom;
 }
 
 namespace cocostudio {
 
+class Armature;
+    
 class TriggerObj;
 
 class ArmatureMovementDispatcher : public cocos2d::Ref

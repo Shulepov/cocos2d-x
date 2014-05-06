@@ -25,6 +25,9 @@ THE SOFTWARE.
 #include "base/CCEventListenerCustom.h"
 
 #include "TriggerObj.h"
+#include "TriggerMng.h"
+#include "DictionaryHelper.h"
+#include "ObjectFactory.h"
 
 using namespace cocos2d;
 

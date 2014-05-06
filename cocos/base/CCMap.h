@@ -253,7 +253,7 @@ public:
         CCASSERT(object != nullptr, "Object is nullptr!");
         erase(key);
         _data.insert(std::make_pair(key, object));
-        object->retain();
+        retainObject(object);
     }
     
     /** @brief Removes an element with an iterator from the Map<K, V> container.
@@ -263,7 +263,7 @@ public:
     iterator erase(const_iterator position)
     {
         CCASSERT(position != _data.cend(), "Invalid iterator!");
-        position->second->release();
+        releaseObject(position->second);
         return _data.erase(position);
     }
     
@@ -277,7 +277,7 @@ public:
         auto iter = _data.find(k);
         if (iter != _data.end())
         {
-            iter->second->release();
+            releaseObject(iter->second);
             _data.erase(iter);
             return 1;
         }
@@ -303,7 +303,7 @@ public:
     {
         for (auto iter = _data.cbegin(); iter != _data.cend(); ++iter)
         {
-            iter->second->release();
+            releaseObject(iter->second);
         }
         
         _data.clear();
@@ -373,13 +373,20 @@ public:
     }
     
 protected:
+    inline void retainObject(V object) {
+        ((Ref *)object)->retain();
+    }
+    
+    inline void releaseObject(V object) {
+        ((Ref *)object)->release();
+    }
     
     /** Retains all the objects in the map */
     void addRefForAllObjects()
     {
         for (auto iter = _data.begin(); iter != _data.end(); ++iter)
         {
-            iter->second->retain();
+            retainObject(iter->second);
         }
     }
     

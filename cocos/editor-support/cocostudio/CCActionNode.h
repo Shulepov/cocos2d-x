@@ -25,10 +25,17 @@ THE SOFTWARE.
 #ifndef __ActionNODE_H__
 #define __ActionNODE_H__
 
-#include "cocostudio/CCActionFrame.h"
-#include "cocostudio/DictionaryHelper.h"
+#include "base/CCVector.h"
+#include "json/document.h"
+
+namespace cocos2d {
+    class Action;
+    class Spawn;
+}
 
 namespace cocostudio {
+    
+class ActionFrame;
 
 /**
 *  @js NA

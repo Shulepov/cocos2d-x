@@ -27,14 +27,13 @@
 
 #include "base/CCPlatformMacros.h"
 #include "base/CCEventListener.h"
-#include "base/CCEvent.h"
 #include "CCStdC.h"
 
 #include <functional>
 #include <string>
 #include <unordered_map>
-#include <list>
 #include <vector>
+#include <set>
 
 NS_CC_BEGIN
 

@@ -24,6 +24,8 @@
 #include "2d/CCDrawNode.h"
 #include "2d/CCShaderCache.h"
 #include "CCGL.h"
+#include "2d/ccGLStateCache.h"
+#include "2d/CCGLProgram.h"
 #include "base/CCEventType.h"
 #include "base/CCConfiguration.h"
 #include "renderer/CCCustomCommand.h"

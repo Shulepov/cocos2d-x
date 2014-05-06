@@ -81,7 +81,7 @@ public:
      * @js NA
      * @lua NA
      */
-    ~BaseData(void);
+    virtual ~BaseData(void);
 
     /*
     * Copy data from node
@@ -247,7 +247,7 @@ public:
      * @js NA
      * @lua NA
      */
-    ~BoneData(void);
+    virtual ~BoneData(void);
 
     virtual bool init();
 

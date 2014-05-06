@@ -26,9 +26,9 @@ THE SOFTWARE.
 #define __CCDATAREADERHELPER_H__
 
 #include "cocostudio/CCArmatureDefine.h"
-#include "cocostudio/CCDatas.h"
-#include "cocostudio/CCArmature.h"
-#include "cocostudio/DictionaryHelper.h"
+
+
+#include "json/document.h"
 
 #include <string>
 #include <queue>
@@ -44,6 +44,17 @@ namespace tinyxml2
 
 namespace cocostudio {
 
+    class ArmatureData;
+    class MovementData;
+    class TextureData;
+    class MovementBoneData;
+    class BoneData;
+    class DisplayData;
+    class FrameData;
+    class AnimationData;
+    class ContourData;
+    class BaseData;
+    
 /**
  *  @js NA
  *  @lua NA

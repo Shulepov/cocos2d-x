@@ -259,6 +259,15 @@ public:
         return true;
     }
 
+    //retain / release
+    inline void retainObject(T object) {
+        ((Ref *)object)->retain();
+    }
+    
+    inline void releaseObject(T object) {
+        ((Ref *)object)->release();
+    }
+    
     // Adds objects
     
     /** @brief Adds a new element at the end of the vector, after its current last element.
@@ -270,7 +279,7 @@ public:
     {
         CCASSERT(object != nullptr, "The object should not be nullptr");
         _data.push_back( object );
-        object->retain();
+        retainObject(object);
     }
     
     /** Push all elements of an existing vector to the end of current vector. */
@@ -278,7 +287,7 @@ public:
     {
         for(const auto &obj : other) {
             _data.push_back(obj);
-            obj->retain();
+            retainObject(obj);
         }
     }
 
@@ -293,7 +302,7 @@ public:
         CCASSERT(index >= 0 && index <= size(), "Invalid index!");
         CCASSERT(object != nullptr, "The object should not be nullptr");
         _data.insert((std::begin(_data) + index), object);
-        object->retain();
+        retainObject(object);
     }
     
     // Removes Objects
@@ -306,7 +315,7 @@ public:
         CCASSERT(!_data.empty(), "no objects added");
         auto last = _data.back();
         _data.pop_back();
-        last->release();
+        releaseObject(last);
     }
     
     /** @brief Remove a certain object in Vector.
@@ -325,7 +334,7 @@ public:
                 if ((*iter) == object)
                 {
                     iter = _data.erase(iter);
-                    object->release();
+                    releaseObject(object);
                 }
                 else
                 {
@@ -339,7 +348,7 @@ public:
             if (iter != _data.end())
             {
                 _data.erase(iter);
-                object->release();
+                releaseObject(object);
             }
         }
     }
@@ -352,7 +361,7 @@ public:
     iterator erase(iterator position)
     {
         CCASSERT(position >= _data.begin() && position < _data.end(), "Invalid position!");
-        (*position)->release();
+        releaseObject(*position);
         return _data.erase(position);
     }
     
@@ -366,7 +375,7 @@ public:
     {
         for (auto iter = first; iter != last; ++iter)
         {
-            (*iter)->release();
+            releaseObject(*iter);
         }
         
         return _data.erase(first, last);
@@ -381,7 +390,7 @@ public:
     {
         CCASSERT(!_data.empty() && index >=0 && index < size(), "Invalid index!");
         auto it = std::next( begin(), index );
-        (*it)->release();
+        releaseObject(*it);
         return _data.erase(it);
     }
 
@@ -391,7 +400,7 @@ public:
     void clear()
     {
         for( auto it = std::begin(_data); it != std::end(_data); ++it ) {
-            (*it)->release();
+            releaseObject(*it);
         }
         _data.clear();
     }
@@ -423,9 +432,9 @@ public:
         CCASSERT(index >= 0 && index < size(), "Invalid index!");
         CCASSERT(object != nullptr, "The object should not be nullptr");
         
-        _data[index]->release();
+        releaseObject(_data[index]);
         _data[index] = object;
-        object->retain();
+        retainObject(object);
     }
 
     /** reverses the vector */
@@ -445,8 +454,8 @@ protected:
     /** Retains all the objects in the vector */
     void addRefForAllObjects()
     {
-        for(const auto &obj : _data) {
-            obj->retain();
+        for(const auto obj : _data) {
+            retainObject(obj);
         }
     }
     

@@ -28,6 +28,7 @@ THE SOFTWARE.
 #include "cocostudio/CCArmatureDefine.h"
 #include "cocostudio/CCUtilMath.h"
 #include "cocostudio/CCDatas.h"
+#include "cocostudio/CCTween.h"
 
 using namespace cocos2d;
 
@@ -94,6 +95,15 @@ bool ArmatureAnimation::init(Armature *armature)
     return bRet;
 }
 
+void ArmatureAnimation::setAnimationData(AnimationData *data)
+{
+    if (_animationData != data)
+    {
+        CC_SAFE_RETAIN(data);
+        CC_SAFE_RELEASE(_animationData);
+        _animationData = data;
+    }
+}
 
 void ArmatureAnimation::pause()
 {

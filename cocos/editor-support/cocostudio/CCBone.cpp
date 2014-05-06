@@ -28,6 +28,7 @@ THE SOFTWARE.
 #include "cocostudio/CCArmatureDataManager.h"
 #include "cocostudio/CCTransformHelp.h"
 #include "cocostudio/CCDisplayManager.h"
+#include "cocostudio/CCTween.h"
 
 using namespace cocos2d;
 

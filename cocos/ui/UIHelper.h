@@ -25,10 +25,12 @@ THE SOFTWARE.
 #ifndef __UIHELPER_H__
 #define __UIHELPER_H__
 
-NS_CC_BEGIN
+namespace cocos2d {
 
 namespace ui {
 
+class Widget;
+    
 /**
 *   @js NA
 *   @lua NA
@@ -63,6 +65,6 @@ public:
 };
 }
 
-NS_CC_END
+}
 
 #endif /* defined(__CocoGUI__UISystem__) */

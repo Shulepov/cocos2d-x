@@ -23,6 +23,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include <set>
+
 #include "2d/CCFontFNT.h"
 #include "2d/uthash.h"
 #include "base/CCConfiguration.h"

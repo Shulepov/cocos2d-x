@@ -25,12 +25,19 @@ THE SOFTWARE.
 #ifndef __ActionObject_H__
 #define __ActionObject_H__
 
-#include "cocostudio/CCActionNode.h"
-#include "2d/CCActionInstant.h"
-#include "cocostudio/DictionaryHelper.h"
+#include "base/CCRef.h"
+#include "base/CCVector.h"
+#include "json/document.h"
+
+namespace cocos2d {
+    class Scheduler;
+    class CallFunc;
+}
 
 namespace cocostudio {
 
+class ActionNode;
+    
 /**
 *  @js NA
 *  @lua NA

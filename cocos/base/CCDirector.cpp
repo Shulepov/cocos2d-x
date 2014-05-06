@@ -47,6 +47,7 @@ THE SOFTWARE.
 #include "2d/CCTransition.h"
 #include "2d/CCTextureCache.h"
 #include "2d/CCFontFreeType.h"
+#include "2d/CCLabelAtlas.h"
 #include "base/CCScheduler.h"
 #include "base/ccMacros.h"
 #include "base/CCEventDispatcher.h"

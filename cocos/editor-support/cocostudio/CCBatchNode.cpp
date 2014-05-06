@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "renderer/CCRenderer.h"
 #include "renderer/CCGroupCommand.h"
 #include "2d/CCShaderCache.h"
+#include "2d/CCGLProgram.h"
 #include "base/CCDirector.h"
 
 using namespace cocos2d;

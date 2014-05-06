@@ -23,6 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "base/CCEventListenerTouch.h"
+#include "base/CCEventDispatcher.h"
 
 #include "ui/UIWidget.h"
 #include "ui/UILayout.h"

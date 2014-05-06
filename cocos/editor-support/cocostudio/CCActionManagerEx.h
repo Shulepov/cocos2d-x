@@ -25,8 +25,10 @@ THE SOFTWARE.
 #ifndef __ActionMANAGER_H__
 #define __ActionMANAGER_H__
 
+#include <unordered_map>
+
 #include "cocostudio/CCActionObject.h"
-#include "cocostudio/DictionaryHelper.h"
+#include "json/document.h"
 
 namespace cocostudio {
 

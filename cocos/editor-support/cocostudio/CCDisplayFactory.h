@@ -26,7 +26,10 @@ THE SOFTWARE.
 #define __CCDISPLAYFACTORY_H__
 
 #include "cocostudio/CCArmatureDefine.h"
-#include "cocostudio/CCDatas.h"
+
+namespace cocos2d {
+    class Node;
+}
 
 namespace cocostudio {
 
@@ -34,6 +37,7 @@ class Skin;
 class Bone;
 class DecorativeDisplay;
 class DisplayData;
+
 /**
  *  @js NA
  *  @lua NA
