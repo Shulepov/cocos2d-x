@@ -371,11 +371,13 @@ public:
      *  @return An iterator pointing to the new location of the element that followed the last element erased by the function call.
      *          This is the container end if the operation erased the last element in the sequence.
      */
-    iterator erase(iterator first, iterator last)
+    iterator erase(iterator first, iterator last, bool release = true)
     {
-        for (auto iter = first; iter != last; ++iter)
-        {
-            releaseObject(*iter);
+        if (release) {
+            for (auto iter = first; iter != last; ++iter)
+            {
+                releaseObject(*iter);
+            }
         }
         
         return _data.erase(first, last);
