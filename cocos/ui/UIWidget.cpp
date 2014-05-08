@@ -600,6 +600,9 @@ void Widget::pushDownEvent()
     {
         (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_BEGAN);
     }
+    if (_touchFuncListener) {
+        _touchFuncListener(TOUCH_EVENT_BEGAN);
+    }
 }
 
 void Widget::moveEvent()
@@ -607,6 +610,9 @@ void Widget::moveEvent()
     if (_touchEventListener && _touchEventSelector)
     {
         (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_MOVED);
+    }
+    if (_touchFuncListener) {
+        _touchFuncListener(TOUCH_EVENT_MOVED);
     }
 }
 
@@ -616,6 +622,9 @@ void Widget::releaseUpEvent()
     {
         (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_ENDED);
     }
+    if (_touchFuncListener) {
+        _touchFuncListener(TOUCH_EVENT_ENDED);
+    }
 }
 
 void Widget::cancelUpEvent()
@@ -623,6 +632,9 @@ void Widget::cancelUpEvent()
     if (_touchEventListener && _touchEventSelector)
     {
         (_touchEventListener->*_touchEventSelector)(this,TOUCH_EVENT_CANCELED);
+    }
+    if (_touchFuncListener) {
+        _touchFuncListener(TOUCH_EVENT_CANCELED);
     }
 }
 

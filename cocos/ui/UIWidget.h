@@ -78,6 +78,7 @@ typedef enum
 
 typedef void (Ref::*SEL_TouchEvent)(Ref*,TouchEventType);
 #define toucheventselector(_SELECTOR) (SEL_TouchEvent)(&_SELECTOR)
+    
 /**
 *   @js NA
 *   @lua NA
@@ -85,6 +86,8 @@ typedef void (Ref::*SEL_TouchEvent)(Ref*,TouchEventType);
 class Widget : public ProtectedNode
 {
 public:
+    using TouchListener = std::function<void (TouchEventType eventType)>;
+    
     /**
      * Default constructor
      */
@@ -217,7 +220,7 @@ public:
      * Sets the touch event target/selector of the menu item
      */
     void addTouchEventListener(Ref* target,SEL_TouchEvent selector);
-
+    void setTouchListener(TouchListener listener) { _touchFuncListener = listener; }
 
     //cocos2d property
 
@@ -601,7 +604,7 @@ protected:
     bool _flippedX;
     bool _flippedY;
     Map<int, LayoutParameter*> _layoutParameterDictionary;
-
+    TouchListener _touchFuncListener;
 };
 }
 
