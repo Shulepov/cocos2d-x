@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include <string>
 #include <unordered_map>
 
-#include "CCRef.h"
+#include "base/CCRef.h"
 
 namespace cocos2d
 {
