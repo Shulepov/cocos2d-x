@@ -103,7 +103,7 @@ public:
     void setFontName(const std::string& name);
 
     const std::string& getFontName();
-
+   
     /**
      * Sets the touch scale enabled of label.
      *

@@ -83,6 +83,15 @@ Text* Text::create(const std::string &textContent, const std::string &fontName, 
     return nullptr;
 }
     
+    bool hasEnding (std::string const &fullString, std::string const &ending)
+    {
+        if (fullString.length() >= ending.length()) {
+            return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+        } else {
+            return false;
+        }
+    }
+    
 bool Text::init(const std::string &textContent, const std::string &fontName, int fontSize)
 {
     bool ret = true;
@@ -137,7 +146,12 @@ int Text::getFontSize()
 void Text::setFontName(const std::string& name)
 {
     _fontName = name;
-    _labelRenderer->setSystemFontName(name);
+    if (hasEnding(name, "fnt")) {
+        _labelRenderer->setBMFontFilePath(name);
+    } else {
+        _labelRenderer->setSystemFontName(name);
+    }
+    
     updateContentSizeWithTextureSize(_labelRenderer->getContentSize());
     _labelRendererAdaptDirty = true;
 }
@@ -147,6 +161,7 @@ const std::string& Text::getFontName()
     return _fontName;
 }
 
+   
 void Text::setTextAreaSize(const Size &size)
 {
     _labelRenderer->setDimensions(size.width,size.height);
