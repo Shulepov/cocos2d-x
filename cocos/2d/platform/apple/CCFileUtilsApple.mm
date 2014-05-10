@@ -462,6 +462,16 @@ ValueVector FileUtilsApple::getValueVectorFromFile(const std::string& filename)
 
 bool FileUtilsApple::writeDataToFile(const std::string &filePath, const char *rawData, size_t dataLength) {
     NSString *pathStr = [NSString stringWithUTF8String:filePath.c_str()];
+    
+    NSString *directory = [pathStr stringByDeletingLastPathComponent];
+    bool directoryExists =[s_fileManager fileExistsAtPath:directory];
+    if (!directoryExists) {
+        [s_fileManager createDirectoryAtPath:directory
+                 withIntermediateDirectories:YES
+                                  attributes:nil
+                                       error:nil];
+    };
+    
     NSData *data = [NSData dataWithBytes:rawData length:dataLength];
     return [data writeToFile:pathStr atomically:YES];
 }
