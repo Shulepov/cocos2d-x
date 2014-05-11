@@ -625,7 +625,11 @@ void GLView::onGLFWKeyCallback(GLFWwindow *window, int key, int scancode, int ac
 {
     if (GLFW_REPEAT != action)
     {
-        EventKeyboard event(g_keyCodeMap[key], GLFW_PRESS == action);
+        EventKeyboard::KeyCode code = g_keyCodeMap[key];
+        if (GLFW_PRESS == action && code == EventKeyboard::KeyCode::KEY_BACKSPACE) {
+            IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+        }
+        EventKeyboard event(code, GLFW_PRESS == action);
         auto dispatcher = Director::getInstance()->getEventDispatcher();
         dispatcher->dispatchEvent(&event);
     }

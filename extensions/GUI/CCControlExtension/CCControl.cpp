@@ -110,7 +110,8 @@ void Control::sendActionsForControlEvents(EventType controlEvents)
         if (((int)controlEvents & (1 << i)))
         {
             // Call invocations
-            const auto& invocationList = this->dispatchListforControlEvent((Control::EventType)(1<<i));
+            int event = 1<<i;
+            const auto& invocationList = this->dispatchListforControlEvent((Control::EventType)event);
 
             for(const auto &invocation : invocationList) {
                 invocation->invoke(this);
@@ -125,6 +126,9 @@ void Control::sendActionsForControlEvents(EventType controlEvents)
                 cocos2d::ScriptEngineManager::getInstance()->getScriptEngine()->sendEvent(&event);
             }
 #endif
+            if (_touchListeners.find(event) != _touchListeners.end()) {
+                _touchListeners[event]();
+            }
         }
     }
 	release();

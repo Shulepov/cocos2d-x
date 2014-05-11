@@ -218,6 +218,7 @@ void Widget::setSizePercent(const Vector2 &percent)
 {
     _sizePercent = percent;
     Size cSize = _customSize;
+    _sizeType = SizeType::SIZE_PERCENT;
     if (_running)
     {
         Widget* widgetParent = getWidgetParent();

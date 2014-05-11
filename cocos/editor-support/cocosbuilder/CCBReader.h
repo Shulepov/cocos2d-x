@@ -2,6 +2,7 @@
 #define _CCB_CCBREADER_H_
 
 #include <string>
+#include <set>
 #include <vector>
 #include "2d/CCNode.h"
 #include "base/CCData.h"

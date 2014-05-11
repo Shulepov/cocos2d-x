@@ -65,6 +65,7 @@ class Invocation;
 class Control : public Layer
 {
 public:
+    using TouchListener = std::function<void(void)>;
     /** Kinds of possible events for the control objects. */
     enum class EventType
     {
@@ -133,7 +134,10 @@ public:
      * action message is sent. See "CCControlEvent" for bitmask constants.
      */
     virtual void addTargetWithActionForControlEvents(Ref* target, Handler action, EventType controlEvents);
-
+    virtual void setTouchListener(EventType controlEvent, TouchListener listener) {
+        _touchListeners.insert({(int)controlEvent, listener});
+    }
+    
     /**
      * Removes a target and action for a particular event (or events) from an
      * internal dispatch table.
@@ -256,6 +260,7 @@ protected:
      * (which contains the target-action pair) is linked.
      */
     std::unordered_map<int, Vector<Invocation*>*> _dispatchTable;
+    std::unordered_map<int, TouchListener> _touchListeners;
 
     //CCRGBAProtocol
     bool _isOpacityModifyRGB;
