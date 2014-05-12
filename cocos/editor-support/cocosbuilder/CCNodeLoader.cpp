@@ -1111,7 +1111,11 @@ void NodeLoader::onHandlePropTypeTexture(Node * pNode, Node * pParent, const cha
 }
 
 void NodeLoader::onHandlePropTypeByte(Node * pNode, Node * pParent, const char* pPropertyName, unsigned char pByte, CCBReader * ccbReader) {
-    ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);
+    if (strcmp(pPropertyName, "opacity") == 0) {
+        pNode->setOpacity(pByte);
+    } else {
+        ASSERT_FAIL_UNEXPECTED_PROPERTY(pPropertyName);
+    }
 }
 
 void NodeLoader::onHandlePropTypeColor3(Node * pNode, Node * pParent, const char* pPropertyName, Color3B pColor3B, CCBReader * ccbReader) {
