@@ -41,10 +41,10 @@ SpriteFrame* SpriteFrame::create(const std::string& filename, const Rect& rect)
     return spriteFrame;
 }
 
-SpriteFrame* SpriteFrame::createWithTexture(Texture2D *texture, const Rect& rect)
+SpriteFrame* SpriteFrame::createWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
 {
     SpriteFrame *spriteFrame = new SpriteFrame();
-    spriteFrame->initWithTexture(texture, rect);
+    spriteFrame->initWithTexture(texture, rect, rotated);
     spriteFrame->autorelease();
     
     return spriteFrame;
@@ -68,10 +68,10 @@ SpriteFrame* SpriteFrame::create(const std::string& filename, const Rect& rect, 
     return spriteFrame;
 }
 
-bool SpriteFrame::initWithTexture(Texture2D* texture, const Rect& rect)
+bool SpriteFrame::initWithTexture(Texture2D* texture, const Rect& rect, bool rotated)
 {
     Rect rectInPixels = CC_RECT_POINTS_TO_PIXELS(rect);
-    return initWithTexture(texture, rectInPixels, false, Vector2::ZERO, rectInPixels.size);
+    return initWithTexture(texture, rectInPixels, rotated, Vector2::ZERO, rectInPixels.size);
 }
 
 bool SpriteFrame::initWithTextureFilename(const std::string& filename, const Rect& rect)

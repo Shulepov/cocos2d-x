@@ -69,7 +69,7 @@ public:
     /** Create a SpriteFrame with a texture, rect in points.
      It is assumed that the frame was not trimmed.
      */
-    static SpriteFrame* createWithTexture(Texture2D* pobTexture, const Rect& rect);
+    static SpriteFrame* createWithTexture(Texture2D* pobTexture, const Rect& rect, bool rotated = false);
 
     /** Create a SpriteFrame with a texture, rect, rotated, offset and originalSize in pixels.
      The originalSize is the size in points of the frame before being trimmed.
@@ -84,7 +84,7 @@ public:
     /** Initializes a SpriteFrame with a texture, rect in points.
      It is assumed that the frame was not trimmed.
      */
-    bool initWithTexture(Texture2D* pobTexture, const Rect& rect);
+    bool initWithTexture(Texture2D* pobTexture, const Rect& rect, bool rotated = false);
 
     /** Initializes a SpriteFrame with a texture filename, rect in points;
      It is assumed that the frame was not trimmed.
