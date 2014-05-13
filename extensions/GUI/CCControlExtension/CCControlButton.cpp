@@ -45,6 +45,7 @@ ControlButton::ControlButton()
 , _parentInited(false)
 , _doesAdjustBackgroundImage(false)
 , _currentTitleColor(Color3B::WHITE)
+, _currentBackgroundColor(Color3B::WHITE)
 , _titleLabel(nullptr)
 , _backgroundSprite(nullptr)
 , _zoomOnTouchDown(false)
@@ -184,7 +185,7 @@ void ControlButton::setHighlighted(bool enabled)
     }
     else
     {
-        _state = Control::State::NORMAL;
+        _state = Control::State::DISABLED;
     }
     
     Control::setHighlighted(enabled);
@@ -494,6 +495,7 @@ void ControlButton::needsLayout()
     _currentTitle = getTitleForState(_state);
 
     _currentTitleColor = getTitleColorForState(_state);
+    _currentBackgroundColor = getBackgroundColorForState(_state);
 
     this->setTitleLabel(getTitleLabelForState(_state));
 
@@ -503,6 +505,13 @@ void ControlButton::needsLayout()
         label->setString(_currentTitle);
     }
 
+    if (_backgroundSprite) {
+        _backgroundSprite->stopActionByTag(4567);
+        auto tint = TintTo::create(0.1f, _currentBackgroundColor.r, _currentBackgroundColor.g, _currentBackgroundColor.b);
+        tint->setTag(4567);
+        _backgroundSprite->runAction(tint);
+    }
+    
     if (_titleLabel)
     {
         _titleLabel->setColor(_currentTitleColor);
@@ -527,12 +536,12 @@ void ControlButton::needsLayout()
     }
     
     // Adjust the background image if necessary
-    if (_doesAdjustBackgroundImage)
+    if ( _doesAdjustBackgroundImage && (titleLabelSize.width > getContentSize().width - _marginH * 2) )
     {
         // Add the margins
         if (_backgroundSprite != nullptr)
         {
-            _backgroundSprite->setContentSize(Size(titleLabelSize.width + _marginH * 2, titleLabelSize.height + _marginV * 2));
+            _backgroundSprite->setContentSize(Size(titleLabelSize.width + _marginH * 2, getContentSize().height));
         }
     } 
     else
@@ -714,6 +723,38 @@ ControlButton* ControlButton::create()
     }
     CC_SAFE_DELETE(pControlButton);
     return nullptr;
+}
+
+void ControlButton::setBackgroundColorForState(const Color3B &color, State state) {
+    _backgroundColorDispatchTable.erase((int)state);
+    _backgroundColorDispatchTable[(int)state] = color;
+    
+    // If the current state if equal to the given state we update the layout
+    if (getState() == state)
+    {
+        needsLayout();
+    }
+
+}
+
+Color3B ControlButton::getBackgroundColorForState(State state) {
+    Color3B returnColor = Color3B::WHITE;
+    
+    auto iter = _backgroundColorDispatchTable.find((int)state);
+    if (iter != _backgroundColorDispatchTable.end())
+    {
+        returnColor = iter->second;
+    }
+    else
+    {
+        iter = _backgroundColorDispatchTable.find((int)Control::State::NORMAL);
+        if (iter != _backgroundColorDispatchTable.end())
+        {
+            returnColor = iter->second;
+        }
+    }
+    
+    return returnColor;
 }
 
 NS_CC_EXT_END

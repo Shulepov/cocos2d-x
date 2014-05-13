@@ -16,6 +16,7 @@
 #include "CCBAnimationManager.h"
 #include "CCBSequenceProperty.h"
 #include "CCBKeyframe.h"
+#include "CCBSequence.h"
 #include <sstream>
 
 using namespace cocos2d;
@@ -794,31 +795,35 @@ CCBKeyframe* CCBReader::readKeyframe(PropertyType type)
         std::string spriteSheet = readCachedString();
         std::string spriteFile = readCachedString();
         
-        SpriteFrame* spriteFrame;
+        
+        SpriteFrameCache* frameCache = SpriteFrameCache::getInstance();
+        SpriteFrame *spriteFrame = frameCache->getSpriteFrameByName(spriteFile.c_str());
 
-        if (spriteSheet.length() == 0)
-        {
-            spriteFile = _CCBRootPath + spriteFile;
-
-            Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(spriteFile.c_str());
-            Rect bounds = Rect(0, 0, texture->getContentSize().width, texture->getContentSize().height);
-            
-            spriteFrame = SpriteFrame::createWithTexture(texture, bounds);
-        }
-        else
-        {
-            spriteSheet = _CCBRootPath + spriteSheet;
-            SpriteFrameCache* frameCache = SpriteFrameCache::getInstance();
-            
-            // Load the sprite sheet only if it is not loaded            
-            if (_loadedSpriteSheets.find(spriteSheet) == _loadedSpriteSheets.end())
+        if (!spriteFrame) {
+            if (spriteSheet.length() == 0)
             {
-                frameCache->addSpriteFramesWithFile(spriteSheet.c_str());
-                _loadedSpriteSheets.insert(spriteSheet);
+                spriteFile = _CCBRootPath + spriteFile;
+                
+                Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(spriteFile.c_str());
+                Rect bounds = Rect(0, 0, texture->getContentSize().width, texture->getContentSize().height);
+                
+                spriteFrame = SpriteFrame::createWithTexture(texture, bounds);
             }
-            
-            spriteFrame = frameCache->getSpriteFrameByName(spriteFile.c_str());
+            else
+            {
+                spriteSheet = _CCBRootPath + spriteSheet;
+                
+                // Load the sprite sheet only if it is not loaded
+                if (_loadedSpriteSheets.find(spriteSheet) == _loadedSpriteSheets.end())
+                {
+                    frameCache->addSpriteFramesWithFile(spriteSheet.c_str());
+                    _loadedSpriteSheets.insert(spriteSheet);
+                }
+                
+                spriteFrame = frameCache->getSpriteFrameByName(spriteFile.c_str());
+            }
         }
+
         
         keyframe->setObject(spriteFrame);
     }

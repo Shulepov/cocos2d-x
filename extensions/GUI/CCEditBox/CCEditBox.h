@@ -28,7 +28,8 @@
 
 #include "2d/CCIMEDelegate.h"
 #include "extensions/ExtensionMacros.h"
-#include "../CCControlExtension/CCControlExtensions.h"
+#include "../CCControlExtension/CCControlButton.h"
+#include "2d/CCLabel.h"
 
 NS_CC_EXT_BEGIN
 

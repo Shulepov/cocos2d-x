@@ -7,7 +7,7 @@
 #include "2d/CCNode.h"
 #include "base/CCData.h"
 #include "base/CCMap.h"
-#include "CCBSequence.h"
+#include "base/CCValue.h"
 #include "extensions/GUI/CCControlExtension/CCControl.h"
 
 #define CCB_STATIC_NEW_AUTORELEASE_OBJECT_METHOD(T, METHOD) static T * METHOD() { \
@@ -34,6 +34,8 @@
 
 namespace cocosbuilder {
 
+class CCBSequence;
+    
 /**
  * @addtogroup cocosbuilder
  * @{

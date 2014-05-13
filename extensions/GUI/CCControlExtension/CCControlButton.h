@@ -142,6 +142,9 @@ public:
     virtual void setTitleBMFontForState(const std::string& fntFile, State state);
     virtual const std::string& getTitleBMFontForState(State state);
 
+    virtual void setBackgroundColorForState(const Color3B &color, State state);
+    virtual Color3B getBackgroundColorForState(State state);
+    
     /**
      * Returns the background sprite used for a state.
      *
@@ -216,6 +219,7 @@ protected:
 
     /** The current color used to display the title. */
     CC_SYNTHESIZE_READONLY_PASS_BY_REF(Color3B, _currentTitleColor, CurrentTitleColor);
+    CC_SYNTHESIZE_READONLY_PASS_BY_REF(Color3B, _currentBackgroundColor, CurrentBackgroundColor);
 
     /** The current title label. */
     CC_SYNTHESIZE_RETAIN(Node*, _titleLabel, TitleLabel);
@@ -235,6 +239,7 @@ protected:
 
     std::unordered_map<int, std::string> _titleDispatchTable;
     std::unordered_map<int, Color3B> _titleColorDispatchTable;
+    std::unordered_map<int, Color3B> _backgroundColorDispatchTable;
 
     Map<int, Node*> _titleLabelDispatchTable;
     Map<int, Scale9Sprite*> _backgroundSpriteDispatchTable;

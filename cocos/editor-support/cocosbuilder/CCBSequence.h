@@ -4,10 +4,12 @@
 #include <string>
 
 #include "base/CCRef.h"
-#include "CCBSequenceProperty.h"
+
 
 namespace cocosbuilder {
 
+class CCBSequenceProperty;
+    
 class CCBSequence : public cocos2d::Ref
 {
 public:

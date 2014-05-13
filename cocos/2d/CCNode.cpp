@@ -1037,13 +1037,13 @@ void Node::onEnter()
 #endif
     
     _isTransitionFinished = false;
+     _running = true;
     
-    for( const auto &child: _children)
+    auto children = _children;
+    for( const auto &child: children)
         child->onEnter();
     
     this->resume();
-    
-    _running = true;
     
 #if CC_ENABLE_SCRIPT_BINDING
     if (_scriptType == kScriptTypeLua)
@@ -1110,7 +1110,8 @@ void Node::onExit()
     
     _running = false;
     
-    for( const auto &child: _children)
+    auto children = _children;
+    for( const auto &child: children)
         child->onExit();
     
 #if CC_ENABLE_SCRIPT_BINDING
