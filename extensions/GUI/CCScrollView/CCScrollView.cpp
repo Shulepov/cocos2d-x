@@ -38,7 +38,7 @@
 NS_CC_EXT_BEGIN
 
 #define SCROLL_DEACCEL_RATE  0.95f
-#define SCROLL_DEACCEL_DIST  1.0f
+#define SCROLL_DEACCEL_DIST  0.01f
 #define BOUNCE_DURATION      0.15f
 #define INSET_RATIO          0.2f
 #define MOVE_INCH            7.0f/160.0f
@@ -378,14 +378,44 @@ void ScrollView::relocateContainer(bool animated)
 
 Vector2 ScrollView::maxContainerOffset()
 {
-    return Vector2(0.0f, 0.0f);
+    float xOffset = 0.0f;
+    float yOffset = 0.0f;
+    
+    float containerWidth = _container->getContentSize().width * _container->getScaleX();
+    float containerHeight = _container->getContentSize().height * _container->getScaleY();
+    
+    if (_viewSize.width > containerWidth) {
+        xOffset = (_viewSize.width - containerWidth) / 2;
+    }
+    
+    if (_viewSize.height > containerHeight) {
+        yOffset = (_viewSize.height - containerHeight) / 2;
+    }
+    
+    return Vector2(xOffset, yOffset);
 }
 
 Vector2 ScrollView::minContainerOffset()
 {
-    return Vector2(_viewSize.width - _container->getContentSize().width*_container->getScaleX(), 
-               _viewSize.height - _container->getContentSize().height*_container->getScaleY());
+    float xOffset, yOffset;
+    
+    float containerWidth = _container->getContentSize().width * _container->getScaleX();
+    if (_viewSize.width > containerWidth) {
+        xOffset = (_viewSize.width - containerWidth) / 2;
+    } else {
+        xOffset = _viewSize.width - containerWidth;
+    }
+    
+    float containerHeight = _container->getContentSize().height * _container->getScaleY();
+    if (_viewSize.height > containerHeight) {
+        yOffset = (_viewSize.height - containerHeight) / 2;
+    } else {
+        yOffset = _viewSize.height - containerHeight;
+    }
+    
+    return Vector2(xOffset, yOffset);
 }
+
 
 void ScrollView::deaccelerateScrolling(float dt)
 {
@@ -404,28 +434,48 @@ void ScrollView::deaccelerateScrolling(float dt)
     {
         maxInset = _maxInset;
         minInset = _minInset;
+        
+        newX = _container->getPosition().x;
+        newY = _container->getPosition().y;
+        
+        _scrollDistance     = _scrollDistance - Vector2(newX - _container->getPosition().x, newY - _container->getPosition().y);
+        _scrollDistance     = _scrollDistance * SCROLL_DEACCEL_RATE;
+        this->setContentOffset({newX,newY});
+        
+        if (fabsf(_scrollDistance.x) <= SCROLL_DEACCEL_DIST &&
+             fabsf(_scrollDistance.y) <= SCROLL_DEACCEL_DIST)
+        {
+            this->unschedule(schedule_selector(ScrollView::deaccelerateScrolling));
+            this->relocateContainer(true);
+        }
     }
     else
     {
         maxInset = this->maxContainerOffset();
         minInset = this->minContainerOffset();
+        
+        newX     = MIN(_container->getPosition().x, maxInset.x);
+        newX     = MAX(newX, minInset.x);
+        newY     = MIN(_container->getPosition().y, maxInset.y);
+        newY     = MAX(newY, minInset.y);
+        
+        _scrollDistance     = _scrollDistance - Vector2(newX - _container->getPosition().x, newY - _container->getPosition().y);
+        _scrollDistance     = _scrollDistance * SCROLL_DEACCEL_RATE;
+        this->setContentOffset({newX,newY});
+        
+        if ((fabsf(_scrollDistance.x) <= SCROLL_DEACCEL_DIST &&
+             fabsf(_scrollDistance.y) <= SCROLL_DEACCEL_DIST) ||
+            newY > maxInset.y || newY < minInset.y ||
+            newX > maxInset.x || newX < minInset.x)
+        {
+            this->unschedule(schedule_selector(ScrollView::deaccelerateScrolling));
+            this->relocateContainer(true);
+        }
     }
     
-    newX = _container->getPosition().x;
-    newY = _container->getPosition().y;
-    
-    _scrollDistance     = _scrollDistance * SCROLL_DEACCEL_RATE;
-    this->setContentOffset(Vector2(newX,newY));
-    
-    if ((fabsf(_scrollDistance.x) <= SCROLL_DEACCEL_DIST &&
-         fabsf(_scrollDistance.y) <= SCROLL_DEACCEL_DIST) ||
-        newY >= maxInset.y || newY <= minInset.y ||
-        newX >= maxInset.x || newX <= minInset.x)
-    {
-        this->unschedule(schedule_selector(ScrollView::deaccelerateScrolling));
-        this->relocateContainer(true);
-    }
+
 }
+
 
 void ScrollView::stoppedAnimatedScroll(Node * node)
 {
