@@ -135,6 +135,7 @@ public:
      */
     virtual void addTargetWithActionForControlEvents(Ref* target, Handler action, EventType controlEvents);
     virtual void setTouchListener(EventType controlEvent, TouchListener listener) {
+        _touchListeners.erase((int)controlEvent);
         _touchListeners.insert({(int)controlEvent, listener});
     }
     
