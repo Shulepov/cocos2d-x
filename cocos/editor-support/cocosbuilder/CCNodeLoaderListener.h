@@ -3,6 +3,8 @@
 
 
 namespace cocosbuilder {
+    
+    class NodeLoader;
 
 class NodeLoaderListener {
     public:
