@@ -33,6 +33,7 @@ THE SOFTWARE.
 #include <stack>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -559,6 +560,9 @@ bool FileUtils::writeDataToFile(const std::string &filePath, const char *data, s
 
 #endif /* (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC) */
 
+void FileUtils::removeFile(const std::string &filePath) {
+    remove(filePath.c_str());
+}
 
 FileUtils* FileUtils::s_sharedFileUtils = nullptr;
 

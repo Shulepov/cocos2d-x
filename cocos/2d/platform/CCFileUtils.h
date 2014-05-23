@@ -334,6 +334,7 @@ public:
   
     virtual bool writeDataToFile(const std::string &filePath, const char *data, size_t dataLength);
     void renameFile(const std::string &from, const std::string &to);
+    virtual void removeFile(const std::string &filePath);
     
 protected:
     /**
