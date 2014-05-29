@@ -886,7 +886,7 @@ void Node::detachChild(Node *child, ssize_t childIndex, bool doCleanup)
     // set parent nil at the end
     child->setParent(nullptr);
 
-    _children.erase(childIndex);
+    _children.eraseObject(child);
 }
 
 
@@ -1037,7 +1037,7 @@ void Node::onEnter()
 #endif
     
     _isTransitionFinished = false;
-     _running = true;
+    _running = true;
     
     auto children = _children;
     for( const auto &child: children)
