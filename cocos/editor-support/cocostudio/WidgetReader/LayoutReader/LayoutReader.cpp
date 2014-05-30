@@ -73,12 +73,12 @@ namespace cocostudio
         
         float bgcv1 = DICTOOL->getFloatValue_json(options, "vectorX");
         float bgcv2 = DICTOOL->getFloatValue_json(options, "vectorY");
-        panel->setBackGroundColorVector(Vector2(bgcv1, bgcv2));
+        panel->setBackGroundColorVector(Vec2(bgcv1, bgcv2));
         
         int co = DICTOOL->getIntValue_json(options, "bgColorOpacity");
         
         int colorType = DICTOOL->getIntValue_json(options, "colorType");
-        panel->setBackGroundColorType(LayoutBackGroundColorType(colorType));
+        panel->setBackGroundColorType(Layout::BackGroundColorType(colorType));
         panel->setBackGroundColor(Color3B(scr, scg, scb),Color3B(ecr, ecg, ecb));
         panel->setBackGroundColor(Color3B(cr, cg, cb));
         panel->setBackGroundColorOpacity(co);
@@ -86,8 +86,8 @@ namespace cocostudio
         
         const rapidjson::Value& imageFileNameDic = DICTOOL->getSubDictionary_json(options, "backGroundImageData");
         int imageFileNameType = DICTOOL->getIntValue_json(imageFileNameDic, "resourceType");
-        std::string imageFileName = this->getResourcePath(imageFileNameDic, "path", (TextureResType)imageFileNameType);
-        panel->setBackGroundImage(imageFileName, (TextureResType)imageFileNameType);
+        std::string imageFileName = this->getResourcePath(imageFileNameDic, "path", (Widget::TextureResType)imageFileNameType);
+        panel->setBackGroundImage(imageFileName, (Widget::TextureResType)imageFileNameType);
         
         
         if (backGroundScale9Enable)
@@ -98,7 +98,7 @@ namespace cocostudio
             float ch = DICTOOL->getFloatValue_json(options, "capInsetsHeight");
             panel->setBackGroundImageCapInsets(Rect(cx, cy, cw, ch));
         }
-        panel->setLayoutType((LayoutType)DICTOOL->getIntValue_json(options, "layoutType"));
+        panel->setLayoutType((Layout::Type)DICTOOL->getIntValue_json(options, "layoutType"));
         
         int bgimgcr = DICTOOL->getIntValue_json(options, "colorR");
         int bgimgcg = DICTOOL->getIntValue_json(options, "colorG");

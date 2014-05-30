@@ -42,7 +42,8 @@ _fontName("Thonburi"),
 _fontSize(10),
 _onSelectedScaleOffset(0.5),
 _labelRenderer(nullptr),
-_labelRendererAdaptDirty(true)
+_labelRendererAdaptDirty(true),
+_type(Type::SYSTEM)
 {
 }
 
@@ -100,7 +101,7 @@ bool Text::init(const std::string &textContent, const std::string &fontName, int
             ret = false;
             break;
         }
-        this->setText(textContent);
+        this->setString(textContent);
         this->setFontName(fontName);
         this->setFontSize(fontSize);
     } while (0);
@@ -113,52 +114,80 @@ void Text::initRenderer()
     addProtectedChild(_labelRenderer, LABEL_RENDERER_Z, -1);
 }
 
-void Text::setText(const std::string& text)
+    
+void Text::setString(const std::string &text)
 {
     _labelRenderer->setString(text);
     updateContentSizeWithTextureSize(_labelRenderer->getContentSize());
     _labelRendererAdaptDirty = true;
 }
-
-const std::string& Text::getStringValue()
+    
+const std::string& Text::getString() const
 {
     return _labelRenderer->getString();
 }
 
-ssize_t Text::getStringLength()
+ssize_t Text::getStringLength()const
 {
-    return _labelRenderer->getString().size();
+    return _labelRenderer->getStringLength();
 }
 
 void Text::setFontSize(int size)
 {
+    if (_type == Type::SYSTEM) {
+        _labelRenderer->setSystemFontSize(size);
+    }
+    else{
+        TTFConfig config = _labelRenderer->getTTFConfig();
+        config.fontSize = size;
+        _labelRenderer->setTTFConfig(config);
+    }
     _fontSize = size;
-    _labelRenderer->setSystemFontSize(size);
     updateContentSizeWithTextureSize(_labelRenderer->getContentSize());
     _labelRendererAdaptDirty = true;
 }
     
-int Text::getFontSize()
+int Text::getFontSize()const
 {
     return _fontSize;
 }
 
 void Text::setFontName(const std::string& name)
 {
+    if(FileUtils::getInstance()->isFileExist(name))
+    {
+        TTFConfig config = _labelRenderer->getTTFConfig();
+        config.fontFilePath = name;
+        config.fontSize = _fontSize;
+        _labelRenderer->setTTFConfig(config);
+        _type = Type::TTF;
+    }
+    else{
+        _labelRenderer->setSystemFontName(name);
+        _type = Type::SYSTEM;
+    }
     _fontName = name;
+<<<<<<< HEAD
     if (hasEnding(name, "fnt")) {
         _labelRenderer->setBMFontFilePath(name);
     } else {
         _labelRenderer->setSystemFontName(name);
     }
     
+=======
+>>>>>>> v3
     updateContentSizeWithTextureSize(_labelRenderer->getContentSize());
     _labelRendererAdaptDirty = true;
 }
     
-const std::string& Text::getFontName()
+const std::string& Text::getFontName()const
 {
     return _fontName;
+}
+    
+Text::Type Text::getType() const
+{
+    return _type;
 }
 
    
@@ -169,7 +198,7 @@ void Text::setTextAreaSize(const Size &size)
     _labelRendererAdaptDirty = true;
 }
     
-const Size& Text::getTextAreaSize()
+const Size& Text::getTextAreaSize()const
 {
     return _labelRenderer->getDimensions();
 }
@@ -181,7 +210,7 @@ void Text::setTextHorizontalAlignment(TextHAlignment alignment)
     _labelRendererAdaptDirty = true;
 }
     
-TextHAlignment Text::getTextHorizontalAlignment()
+TextHAlignment Text::getTextHorizontalAlignment()const
 {
     return _labelRenderer->getHorizontalAlignment();
 }
@@ -193,7 +222,7 @@ void Text::setTextVerticalAlignment(TextVAlignment alignment)
     _labelRendererAdaptDirty = true;
 }
     
-TextVAlignment Text::getTextVerticalAlignment()
+TextVAlignment Text::getTextVerticalAlignment()const
 {
     return _labelRenderer->getVerticalAlignment();
 }
@@ -203,7 +232,7 @@ void Text::setTouchScaleChangeEnabled(bool enable)
     _touchScaleChangeEnabled = enable;
 }
     
-bool Text::isTouchScaleChangeEnabled()
+bool Text::isTouchScaleChangeEnabled()const
 {
     return _touchScaleChangeEnabled;
 }
@@ -341,7 +370,7 @@ void Text::copySpecialProperties(Widget *widget)
     {
         setFontName(label->_fontName);
         setFontSize(label->_labelRenderer->getSystemFontSize());
-        setText(label->getStringValue());
+        setString(label->getString());
         setTouchScaleChangeEnabled(label->_touchScaleChangeEnabled);
         setTextHorizontalAlignment(label->_labelRenderer->getHorizontalAlignment());
         setTextVerticalAlignment(label->_labelRenderer->getVerticalAlignment());

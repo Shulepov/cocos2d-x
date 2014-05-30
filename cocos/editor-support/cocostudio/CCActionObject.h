@@ -64,7 +64,7 @@ public:
 	void setName(const char* name);
 
 	/**
-	* Sets name for object
+	* Gets name of object
 	*
 	* @return name of object
 	*/
@@ -94,7 +94,7 @@ public:
 	/**
 	* Gets the time interval of frame.
 	*
-	* @return fTime   the time interval of frame
+	* @return the time interval of frame
 	*/
 	float getUnitTime();
 
@@ -108,14 +108,14 @@ public:
 	/**
 	* Gets the current time of frame.
 	*
-	* @return fTime   the current time of frame
+	* @return the current time of frame
 	*/
 	float getCurrentTime();
 
 	/**
 	* Gets the total time of frame.
 	*
-	* @return fTime   the current time of frame
+	* @return the total time of frame
 	*/
 	float getTotalTime();
 
@@ -134,7 +134,7 @@ public:
 	/**
 	* Play the action.
 	*
-	* @ Action Call Back
+	* @param func Action Call Back
 	*/
 	void play(cocos2d::CallFunc* func);
 
@@ -151,14 +151,14 @@ public:
 	/**
 	* Adds a ActionNode to play the action.
 	*
-	* @node    the ActionNode which will play the action
+	* @param node    the ActionNode which will play the action
 	*/
 	void addActionNode(ActionNode* node);
 
 	/**
 	* Removes a ActionNode which play the action.
 	*
-	* @node    the ActionNode which play the action
+	* @param node    the ActionNode which play the action
 	*/
 	void removeActionNode(ActionNode* node);
 

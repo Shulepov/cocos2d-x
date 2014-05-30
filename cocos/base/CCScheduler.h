@@ -33,15 +33,8 @@ THE SOFTWARE.
 #include <set>
 
 #include "base/CCRef.h"
-
-#if CC_ENABLE_SCRIPT_BINDING
 #include "base/CCVector.h"
-#else
-#include <string>
-#include <vector>
-#endif
-
-#include "2d/uthash.h"
+#include "base/uthash.h"
 
 NS_CC_BEGIN
 

@@ -12,6 +12,7 @@ function __G__TRACKBACK__(msg)
     cclog("LUA ERROR: " .. tostring(msg) .. "\n")
     cclog(debug.traceback())
     cclog("----------------------------------------")
+    return msg
 end
 
 local function main()
@@ -204,14 +205,7 @@ local function main()
     end
 
     -- play background music, preload effect
-
-    -- uncomment below for the BlackBerry version
-    local bgMusicPath = nil 
-    if (cc.PLATFORM_OS_IPHONE == targetPlatform) or (cc.PLATFORM_OS_IPAD == targetPlatform) then
-        bgMusicPath = cc.FileUtils:getInstance():fullPathForFilename("res/background.caf")
-    else
-        bgMusicPath = cc.FileUtils:getInstance():fullPathForFilename("res/background.mp3")
-    end
+    local bgMusicPath = cc.FileUtils:getInstance():fullPathForFilename("background.mp3") 
     cc.SimpleAudioEngine:getInstance():playMusic(bgMusicPath, true)
     local effectPath = cc.FileUtils:getInstance():fullPathForFilename("effect1.wav")
     cc.SimpleAudioEngine:getInstance():preloadEffect(effectPath)
@@ -230,4 +224,7 @@ local function main()
 end
 
 
-xpcall(main, __G__TRACKBACK__)
+local status, msg = xpcall(main, __G__TRACKBACK__)
+if not status then
+    error(msg)
+end

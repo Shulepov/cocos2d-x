@@ -15,7 +15,7 @@
 --------------------------------
 -- @function [parent=#Skeleton] onDraw 
 -- @param self
--- @param #cc.math::Matrix matrix
+-- @param #mat4_table mat4
 -- @param #bool bool
         
 --------------------------------

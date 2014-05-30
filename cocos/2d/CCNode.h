@@ -30,14 +30,14 @@
 #define __CCNODE_H__
 
 #include "base/ccMacros.h"
-#include "math/CCAffineTransform.h"
-#include "CCGL.h"
-#include "2d/CCScriptSupport.h"
-#include "2d/CCProtocols.h"
-#include "math/Vector2.h"
-#include "math/Vector3.h"
-#include "math/Matrix.h"
+#include "base/CCEventDispatcher.h"
 #include "base/CCVector.h"
+#include "base/CCScriptSupport.h"
+#include "base/CCProtocols.h"
+#include "math/CCAffineTransform.h"
+#include "math/CCMath.h"
+#include "renderer/ccGLStateCache.h"
+#include "CCGL.h"
 
 NS_CC_BEGIN
 
@@ -54,6 +54,8 @@ class EventDispatcher;
 class Scene;
 class Renderer;
 class Director;
+class GLProgram;
+class GLProgramState;
 #if CC_USE_PHYSICS
 class PhysicsBody;
 #endif
@@ -70,8 +72,6 @@ enum {
     kNodeOnExitTransitionDidStart,
     kNodeOnCleanup
 };
-
-USING_NS_CC_MATH;
 
 bool nodeComparisonLess(Node* n1, Node* n2);
 
@@ -116,7 +116,7 @@ public:
      * Allocates and initializes a node.
      * @return A initialized node which is marked as "autorelease".
      */
-    static Node * create(void);
+    static Node * create();
 
     /**
      * Gets the description string. It makes debugging easier.
@@ -275,37 +275,37 @@ public:
     /**
      * Sets the position (x,y) of the node in its parent's coordinate system.
      *
-     * Usually we use `Vector2(x,y)` to compose Vector2 object.
+     * Usually we use `Vec2(x,y)` to compose Vec2 object.
      * This code snippet sets the node in the center of screen.
      @code
      Size size = Director::getInstance()->getWinSize();
-     node->setPosition( Vector2(size.width/2, size.height/2) )
+     node->setPosition( Vec2(size.width/2, size.height/2) )
      @endcode
      *
      * @param position  The position (x,y) of the node in OpenGL coordinates
      */
-    virtual void setPosition(const Vector2 &position);
+    virtual void setPosition(const Vec2 &position);
     /**
      * Gets the position (x,y) of the node in its parent's coordinate system.
      *
-     * @see setPosition(const Vector2&)
+     * @see setPosition(const Vec2&)
      *
      * @return The position (x,y) of the node in OpenGL coordinates
      * @code
      * In js and lua return value is table which contains x,y
      * @endcode
      */
-    virtual const Vector2& getPosition() const;
+    virtual const Vec2& getPosition() const;
     /**
      * Sets the position (x,y) of the node in its parent's coordinate system.
      *
-     * Passing two numbers (x,y) is much efficient than passing Vector2 object.
+     * Passing two numbers (x,y) is much efficient than passing Vec2 object.
      * This method is bound to Lua and JavaScript.
      * Passing a number is 10 times faster than passing a object from Lua to c++
      *
      @code
      // sample code in Lua
-     local pos  = node::getPosition()  -- returns Vector2 object from C++
+     local pos  = node::getPosition()  -- returns Vec2 object from C++
      node:setPosition(x, y)            -- pass x, y coordinate to C++
      @endcode
      *
@@ -314,7 +314,7 @@ public:
      */
     virtual void setPosition(float x, float y);
     /**
-     * Gets position in a more efficient way, returns two number instead of a Vector2 object
+     * Gets position in a more efficient way, returns two number instead of a Vec2 object
      *
      * @see `setPosition(float, float)`
      * In js,out value not return
@@ -332,11 +332,11 @@ public:
     /**
      * Sets the position (X, Y, and Z) in its parent's coordinate system
      */
-    virtual void setPosition3D(const Vector3& position);
+    virtual void setPosition3D(const Vec3& position);
     /**
      * returns the position (X,Y,Z) in its parent's coordinate system
      */
-    virtual Vector3 getPosition3D() const;
+    virtual Vec3 getPosition3D() const;
 
     /**
      * Sets the 'z' coordinate in the position. It is the OpenGL Z vertex value.
@@ -421,15 +421,15 @@ public:
      *
      * @param anchorPoint   The anchor point of node.
      */
-    virtual void setAnchorPoint(const Vector2& anchorPoint);
+    virtual void setAnchorPoint(const Vec2& anchorPoint);
     /**
      * Returns the anchor point in percent.
      *
-     * @see `setAnchorPoint(const Vector2&)`
+     * @see `setAnchorPoint(const Vec2&)`
      *
      * @return The anchor point of node.
      */
-    virtual const Vector2& getAnchorPoint() const;
+    virtual const Vec2& getAnchorPoint() const;
     /**
      * Returns the anchorPoint in absolute pixels.
      *
@@ -438,7 +438,7 @@ public:
      *
      * @return The anchor point in absolute pixels.
      */
-    virtual const Vector2& getAnchorPointInPoints() const;
+    virtual const Vec2& getAnchorPointInPoints() const;
 
 
     /**
@@ -500,11 +500,11 @@ public:
      * Sets the rotation (X,Y,Z) in degrees.
      * Useful for 3d rotations
      */
-    virtual void setRotation3D(const Vector3& rotation);
+    virtual void setRotation3D(const Vec3& rotation);
     /**
      * returns the rotation (X,Y,Z) in degrees.
      */
-    virtual Vector3 getRotation3D() const;
+    virtual Vec3 getRotation3D() const;
 
     /**
      * Sets the X rotation (angle) of the node in degrees which performs a horizontal rotational skew.
@@ -645,7 +645,7 @@ public:
      *
      * @return a Node object whose tag equals to the input parameter
      */
-    virtual Node * getChildByTag(int tag);
+    virtual Node * getChildByTag(int tag) const;
     /**
      * Returns the array of the node's children
      *
@@ -822,14 +822,17 @@ public:
 
 
     /// @{
-    /// @name Shader Program
+    /// @name GLProgram
     /**
-     * Return the shader program currently used for this node
+     * Return the GLProgram (shader) currently used for this node
      *
-     * @return The shader program currently used for this node
+     * @return The GLProgram (shader) currently used for this node
      */
-    virtual GLProgram* getShaderProgram() { return _shaderProgram; }
-    virtual const GLProgram* getShaderProgram() const { return _shaderProgram; }
+    GLProgram* getGLProgram() const;
+    CC_DEPRECATED_ATTRIBUTE GLProgram* getShaderProgram() const { return getGLProgram(); }
+
+    GLProgramState *getGLProgramState() const;
+    void setGLProgramState(GLProgramState *glProgramState);
 
     /**
      * Sets the shader program for this node
@@ -837,12 +840,13 @@ public:
      * Since v2.0, each rendering node must set its shader program.
      * It should be set in initialize phase.
      @code
-     node->setShaderProgram(ShaderCache::getInstance()->getProgram(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR));
+     node->setGLrProgram(GLProgramCache::getInstance()->getProgram(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR));
      @endcode
      *
      * @param shaderProgram The shader program
      */
-    virtual void setShaderProgram(GLProgram *shaderProgram);
+    void setGLProgram(GLProgram *glprogram);
+    CC_DEPRECATED_ATTRIBUTE void setShaderProgram(GLProgram *glprogram) { setGLProgram(glprogram); }
     /// @} end of Shader Program
 
 
@@ -921,13 +925,13 @@ public:
      * AND YOU SHOULD NOT DISABLE THEM AFTER DRAWING YOUR NODE
      * But if you enable any other GL state, you should disable it after drawing your node.
      */
-    virtual void draw(Renderer *renderer, const Matrix& transform, bool transformUpdated);
+    virtual void draw(Renderer *renderer, const Mat4& transform, bool transformUpdated);
     virtual void draw() final;
 
     /**
      * Visits this node's children and draw them recursively.
      */
-    virtual void visit(Renderer *renderer, const Matrix& parentTransform, bool parentTransformUpdated);
+    virtual void visit(Renderer *renderer, const Mat4& parentTransform, bool parentTransformUpdated);
     virtual void visit() final;
 
 
@@ -1162,12 +1166,12 @@ public:
      * Resumes all scheduled selectors, actions and event listeners.
      * This method is called internally by onEnter
      */
-    CC_DEPRECATED_ATTRIBUTE void resumeSchedulerAndActions(void);
+    CC_DEPRECATED_ATTRIBUTE void resumeSchedulerAndActions();
     /**
      * Pauses all scheduled selectors, actions and event listeners..
      * This method is called internally by onExit
      */
-    CC_DEPRECATED_ATTRIBUTE void pauseSchedulerAndActions(void);
+    CC_DEPRECATED_ATTRIBUTE void pauseSchedulerAndActions();
 
     /*
      * Update method will be called automatically every frame if "scheduleUpdate" is called, and the node is "live"
@@ -1192,13 +1196,13 @@ public:
      * Returns the matrix that transform the node's (local) space coordinates into the parent's space coordinates.
      * The matrix is in Pixels.
      */
-    virtual const Matrix& getNodeToParentTransform() const;
+    virtual const Mat4& getNodeToParentTransform() const;
     virtual AffineTransform getNodeToParentAffineTransform() const;
 
     /** 
      * Sets the Transformation matrix manually.
      */
-    virtual void setNodeToParentTransform(const Matrix& transform);
+    virtual void setNodeToParentTransform(const Mat4& transform);
 
     /** @deprecated use getNodeToParentTransform() instead */
     CC_DEPRECATED_ATTRIBUTE inline virtual AffineTransform nodeToParentTransform() const { return getNodeToParentAffineTransform(); }
@@ -1207,7 +1211,7 @@ public:
      * Returns the matrix that transform parent's space coordinates to the node's (local) space coordinates.
      * The matrix is in Pixels.
      */
-    virtual const Matrix& getParentToNodeTransform() const;
+    virtual const Mat4& getParentToNodeTransform() const;
     virtual AffineTransform getParentToNodeAffineTransform() const;
 
     /** @deprecated Use getParentToNodeTransform() instead */
@@ -1216,7 +1220,7 @@ public:
     /**
      * Returns the world affine transform matrix. The matrix is in Pixels.
      */
-    virtual Matrix getNodeToWorldTransform() const;
+    virtual Mat4 getNodeToWorldTransform() const;
     virtual AffineTransform getNodeToWorldAffineTransform() const;
 
     /** @deprecated Use getNodeToWorldTransform() instead */
@@ -1225,7 +1229,7 @@ public:
     /**
      * Returns the inverse world affine transform matrix. The matrix is in Pixels.
      */
-    virtual Matrix getWorldToNodeTransform() const;
+    virtual Mat4 getWorldToNodeTransform() const;
     virtual AffineTransform getWorldToNodeAffineTransform() const;
 
 
@@ -1239,36 +1243,36 @@ public:
     /// @name Coordinate Converters
 
     /**
-     * Converts a Vector2 to node (local) space coordinates. The result is in Points.
+     * Converts a Vec2 to node (local) space coordinates. The result is in Points.
      */
-    Vector2 convertToNodeSpace(const Vector2& worldPoint) const;
+    Vec2 convertToNodeSpace(const Vec2& worldPoint) const;
 
     /**
-     * Converts a Vector2 to world space coordinates. The result is in Points.
+     * Converts a Vec2 to world space coordinates. The result is in Points.
      */
-    Vector2 convertToWorldSpace(const Vector2& nodePoint) const;
+    Vec2 convertToWorldSpace(const Vec2& nodePoint) const;
 
     /**
-     * Converts a Vector2 to node (local) space coordinates. The result is in Points.
+     * Converts a Vec2 to node (local) space coordinates. The result is in Points.
      * treating the returned/received node point as anchor relative.
      */
-    Vector2 convertToNodeSpaceAR(const Vector2& worldPoint) const;
+    Vec2 convertToNodeSpaceAR(const Vec2& worldPoint) const;
 
     /**
-     * Converts a local Vector2 to world space coordinates.The result is in Points.
+     * Converts a local Vec2 to world space coordinates.The result is in Points.
      * treating the returned/received node point as anchor relative.
      */
-    Vector2 convertToWorldSpaceAR(const Vector2& nodePoint) const;
+    Vec2 convertToWorldSpaceAR(const Vec2& nodePoint) const;
 
     /**
-     * convenience methods which take a Touch instead of Vector2
+     * convenience methods which take a Touch instead of Vec2
      */
-    Vector2 convertTouchToNodeSpace(Touch * touch) const;
+    Vec2 convertTouchToNodeSpace(Touch * touch) const;
 
     /**
      * converts a Touch (world coordinates) into a local coordinate. This method is AR (Anchor Relative).
      */
-    Vector2 convertTouchToNodeSpaceAR(Touch * touch) const;
+    Vec2 convertTouchToNodeSpaceAR(Touch * touch) const;
 
 	/**
      *  Sets an additional transform matrix to the node.
@@ -1278,7 +1282,7 @@ public:
      *  @note The additional transform will be concatenated at the end of getNodeToParentTransform.
      *        It could be used to simulate `parent-child` relationship between two nodes (e.g. one is in BatchNode, another isn't).
      */
-    void setAdditionalTransform(Matrix* additionalTransform);
+    void setAdditionalTransform(Mat4* additionalTransform);
     void setAdditionalTransform(const AffineTransform& additionalTransform);
 
     /// @} end of Coordinate Converters
@@ -1288,17 +1292,17 @@ public:
     /**
      *   gets a component by its name
      */
-    Component* getComponent(const std::string& pName);
+    Component* getComponent(const std::string& name);
 
     /**
      *   adds a component
      */
-    virtual bool addComponent(Component *pComponent);
+    virtual bool addComponent(Component *component);
 
     /**
      *   removes a component by its name
      */
-    virtual bool removeComponent(const std::string& pName);
+    virtual bool removeComponent(const std::string& name);
 
     /**
      *   removes all components
@@ -1310,7 +1314,7 @@ public:
 #if CC_USE_PHYSICS
     /**
      *   set the PhysicsBody that let the sprite effect with physics
-     * @note This method will set anchor point to Vector2::ANCHOR_MIDDLE if body not null, and you cann't change anchor point if node has a physics body.
+     * @note This method will set anchor point to Vec2::ANCHOR_MIDDLE if body not null, and you cann't change anchor point if node has a physics body.
      */
     void setPhysicsBody(PhysicsBody* body);
 
@@ -1329,14 +1333,14 @@ public:
     virtual bool isCascadeOpacityEnabled() const;
     virtual void setCascadeOpacityEnabled(bool cascadeOpacityEnabled);
     
-    virtual const Color3B& getColor(void) const;
+    virtual const Color3B& getColor() const;
     virtual const Color3B& getDisplayedColor() const;
     virtual void setColor(const Color3B& color);
     virtual void updateDisplayedColor(const Color3B& parentColor);
     virtual bool isCascadeColorEnabled() const;
     virtual void setCascadeColorEnabled(bool cascadeColorEnabled);
     
-    virtual void setOpacityModifyRGB(bool bValue) {CC_UNUSED_PARAM(bValue);}
+    virtual void setOpacityModifyRGB(bool value) {CC_UNUSED_PARAM(value);}
     virtual bool isOpacityModifyRGB() const { return false; };
     
 CC_CONSTRUCTOR_ACCESS:
@@ -1357,9 +1361,9 @@ protected:
     void detachChild(Node *child, ssize_t index, bool doCleanup);
 
     /// Convert cocos2d coordinates to UI windows coordinate.
-    Vector2 convertToWindowSpace(const Vector2& nodePoint) const;
+    Vec2 convertToWindowSpace(const Vec2& nodePoint) const;
 
-    Matrix transform(const Matrix &parentTransform);
+    Mat4 transform(const Mat4 &parentTransform);
 
     virtual void updateCascadeOpacity();
     virtual void disableCascadeOpacity();
@@ -1383,25 +1387,25 @@ protected:
     float _scaleY;                  ///< scaling factor on y-axis
     float _scaleZ;                  ///< scaling factor on z-axis
 
-    Vector2 _position;                ///< position of the node
+    Vec2 _position;                ///< position of the node
     float _positionZ;               ///< OpenGL real Z position
 
     float _skewX;                   ///< skew angle on x-axis
     float _skewY;                   ///< skew angle on y-axis
 
-    Vector2 _anchorPointInPoints;     ///< anchor point in points
-    Vector2 _anchorPoint;             ///< anchor point normalized (NOT in points)
+    Vec2 _anchorPointInPoints;     ///< anchor point in points
+    Vec2 _anchorPoint;             ///< anchor point normalized (NOT in points)
 
     Size _contentSize;              ///< untransformed size of the node
 
-    Matrix  _modelViewTransform;    ///< ModelView transform of the Node.
+    Mat4 _modelViewTransform;    ///< ModelView transform of the Node.
 
     // "cache" variables are allowed to be mutable
-    mutable Matrix _transform;      ///< transform
+    mutable Mat4 _transform;      ///< transform
     mutable bool _transformDirty;   ///< transform dirty flag
-    mutable Matrix _inverse;        ///< inverse transform
+    mutable Mat4 _inverse;        ///< inverse transform
     mutable bool _inverseDirty;     ///< inverse transform dirty flag
-    mutable Matrix _additionalTransform; ///< transform
+    mutable Mat4 _additionalTransform; ///< transform
     bool _useAdditionalTransform;   ///< The flag to check whether the additional transform is dirty
     bool _transformUpdated;         ///< Whether or not the Transform object was updated since the last frame
 
@@ -1418,7 +1422,7 @@ protected:
     void *_userData;                ///< A user assingned void pointer, Can be point to any cpp object
     Ref *_userObject;               ///< A user assigned Object
 
-    GLProgram *_shaderProgram;      ///< OpenGL shader
+    GLProgramState *_glProgramState; ///< OpenGL Program State
 
     int _orderOfArrival;            ///< used to preserve sequence while sorting children with the same localZOrder
 
@@ -1433,7 +1437,7 @@ protected:
 
     bool _visible;                  ///< is this node visible
 
-    bool _ignoreAnchorPointForPosition; ///< true if the Anchor Vector2 will be (0,0) when you position the Node, false otherwise.
+    bool _ignoreAnchorPointForPosition; ///< true if the Anchor Vec2 will be (0,0) when you position the Node, false otherwise.
                                           ///< Used by Layer and Scene.
 
     bool _reorderChildDirty;          ///< children order dirty flag

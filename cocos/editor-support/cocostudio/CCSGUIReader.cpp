@@ -222,6 +222,30 @@ Widget* GUIReader::widgetFromJsonFile(const char *fileName)
 }
 
 
+void WidgetPropertiesReader::setAnchorPointForWidget(cocos2d::ui::Widget *widget, const rapidjson::Value &options)
+{
+    bool isAnchorPointXExists = DICTOOL->checkObjectExist_json(options, "anchorPointX");
+    float anchorPointXInFile;
+    if (isAnchorPointXExists) {
+        anchorPointXInFile = DICTOOL->getFloatValue_json(options, "anchorPointX");
+    }else{
+        anchorPointXInFile = widget->getAnchorPoint().x;
+    }
+    
+    bool isAnchorPointYExists = DICTOOL->checkObjectExist_json(options, "anchorPointY");
+    float anchorPointYInFile;
+    if (isAnchorPointYExists) {
+        anchorPointYInFile = DICTOOL->getFloatValue_json(options, "anchorPointY");
+    }
+    else{
+        anchorPointYInFile = widget->getAnchorPoint().y;
+    }
+    
+    if (isAnchorPointXExists || isAnchorPointYExists) {
+        widget->setAnchorPoint(Vec2(anchorPointXInFile, anchorPointYInFile));
+    }
+}
+
 
 Widget* WidgetPropertiesReader0250::createWidget(const rapidjson::Value& data, const char* fullPath, const char* fileName)
 {
@@ -376,7 +400,7 @@ void WidgetPropertiesReader0250::setPropsForWidgetFromJsonDictionary(Widget*widg
     widget->setName(widgetName);
     float x = DICTOOL->getFloatValue_json(options, "x");
     float y = DICTOOL->getFloatValue_json(options, "y");
-    widget->setPosition(Vector2(x,y));
+    widget->setPosition(Vec2(x,y));
     bool sx = DICTOOL->checkObjectExist_json(options, "scaleX");
     if (sx)
     {
@@ -415,11 +439,9 @@ void WidgetPropertiesReader0250::setColorPropsForWidgetFromJsonDictionary(Widget
     int colorG = cg ? DICTOOL->getIntValue_json(options, "colorG") : 255;
     int colorB = cb ? DICTOOL->getIntValue_json(options, "colorB") : 255;
     widget->setColor(Color3B(colorR, colorG, colorB));
-    bool apx = DICTOOL->checkObjectExist_json(options, "anchorPointX");
-    float apxf = apx ? DICTOOL->getFloatValue_json(options, "anchorPointX") : ((widget->getWidgetType() == WidgetTypeWidget) ? 0.5f : 0.0f);
-    bool apy = DICTOOL->checkObjectExist_json(options, "anchorPointY");
-    float apyf = apy ? DICTOOL->getFloatValue_json(options, "anchorPointY") : ((widget->getWidgetType() == WidgetTypeWidget) ? 0.5f : 0.0f);
-    widget->setAnchorPoint(Vector2(apxf, apyf));
+    
+    this->setAnchorPointForWidget(widget, options);
+    
     bool flipX = DICTOOL->getBooleanValue_json(options, "flipX");
     bool flipY = DICTOOL->getBooleanValue_json(options, "flipY");
     widget->setFlippedX(flipX);
@@ -454,7 +476,7 @@ void WidgetPropertiesReader0250::setPropsForButtonFromJsonDictionary(Widget*widg
         
         if (useMergedTexture)
         {
-            button->loadTextures(normalFileName, pressedFileName, disabledFileName,UI_TEX_TYPE_PLIST);
+            button->loadTextures(normalFileName, pressedFileName, disabledFileName,TextureResType::PLIST);
         }
         else
         {
@@ -474,7 +496,7 @@ void WidgetPropertiesReader0250::setPropsForButtonFromJsonDictionary(Widget*widg
     {
         if (useMergedTexture)
         {
-            button->loadTextures(normalFileName, pressedFileName, disabledFileName,UI_TEX_TYPE_PLIST);
+            button->loadTextures(normalFileName, pressedFileName, disabledFileName,TextureResType::PLIST);
         }
         else
         {
@@ -535,7 +557,7 @@ void WidgetPropertiesReader0250::setPropsForCheckBoxFromJsonDictionary(Widget*wi
     
     if (useMergedTexture)
     {
-        checkBox->loadTextures(backGroundFileName, backGroundSelectedFileName, frontCrossFileName,backGroundDisabledFileName,frontCrossDisabledFileName,UI_TEX_TYPE_PLIST);
+        checkBox->loadTextures(backGroundFileName, backGroundSelectedFileName, frontCrossFileName,backGroundDisabledFileName,frontCrossDisabledFileName,TextureResType::PLIST);
     }
     else
     {
@@ -570,7 +592,7 @@ void WidgetPropertiesReader0250::setPropsForImageViewFromJsonDictionary(Widget*w
     {
         if (useMergedTexture)
         {
-            imageView->loadTexture(imageFileName,UI_TEX_TYPE_PLIST);
+            imageView->loadTexture(imageFileName,TextureResType::PLIST);
         }
         else
         {
@@ -597,7 +619,7 @@ void WidgetPropertiesReader0250::setPropsForImageViewFromJsonDictionary(Widget*w
     {
         if (useMergedTexture)
         {
-            imageView->loadTexture(imageFileName,UI_TEX_TYPE_PLIST);
+            imageView->loadTexture(imageFileName,TextureResType::PLIST);
         }
         else
         {
@@ -614,7 +636,7 @@ void WidgetPropertiesReader0250::setPropsForLabelFromJsonDictionary(Widget*widge
     bool touchScaleChangeAble = DICTOOL->getBooleanValue_json(options, "touchScaleEnable");
     label->setTouchScaleChangeEnabled(touchScaleChangeAble);
     const char* text = DICTOOL->getStringValue_json(options, "text");
-    label->setText(text);
+    label->setString(text);
     bool fs = DICTOOL->checkObjectExist_json(options, "fontSize");
     if (fs)
     {
@@ -693,12 +715,12 @@ void WidgetPropertiesReader0250::setPropsForLayoutFromJsonDictionary(Widget*widg
     
     float bgcv1 = DICTOOL->getFloatValue_json(options, "vectorX");
     float bgcv2 = DICTOOL->getFloatValue_json(options, "vectorY");
-    panel->setBackGroundColorVector(Vector2(bgcv1, bgcv2));
+    panel->setBackGroundColorVector(Vec2(bgcv1, bgcv2));
     
     int co = DICTOOL->getIntValue_json(options, "bgColorOpacity");
     
     int colorType = DICTOOL->getIntValue_json(options, "colorType");
-    panel->setBackGroundColorType(LayoutBackGroundColorType(colorType));
+    panel->setBackGroundColorType(Layout::BackGroundColorType(colorType));
     panel->setBackGroundColor(Color3B(scr, scg, scb),Color3B(ecr, ecg, ecb));
     panel->setBackGroundColor(Color3B(cr, cg, cb));
     panel->setBackGroundColorOpacity(co);
@@ -715,7 +737,7 @@ void WidgetPropertiesReader0250::setPropsForLayoutFromJsonDictionary(Widget*widg
         float ch = DICTOOL->getFloatValue_json(options, "capInsetsHeight");
         if (useMergedTexture)
         {
-            panel->setBackGroundImage(imageFileName,UI_TEX_TYPE_PLIST);
+            panel->setBackGroundImage(imageFileName,TextureResType::PLIST);
         }
         else
         {
@@ -728,7 +750,7 @@ void WidgetPropertiesReader0250::setPropsForLayoutFromJsonDictionary(Widget*widg
         
         if (useMergedTexture)
         {
-            panel->setBackGroundImage(imageFileName,UI_TEX_TYPE_PLIST);
+            panel->setBackGroundImage(imageFileName,TextureResType::PLIST);
         }
         else
         {
@@ -746,7 +768,7 @@ void WidgetPropertiesReader0250::setPropsForScrollViewFromJsonDictionary(Widget*
     float innerHeight = DICTOOL->getFloatValue_json(options, "innerHeight");
     scrollView->setInnerContainerSize(Size(innerWidth, innerHeight));
 	int direction = DICTOOL->getFloatValue_json(options, "direction");
-    scrollView->setDirection((SCROLLVIEW_DIR)direction);
+    scrollView->setDirection((ScrollView::Direction)direction);
     scrollView->setBounceEnabled(DICTOOL->getBooleanValue_json(options, "bounceEnable"));
     setColorPropsForWidgetFromJsonDictionary(widget,options);
 }
@@ -770,7 +792,7 @@ void WidgetPropertiesReader0250::setPropsForSliderFromJsonDictionary(Widget*widg
             const char* imageFileName_tp = (imageFileName && (strcmp(imageFileName, "") != 0))?tp_b.append(imageFileName).c_str():nullptr;
             if (useMergedTexture)
             {
-                slider->loadBarTexture(imageFileName,UI_TEX_TYPE_PLIST);
+                slider->loadBarTexture(imageFileName,TextureResType::PLIST);
             }
             else
             {
@@ -785,7 +807,7 @@ void WidgetPropertiesReader0250::setPropsForSliderFromJsonDictionary(Widget*widg
             const char* imageFileName_tp = (imageFileName && (strcmp(imageFileName, "") != 0))?tp_b.append(imageFileName).c_str():nullptr;
             if (useMergedTexture)
             {
-                slider->loadBarTexture(imageFileName,UI_TEX_TYPE_PLIST);
+                slider->loadBarTexture(imageFileName,TextureResType::PLIST);
             }
             else
             {
@@ -806,7 +828,7 @@ void WidgetPropertiesReader0250::setPropsForSliderFromJsonDictionary(Widget*widg
     const char* disabledFileName_tp =  (disabledFileName && (strcmp(disabledFileName, "") != 0))?tp_d.append(disabledFileName).c_str():nullptr;
     if (useMergedTexture)
     {
-        slider->loadSlidBallTextures(normalFileName,pressedFileName,disabledFileName,UI_TEX_TYPE_PLIST);
+        slider->loadSlidBallTextures(normalFileName,pressedFileName,disabledFileName,TextureResType::PLIST);
     }
     else
     {
@@ -819,7 +841,7 @@ void WidgetPropertiesReader0250::setPropsForSliderFromJsonDictionary(Widget*widg
     const char* imageFileName_tp = (imageFileName && (strcmp(imageFileName, "") != 0))?tp_b.append(imageFileName).c_str():nullptr;
     if (useMergedTexture)
     {
-        slider->loadProgressBarTexture(imageFileName, UI_TEX_TYPE_PLIST);
+        slider->loadProgressBarTexture(imageFileName, TextureResType::PLIST);
     }
     else
     {
@@ -888,13 +910,13 @@ void WidgetPropertiesReader0250::setPropsForLoadingBarFromJsonDictionary(Widget 
     const char* imageFileName_tp = (imageFileName && (strcmp(imageFileName, "") != 0))?tp_b.append(imageFileName).c_str():nullptr;
     if (useMergedTexture)
     {
-        loadingBar->loadTexture(imageFileName,UI_TEX_TYPE_PLIST);
+        loadingBar->loadTexture(imageFileName,TextureResType::PLIST);
     }
     else
     {
         loadingBar->loadTexture(imageFileName_tp);
     }
-    loadingBar->setDirection(LoadingBarType(DICTOOL->getIntValue_json(options, "direction")));
+    loadingBar->setDirection(LoadingBar::Direction(DICTOOL->getIntValue_json(options, "direction")));
     loadingBar->setPercent(DICTOOL->getIntValue_json(options, "percent"));
     setColorPropsForWidgetFromJsonDictionary(widget,options);
 }
@@ -914,7 +936,7 @@ void WidgetPropertiesReader0250::setPropsForLabelBMFontFromJsonDictionary(Widget
     labelBMFont->setFntFile(cmf_tp);
     
     const char* text = DICTOOL->getStringValue_json(options, "text");
-    labelBMFont->setText(text);
+    labelBMFont->setString(text);
     
     setColorPropsForWidgetFromJsonDictionary(widget,options);
 }
@@ -1115,11 +1137,11 @@ Widget* WidgetPropertiesReader0300::widgetFromJsonDictionary(const rapidjson::Va
                 {
                     if (!dynamic_cast<Layout*>(widget))
                     {
-                        if (child->getPositionType() == cocos2d::ui::POSITION_PERCENT)
+                        if (child->getPositionType() == ui::Widget::PositionType::PERCENT)
                         {
-                            child->setPositionPercent(Vector2(child->getPositionPercent().x + 0.5f, child->getPositionPercent().y + 0.5f));
+                            child->setPositionPercent(Vec2(child->getPositionPercent().x + widget->getAnchorPoint().x, child->getPositionPercent().y + widget->getAnchorPoint().y));
                         }
-                        child->setPosition(Vector2(child->getPositionX() + widget->getSize().width / 2.0f, child->getPositionY() + widget->getSize().height / 2.0f));
+                        child->setPosition(Vec2(child->getPositionX() + widget->getAnchorPointInPoints().x, child->getPositionY() + widget->getAnchorPointInPoints().y));
                     }
                     widget->addChild(child);
                 }
@@ -1137,11 +1159,11 @@ void WidgetPropertiesReader0300::setPropsForWidgetFromJsonDictionary(Widget*widg
         widget->ignoreContentAdaptWithSize(DICTOOL->getBooleanValue_json(options, "ignoreSize"));
     }
     
-    widget->setSizeType((SizeType)DICTOOL->getIntValue_json(options, "sizeType"));
-    widget->setPositionType((PositionType)DICTOOL->getIntValue_json(options, "positionType"));
+    widget->setSizeType((Widget::SizeType)DICTOOL->getIntValue_json(options, "sizeType"));
+    widget->setPositionType((Widget::PositionType)DICTOOL->getIntValue_json(options, "positionType"));
     
-    widget->setSizePercent(Vector2(DICTOOL->getFloatValue_json(options, "sizePercentX"), DICTOOL->getFloatValue_json(options, "sizePercentY")));
-    widget->setPositionPercent(Vector2(DICTOOL->getFloatValue_json(options, "positionPercentX"), DICTOOL->getFloatValue_json(options, "positionPercentY")));
+    widget->setSizePercent(Vec2(DICTOOL->getFloatValue_json(options, "sizePercentX"), DICTOOL->getFloatValue_json(options, "sizePercentY")));
+    widget->setPositionPercent(Vec2(DICTOOL->getFloatValue_json(options, "positionPercentX"), DICTOOL->getFloatValue_json(options, "positionPercentY")));
     
     float w = DICTOOL->getFloatValue_json(options, "width");
     float h = DICTOOL->getFloatValue_json(options, "height");
@@ -1155,7 +1177,7 @@ void WidgetPropertiesReader0300::setPropsForWidgetFromJsonDictionary(Widget*widg
     widget->setName(widgetName);
     float x = DICTOOL->getFloatValue_json(options, "x");
     float y = DICTOOL->getFloatValue_json(options, "y");
-    widget->setPosition(Vector2(x,y));
+    widget->setPosition(Vec2(x,y));
     bool sx = DICTOOL->checkObjectExist_json(options, "scaleX");
     if (sx)
     {
@@ -1193,7 +1215,7 @@ void WidgetPropertiesReader0300::setPropsForWidgetFromJsonDictionary(Widget*widg
             {
                 parameter = LinearLayoutParameter::create();
 				int gravity = DICTOOL->getIntValue_json(layoutParameterDic, "gravity");
-                ((LinearLayoutParameter*)parameter)->setGravity((LinearGravity)gravity);
+                ((LinearLayoutParameter*)parameter)->setGravity((LinearLayoutParameter::LinearGravity)gravity);
                 break;
             }
             case 2:
@@ -1205,7 +1227,7 @@ void WidgetPropertiesReader0300::setPropsForWidgetFromJsonDictionary(Widget*widg
 				const char* relativeToName = DICTOOL->getStringValue_json(layoutParameterDic, "relativeToName");
                 rParameter->setRelativeToWidgetName(relativeToName);
 				int align = DICTOOL->getIntValue_json(layoutParameterDic, "align");
-                rParameter->setAlign((RelativeAlign)align);
+                rParameter->setAlign((RelativeLayoutParameter::RelativeAlign)align);
                 break;
             }
             default:
@@ -1237,16 +1259,16 @@ void WidgetPropertiesReader0300::setColorPropsForWidgetFromJsonDictionary(Widget
     int colorG = cg ? DICTOOL->getIntValue_json(options, "colorG") : 255;
     int colorB = cb ? DICTOOL->getIntValue_json(options, "colorB") : 255;
     widget->setColor(Color3B(colorR, colorG, colorB));
-    bool apx = DICTOOL->checkObjectExist_json(options, "anchorPointX");
-    float apxf = apx ? DICTOOL->getFloatValue_json(options, "anchorPointX") : ((widget->getWidgetType() == WidgetTypeWidget) ? 0.5f : 0.0f);
-    bool apy = DICTOOL->checkObjectExist_json(options, "anchorPointY");
-    float apyf = apy ? DICTOOL->getFloatValue_json(options, "anchorPointY") : ((widget->getWidgetType() == WidgetTypeWidget) ? 0.5f : 0.0f);
-    widget->setAnchorPoint(Vector2(apxf, apyf));
+   
+    this->setAnchorPointForWidget(widget, options);
+    
     bool flipX = DICTOOL->getBooleanValue_json(options, "flipX");
     bool flipY = DICTOOL->getBooleanValue_json(options, "flipY");
     widget->setFlippedX(flipX);
     widget->setFlippedY(flipY);
 }
+    
+
 
 void WidgetPropertiesReader0300::setPropsForButtonFromJsonDictionary(Widget*widget,const rapidjson::Value& options)
 {
@@ -1270,7 +1292,7 @@ void WidgetPropertiesReader0300::setPropsForButtonFromJsonDictionary(Widget*widg
         case 1:
         {
             const char* normalFileName = DICTOOL->getStringValue_json(normalDic, "path");
-            button->loadTextureNormal(normalFileName,UI_TEX_TYPE_PLIST);
+            button->loadTextureNormal(normalFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1291,7 +1313,7 @@ void WidgetPropertiesReader0300::setPropsForButtonFromJsonDictionary(Widget*widg
         case 1:
         {
             const char* pressedFileName = DICTOOL->getStringValue_json(pressedDic, "path");
-            button->loadTexturePressed(pressedFileName,UI_TEX_TYPE_PLIST);
+            button->loadTexturePressed(pressedFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1312,7 +1334,7 @@ void WidgetPropertiesReader0300::setPropsForButtonFromJsonDictionary(Widget*widg
         case 1:
         {
             const char* disabledFileName = DICTOOL->getStringValue_json(disabledDic, "path");
-            button->loadTextureDisabled(disabledFileName,UI_TEX_TYPE_PLIST);
+            button->loadTextureDisabled(disabledFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1385,7 +1407,7 @@ void WidgetPropertiesReader0300::setPropsForCheckBoxFromJsonDictionary(Widget*wi
         case 1:
         {
             const char* backGroundFileName = DICTOOL->getStringValue_json(backGroundDic, "path");
-            checkBox->loadTextureBackGround(backGroundFileName,UI_TEX_TYPE_PLIST);
+            checkBox->loadTextureBackGround(backGroundFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1407,7 +1429,7 @@ void WidgetPropertiesReader0300::setPropsForCheckBoxFromJsonDictionary(Widget*wi
         case 1:
         {
             const char* backGroundSelectedFileName = DICTOOL->getStringValue_json(backGroundSelectedDic, "path");
-            checkBox->loadTextureBackGroundSelected(backGroundSelectedFileName,UI_TEX_TYPE_PLIST);
+            checkBox->loadTextureBackGroundSelected(backGroundSelectedFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1429,7 +1451,7 @@ void WidgetPropertiesReader0300::setPropsForCheckBoxFromJsonDictionary(Widget*wi
         case 1:
         {
             const char* frontCrossFileName = DICTOOL->getStringValue_json(frontCrossDic, "path");
-            checkBox->loadTextureFrontCross(frontCrossFileName,UI_TEX_TYPE_PLIST);
+            checkBox->loadTextureFrontCross(frontCrossFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1451,7 +1473,7 @@ void WidgetPropertiesReader0300::setPropsForCheckBoxFromJsonDictionary(Widget*wi
         case 1:
         {
             const char* backGroundDisabledFileName = DICTOOL->getStringValue_json(backGroundDisabledDic, "path");
-            checkBox->loadTextureBackGroundDisabled(backGroundDisabledFileName,UI_TEX_TYPE_PLIST);
+            checkBox->loadTextureBackGroundDisabled(backGroundDisabledFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1473,7 +1495,7 @@ void WidgetPropertiesReader0300::setPropsForCheckBoxFromJsonDictionary(Widget*wi
         case 1:
         {
             const char* frontCrossDisabledFileName = DICTOOL->getStringValue_json(options, "path");
-            checkBox->loadTextureFrontCrossDisabled(frontCrossDisabledFileName,UI_TEX_TYPE_PLIST);
+            checkBox->loadTextureFrontCrossDisabled(frontCrossDisabledFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1508,7 +1530,7 @@ void WidgetPropertiesReader0300::setPropsForImageViewFromJsonDictionary(Widget*w
         case 1:
         {
             const char* imageFileName = DICTOOL->getStringValue_json(imageFileNameDic, "path");
-            imageView->loadTexture(imageFileName,UI_TEX_TYPE_PLIST);
+            imageView->loadTexture(imageFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1553,7 +1575,7 @@ void WidgetPropertiesReader0300::setPropsForLabelFromJsonDictionary(Widget*widge
     bool touchScaleChangeAble = DICTOOL->getBooleanValue_json(options, "touchScaleEnable");
     label->setTouchScaleChangeEnabled(touchScaleChangeAble);
     const char* text = DICTOOL->getStringValue_json(options, "text");
-    label->setText(text);
+    label->setString(text);
     bool fs = DICTOOL->checkObjectExist_json(options, "fontSize");
     if (fs)
     {
@@ -1657,12 +1679,12 @@ void WidgetPropertiesReader0300::setPropsForLayoutFromJsonDictionary(Widget*widg
     
     float bgcv1 = DICTOOL->getFloatValue_json(options, "vectorX");
     float bgcv2 = DICTOOL->getFloatValue_json(options, "vectorY");
-    panel->setBackGroundColorVector(Vector2(bgcv1, bgcv2));
+    panel->setBackGroundColorVector(Vec2(bgcv1, bgcv2));
     
     int co = DICTOOL->getIntValue_json(options, "bgColorOpacity");
     
     int colorType = DICTOOL->getIntValue_json(options, "colorType");
-    panel->setBackGroundColorType(LayoutBackGroundColorType(colorType));
+    panel->setBackGroundColorType(Layout::BackGroundColorType(colorType));
     panel->setBackGroundColor(Color3B(scr, scg, scb),Color3B(ecr, ecg, ecb));
     panel->setBackGroundColor(Color3B(cr, cg, cb));
     panel->setBackGroundColorOpacity(co);
@@ -1683,7 +1705,7 @@ void WidgetPropertiesReader0300::setPropsForLayoutFromJsonDictionary(Widget*widg
         case 1:
         {
             const char* imageFileName = DICTOOL->getStringValue_json(imageFileNameDic, "path");
-            panel->setBackGroundImage(imageFileName,UI_TEX_TYPE_PLIST);
+            panel->setBackGroundImage(imageFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1698,7 +1720,7 @@ void WidgetPropertiesReader0300::setPropsForLayoutFromJsonDictionary(Widget*widg
         float ch = DICTOOL->getFloatValue_json(options, "capInsetsHeight");
         panel->setBackGroundImageCapInsets(Rect(cx, cy, cw, ch));
     }
-    panel->setLayoutType((LayoutType)DICTOOL->getIntValue_json(options, "layoutType"));
+    panel->setLayoutType((Layout::Type)DICTOOL->getIntValue_json(options, "layoutType"));
     setColorPropsForWidgetFromJsonDictionary(widget,options);
 }
 
@@ -1710,7 +1732,7 @@ void WidgetPropertiesReader0300::setPropsForScrollViewFromJsonDictionary(Widget*
     float innerHeight = DICTOOL->getFloatValue_json(options, "innerHeight");
     scrollView->setInnerContainerSize(Size(innerWidth, innerHeight));
 	int direction = DICTOOL->getFloatValue_json(options, "direction");
-    scrollView->setDirection((SCROLLVIEW_DIR)direction);
+    scrollView->setDirection((ScrollView::Direction)direction);
     scrollView->setBounceEnabled(DICTOOL->getBooleanValue_json(options, "bounceEnable"));
     setColorPropsForWidgetFromJsonDictionary(widget,options);
 }
@@ -1744,7 +1766,7 @@ void WidgetPropertiesReader0300::setPropsForSliderFromJsonDictionary(Widget*widg
                 case 1:
                 {
                     const char* imageFileName =  DICTOOL->getStringValue_json(imageFileNameDic, "path");
-                    slider->loadBarTexture(imageFileName,UI_TEX_TYPE_PLIST);
+                    slider->loadBarTexture(imageFileName,TextureResType::PLIST);
                     break;
                 }
                 default:
@@ -1770,7 +1792,7 @@ void WidgetPropertiesReader0300::setPropsForSliderFromJsonDictionary(Widget*widg
                 case 1:
                 {
                     const char*imageFileName =  DICTOOL->getStringValue_json(imageFileNameDic, "path");
-                    slider->loadBarTexture(imageFileName,UI_TEX_TYPE_PLIST);
+                    slider->loadBarTexture(imageFileName,TextureResType::PLIST);
                     break;
                 }
                 default:
@@ -1794,7 +1816,7 @@ void WidgetPropertiesReader0300::setPropsForSliderFromJsonDictionary(Widget*widg
         case 1:
         {
             const char* normalFileName = DICTOOL->getStringValue_json(normalDic, "path");
-            slider->loadSlidBallTextureNormal(normalFileName,UI_TEX_TYPE_PLIST);
+            slider->loadSlidBallTextureNormal(normalFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1816,7 +1838,7 @@ void WidgetPropertiesReader0300::setPropsForSliderFromJsonDictionary(Widget*widg
         case 1:
         {
             const char* pressedFileName = DICTOOL->getStringValue_json(pressedDic, "path");
-            slider->loadSlidBallTexturePressed(pressedFileName,UI_TEX_TYPE_PLIST);
+            slider->loadSlidBallTexturePressed(pressedFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1838,7 +1860,7 @@ void WidgetPropertiesReader0300::setPropsForSliderFromJsonDictionary(Widget*widg
         case 1:
         {
             const char* disabledFileName = DICTOOL->getStringValue_json(disabledDic, "path");
-            slider->loadSlidBallTextureDisabled(disabledFileName,UI_TEX_TYPE_PLIST);
+            slider->loadSlidBallTextureDisabled(disabledFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1862,7 +1884,7 @@ void WidgetPropertiesReader0300::setPropsForSliderFromJsonDictionary(Widget*widg
         case 1:
         {
             const char* imageFileName = DICTOOL->getStringValue_json(progressBarDic, "path");
-            slider->loadProgressBarTexture(imageFileName,UI_TEX_TYPE_PLIST);
+            slider->loadProgressBarTexture(imageFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1945,7 +1967,7 @@ void WidgetPropertiesReader0300::setPropsForLoadingBarFromJsonDictionary(Widget 
         case 1:
         {
             const char* imageFileName = DICTOOL->getStringValue_json(imageFileNameDic, "path");
-            loadingBar->loadTexture(imageFileName,UI_TEX_TYPE_PLIST);
+            loadingBar->loadTexture(imageFileName,TextureResType::PLIST);
             break;
         }
         default:
@@ -1971,7 +1993,7 @@ void WidgetPropertiesReader0300::setPropsForLoadingBarFromJsonDictionary(Widget 
     }
     /**/
     
-    loadingBar->setDirection(LoadingBarType(DICTOOL->getIntValue_json(options, "direction")));
+    loadingBar->setDirection(LoadingBar::Direction(DICTOOL->getIntValue_json(options, "direction")));
     loadingBar->setPercent(DICTOOL->getIntValue_json(options, "percent"));
     setColorPropsForWidgetFromJsonDictionary(widget,options);
 }
@@ -2002,7 +2024,7 @@ void WidgetPropertiesReader0300::setPropsForLabelBMFontFromJsonDictionary(Widget
     }
     
     const char* text = DICTOOL->getStringValue_json(options, "text");
-    labelBMFont->setText(text);
+    labelBMFont->setString(text);
     
     setColorPropsForWidgetFromJsonDictionary(widget,options);
 }
@@ -2022,9 +2044,9 @@ void WidgetPropertiesReader0300::setPropsForListViewFromJsonDictionary(Widget* w
     float innerHeight = DICTOOL->getFloatValue_json(options, "innerHeight");
     listView->setInnerContainerSize(Size(innerWidth, innerHeight));
 	int direction = DICTOOL->getFloatValue_json(options, "direction");
-	listView->setDirection((SCROLLVIEW_DIR)direction);
+	listView->setDirection((ScrollView::Direction)direction);
     
-    ListViewGravity gravity = (ListViewGravity)DICTOOL->getIntValue_json(options, "gravity");
+    ListView::Gravity gravity = (ListView::Gravity)DICTOOL->getIntValue_json(options, "gravity");
     listView->setGravity(gravity);
     
     float itemMargin = DICTOOL->getFloatValue_json(options, "itemMargin");

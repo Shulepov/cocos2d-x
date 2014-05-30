@@ -59,8 +59,8 @@
 #include "base/CCPlatformConfig.h"
 #include "base/CCConfiguration.h"
 #include "2d/CCScene.h"
-#include "2d/platform/CCFileUtils.h"
-#include "2d/CCTextureCache.h"
+#include "platform/CCFileUtils.h"
+#include "renderer/CCTextureCache.h"
 #include "CCGLView.h"
 #include "base/base64.h"
 NS_CC_BEGIN
@@ -194,7 +194,7 @@ static const char* inet_ntop(int af, const void* src, char* dst, int cnt)
     memcpy(&(srcaddr.sin_addr), src, sizeof(srcaddr.sin_addr));
 
     srcaddr.sin_family = af;
-    if (WSAAddressToString((struct sockaddr*) &srcaddr, sizeof(struct sockaddr_in), 0, dst, (LPDWORD) &cnt) != 0)
+    if (WSAAddressToStringA((struct sockaddr*) &srcaddr, sizeof(struct sockaddr_in), 0, dst, (LPDWORD) &cnt) != 0)
     {
         return nullptr;
     }

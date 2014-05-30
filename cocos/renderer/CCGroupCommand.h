@@ -26,10 +26,10 @@
 #ifndef _CC_GROUPCOMMAND_H_
 #define _CC_GROUPCOMMAND_H_
 
+#include <unordered_map>
+
 #include "base/CCRef.h"
 #include "CCRenderCommand.h"
-
-#include <unordered_map>
 
 NS_CC_BEGIN
 

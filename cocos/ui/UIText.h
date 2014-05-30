@@ -34,15 +34,21 @@ class Label;
 namespace ui {
 
 /**
-*   @js NA
-*   @lua NA
-*/
+ *  For creating a system font or a TTF font Text
+ *@js 
+ *@lua NA
+ */
 class Text : public Widget
 {
     
     DECLARE_CLASS_GUI_INFO
     
 public:
+    enum class Type
+    {
+        SYSTEM,
+        TTF
+    };
     /**
      * Default constructor
      */
@@ -60,6 +66,9 @@ public:
     
     /**
      *  create a Text object with textContent, fontName and fontSize
+     *  the fontName could be a system font name or a TTF file path.
+     *  Usage:  Text *text = Text::create("Hello", "Arial", 20);  //create a system font UIText
+     *          Text *text = Text::create("Hello", "xxx\xxx.ttf", 20); //create a TTF font UIText
      */
     static Text* create(const std::string& textContent,
                         const std::string& fontName,
@@ -70,44 +79,59 @@ public:
      *
      * @param text  string value.
      */
-    void setText(const std::string& text);
+    CC_DEPRECATED_ATTRIBUTE void setText(const std::string& text){this->setString(text);}
+    void setString(const std::string& text);
 
     /**
      * Gets the string value of label.
      *
-     * @return text  string value.
+     * @return string value.
      */
-    const std::string& getStringValue();
+    CC_DEPRECATED_ATTRIBUTE const std::string& getStringValue(){ return this->getString();}
+    const std::string& getString()const;
 
     /**
-     * Gets the string length of label.
+     * Gets the string length of the label.
+     * Note: This length will be larger than the raw string length,
+     * if you want to get the raw string length, you should call this->getString().size() instead
      *
      * @return  string length.
      */
-    ssize_t getStringLength();
+    ssize_t getStringLength()const;
 
     /**
      * Sets the font size of label.
      *
-     * @param  font size.
+     * @param size font size.
      */
     void setFontSize(int size);
 
-    int getFontSize();
+    int getFontSize()const;
 
     /**
      * Sets the font name of label.
-     *
-     * @param  font name.
+     *  If you are trying to use a system font, you could just pass a font name
+     * If you are trying to use a TTF, you should pass a file path to the TTF file
+     * Usage:  Text *text = Text::create("Hello", "Arial", 20);  //create a system font UIText
+     *         text->setFontName("Marfelt");  // it will change the font  to  system font no matter the previous font type is TTF or system font
+     *         text->setFontName("xxxx/xxx.ttf"); //it will change the font  to TTF font no matter the previous font type is TTF or system font
+     * @param name font name.
      */
     void setFontName(const std::string& name);
 
+<<<<<<< HEAD
     const std::string& getFontName();
    
+=======
+    const std::string& getFontName()const;
+    
+    Type getType() const;
+
+>>>>>>> v3
     /**
      * Sets the touch scale enabled of label.
      *
-     * @param  touch scale enabled of label.
+     * @param enabled touch scale enabled of label.
      */
     void setTouchScaleChangeEnabled(bool enabled);
 
@@ -116,7 +140,7 @@ public:
      *
      * @return  touch scale enabled of label.
      */
-    bool isTouchScaleChangeEnabled();
+    bool isTouchScaleChangeEnabled()const;
 
     //override "getVirtualRendererSize" method of widget.
     virtual const Size& getVirtualRendererSize() const override;
@@ -131,15 +155,15 @@ public:
 
     void setTextAreaSize(const Size &size);
 
-    const Size& getTextAreaSize();
+    const Size& getTextAreaSize()const;
 
     void setTextHorizontalAlignment(TextHAlignment alignment);
 
-    TextHAlignment getTextHorizontalAlignment();
+    TextHAlignment getTextHorizontalAlignment()const;
 
     void setTextVerticalAlignment(TextVAlignment alignment);
 
-    TextVAlignment getTextVerticalAlignment();
+    TextVAlignment getTextVerticalAlignment()const;
     
 CC_CONSTRUCTOR_ACCESS:
     virtual bool init() override;
@@ -171,6 +195,7 @@ protected:
     float _onSelectedScaleOffset;
     Label* _labelRenderer;
     bool _labelRendererAdaptDirty;
+    Type _type;
 };
 
 }

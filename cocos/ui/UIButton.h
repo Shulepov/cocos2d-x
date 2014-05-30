@@ -68,7 +68,7 @@ public:
     static Button* create(const std::string& normalImage,
                           const std::string& selectedImage = "",
                           const std::string& disableImage = "",
-                          TextureResType texType = UI_TEX_TYPE_LOCAL);
+                          TextureResType texType = TextureResType::LOCAL);
     
 
     /**
@@ -85,7 +85,7 @@ public:
     void loadTextures(const std::string& normal,
                       const std::string& selected,
                       const std::string& disabled = "",
-                      TextureResType texType = UI_TEX_TYPE_LOCAL);
+                      TextureResType texType = TextureResType::LOCAL);
 
     /**
      * Load normal state texture for button.
@@ -94,7 +94,7 @@ public:
      *
      * @param texType    @see UI_TEX_TYPE_LOCAL
      */
-    void loadTextureNormal(const std::string& normal, TextureResType texType = UI_TEX_TYPE_LOCAL);
+    void loadTextureNormal(const std::string& normal, TextureResType texType = TextureResType::LOCAL);
 
     /**
      * Load selected state texture for button.
@@ -103,7 +103,7 @@ public:
      *
      * @param texType    @see UI_TEX_TYPE_LOCAL
      */
-    void loadTexturePressed(const std::string& selected, TextureResType texType = UI_TEX_TYPE_LOCAL);
+    void loadTexturePressed(const std::string& selected, TextureResType texType = TextureResType::LOCAL);
 
     /**
      * Load dark state texture for button.
@@ -112,7 +112,7 @@ public:
      *
      * @param texType    @see UI_TEX_TYPE_LOCAL
      */
-    void loadTextureDisabled(const std::string& disabled, TextureResType texType = UI_TEX_TYPE_LOCAL);
+    void loadTextureDisabled(const std::string& disabled, TextureResType texType = TextureResType::LOCAL);
 
     /**
      * Sets capinsets for button, if button is using scale9 renderer.
@@ -128,7 +128,7 @@ public:
      */
     void setCapInsetsNormalRenderer(const Rect &capInsets);
 
-    const Rect& getCapInsetsNormalRenderer();
+    const Rect& getCapInsetsNormalRenderer()const;
 
     /**
      * Sets capinsets for button, if button is using scale9 renderer.
@@ -137,7 +137,7 @@ public:
      */
     void setCapInsetsPressedRenderer(const Rect &capInsets);
 
-    const Rect& getCapInsetsPressedRenderer();
+    const Rect& getCapInsetsPressedRenderer()const;
 
     /**
      * Sets capinsets for button, if button is using scale9 renderer.
@@ -146,7 +146,7 @@ public:
      */
     void setCapInsetsDisabledRenderer(const Rect &capInsets);
 
-    const Rect& getCapInsetsDisabledRenderer();
+    const Rect& getCapInsetsDisabledRenderer()const;
 
     /**
      * Sets if button is using scale9 renderer.
@@ -155,7 +155,7 @@ public:
      */
     virtual void setScale9Enabled(bool able);
 
-    bool isScale9Enabled();
+    bool isScale9Enabled()const;
 
     /**
      * Changes if button can be clicked zoom effect.
@@ -192,7 +192,7 @@ CC_CONSTRUCTOR_ACCESS:
     virtual bool init(const std::string& normalImage,
                       const std::string& selectedImage = "",
                       const std::string& disableImage = "",
-                      TextureResType texType = UI_TEX_TYPE_LOCAL);
+                      TextureResType texType = TextureResType::LOCAL);
 
 
 protected:

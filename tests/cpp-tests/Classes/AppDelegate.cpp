@@ -72,31 +72,34 @@ bool AppDelegate::applicationDidFinishLaunching()
     {
         auto resourceSize = Size(960, 640);
         searchPaths.push_back("hd");
-        searchPaths.push_back("hd/scenetest");
-        searchPaths.push_back("hd/scenetest/ArmatureComponentTest");
-        searchPaths.push_back("hd/scenetest/AttributeComponentTest");
-        searchPaths.push_back("hd/scenetest/BackgroundComponentTest");
-        searchPaths.push_back("hd/scenetest/EffectComponentTest");
-        searchPaths.push_back("hd/scenetest/LoadSceneEdtiorFileTest");
-        searchPaths.push_back("hd/scenetest/ParticleComponentTest");
-        searchPaths.push_back("hd/scenetest/SpriteComponentTest");
-        searchPaths.push_back("hd/scenetest/TmxMapComponentTest");
-        searchPaths.push_back("hd/scenetest/UIComponentTest");
-        searchPaths.push_back("hd/scenetest/TriggerTest");
+        searchPaths.push_back("ccs-res/hd");
+        searchPaths.push_back("ccs-res/hd/scenetest");
+        searchPaths.push_back("ccs-res/hd/scenetest/ArmatureComponentTest");
+        searchPaths.push_back("ccs-res/hd/scenetest/AttributeComponentTest");
+        searchPaths.push_back("ccs-res/hd/scenetest/BackgroundComponentTest");
+        searchPaths.push_back("ccs-res/hd/scenetest/EffectComponentTest");
+        searchPaths.push_back("ccs-res/hd/scenetest/LoadSceneEdtiorFileTest");
+        searchPaths.push_back("ccs-res/hd/scenetest/ParticleComponentTest");
+        searchPaths.push_back("ccs-res/hd/scenetest/SpriteComponentTest");
+        searchPaths.push_back("ccs-res/hd/scenetest/TmxMapComponentTest");
+        searchPaths.push_back("ccs-res/hd/scenetest/UIComponentTest");
+        searchPaths.push_back("ccs-res/hd/scenetest/TriggerTest");
+        searchPaths.push_back("ccs-res");
         director->setContentScaleFactor(resourceSize.height/designSize.height);
     }
     else
     {
-        searchPaths.push_back("scenetest/ArmatureComponentTest");
-        searchPaths.push_back("scenetest/AttributeComponentTest");
-        searchPaths.push_back("scenetest/BackgroundComponentTest");
-        searchPaths.push_back("scenetest/EffectComponentTest");
-        searchPaths.push_back("scenetest/LoadSceneEdtiorFileTest");
-        searchPaths.push_back("scenetest/ParticleComponentTest");
-        searchPaths.push_back("scenetest/SpriteComponentTest");
-        searchPaths.push_back("scenetest/TmxMapComponentTest");
-        searchPaths.push_back("scenetest/UIComponentTest");
-        searchPaths.push_back("scenetest/TriggerTest");
+        searchPaths.push_back("ccs-res");
+        searchPaths.push_back("ccs-res/scenetest/ArmatureComponentTest");
+        searchPaths.push_back("ccs-res/scenetest/AttributeComponentTest");
+        searchPaths.push_back("ccs-res/scenetest/BackgroundComponentTest");
+        searchPaths.push_back("ccs-res/scenetest/EffectComponentTest");
+        searchPaths.push_back("ccs-res/scenetest/LoadSceneEdtiorFileTest");
+        searchPaths.push_back("ccs-res/scenetest/ParticleComponentTest");
+        searchPaths.push_back("ccs-res/scenetest/SpriteComponentTest");
+        searchPaths.push_back("ccs-res/scenetest/TmxMapComponentTest");
+        searchPaths.push_back("ccs-res/scenetest/UIComponentTest");
+        searchPaths.push_back("ccs-res/scenetest/TriggerTest");
     }
     
     fileUtils->setSearchPaths(searchPaths);
@@ -113,9 +116,8 @@ bool AppDelegate::applicationDidFinishLaunching()
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WP8) && (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
     layer->addConsoleAutoTest();
 #endif
-
     layer->autorelease();
-
+    layer->addConsoleAutoTest();
     scene->addChild(layer);
     director->runWithScene(scene);
 
@@ -123,8 +125,14 @@ bool AppDelegate::applicationDidFinishLaunching()
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
     auto console = director->getConsole();
     console->listenOnTCP(5678);
+    Configuration *conf = Configuration::getInstance();
+    bool isAutoRun = conf->getValue("cocos2d.x.testcpp.autorun", Value(false)).asBool();
+    if(isAutoRun)
+    {
+        layer->startAutoRun();
+    }
 #endif
-
+    
     return true;
 }
 

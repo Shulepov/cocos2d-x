@@ -7,7 +7,7 @@
 -- @function [parent=#JumpTo] create 
 -- @param self
 -- @param #float float
--- @param #cc.math::Vector2 array
+-- @param #vec2_table vec2
 -- @param #float float
 -- @param #int int
 -- @return JumpTo#JumpTo ret (return value: cc.JumpTo)

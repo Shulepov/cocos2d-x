@@ -30,6 +30,7 @@
 #include "base/CCEventListenerMouse.h"
 #include "base/CCEventListenerKeyboard.h"
 #include "base/CCEventListenerCustom.h"
+#include "base/CCEventListenerFocus.h"
 
 #include "2d/CCScene.h"
 #include "base/CCDirector.h"
@@ -84,6 +85,9 @@ static EventListener::ListenerID __getListenerID(Event* event)
             break;
         case Event::Type::MOUSE:
             ret = EventListenerMouse::LISTENER_ID;
+            break;
+        case Event::Type::FOCUS:
+            ret = EventListenerFocus::LISTENER_ID;
             break;
         case Event::Type::TOUCH:
             // Touch listener is very special, it contains two kinds of listeners, EventListenerTouchOneByOne and EventListenerTouchAllAtOnce.
@@ -288,6 +292,14 @@ void EventDispatcher::pauseEventListenersForTarget(Node* target, bool recursive/
             l->setPaused(true);
         }
     }
+
+    for (auto& listener : _toAddedListeners)
+    {
+        if (listener->getAssociatedNode() == target)
+        {
+            listener->setPaused(true);
+        }
+    }
     
     if (recursive)
     {
@@ -310,6 +322,15 @@ void EventDispatcher::resumeEventListenersForTarget(Node* target, bool recursive
             l->setPaused(false);
         }
     }
+    
+    for (auto& listener : _toAddedListeners)
+    {
+        if (listener->getAssociatedNode() == target)
+        {
+            listener->setPaused(false);
+        }
+    }
+
     setDirtyForNode(target);
     
     if (recursive)

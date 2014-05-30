@@ -63,6 +63,13 @@
 -- @return ProtectedNode#ProtectedNode ret (return value: cc.ProtectedNode)
         
 --------------------------------
+-- @function [parent=#ProtectedNode] visit 
+-- @param self
+-- @param #cc.Renderer renderer
+-- @param #mat4_table mat4
+-- @param #bool bool
+        
+--------------------------------
 -- @function [parent=#ProtectedNode] updateDisplayedOpacity 
 -- @param self
 -- @param #unsigned char char
@@ -70,7 +77,7 @@
 --------------------------------
 -- @function [parent=#ProtectedNode] updateDisplayedColor 
 -- @param self
--- @param #color3B_table color3b
+-- @param #color3b_table color3b
         
 --------------------------------
 -- @function [parent=#ProtectedNode] cleanup 

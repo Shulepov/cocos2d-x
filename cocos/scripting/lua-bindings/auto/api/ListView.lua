@@ -16,7 +16,7 @@
 --------------------------------
 -- @function [parent=#ListView] setGravity 
 -- @param self
--- @param #ccui.ListViewGravity listviewgravity
+-- @param #ccui.ListView::Gravity gravity
         
 --------------------------------
 -- @function [parent=#ListView] pushBackCustomItem 
@@ -62,6 +62,11 @@
 -- @return float#float ret (return value: float)
         
 --------------------------------
+-- @function [parent=#ListView] addEventListener 
+-- @param self
+-- @param #function func
+        
+--------------------------------
 -- @function [parent=#ListView] getItem 
 -- @param self
 -- @param #long long
@@ -97,9 +102,22 @@
 -- @return Ref#Ref ret (return value: cc.Ref)
         
 --------------------------------
+-- overload function: addChild(cc.Node, int)
+--          
+-- overload function: addChild(cc.Node)
+--          
+-- overload function: addChild(cc.Node, int, int)
+--          
+-- @function [parent=#ListView] addChild
+-- @param self
+-- @param #cc.Node node
+-- @param #int int
+-- @param #int int
+
+--------------------------------
 -- @function [parent=#ListView] setDirection 
 -- @param self
--- @param #ccui.SCROLLVIEW_DIR scrollview_dir
+-- @param #ccui.ScrollView::Direction direction
         
 --------------------------------
 -- @function [parent=#ListView] getDescription 
@@ -107,8 +125,23 @@
 -- @return string#string ret (return value: string)
         
 --------------------------------
+-- @function [parent=#ListView] removeAllChildrenWithCleanup 
+-- @param self
+-- @param #bool bool
+        
+--------------------------------
+-- @function [parent=#ListView] removeAllChildren 
+-- @param self
+        
+--------------------------------
 -- @function [parent=#ListView] sortAllChildren 
 -- @param self
+        
+--------------------------------
+-- @function [parent=#ListView] removeChild 
+-- @param self
+-- @param #cc.Node node
+-- @param #bool bool
         
 --------------------------------
 -- @function [parent=#ListView] ListView 

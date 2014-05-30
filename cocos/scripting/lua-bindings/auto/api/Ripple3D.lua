@@ -26,19 +26,19 @@
 --------------------------------
 -- @function [parent=#Ripple3D] setPosition 
 -- @param self
--- @param #cc.math::Vector2 array
+-- @param #vec2_table vec2
         
 --------------------------------
 -- @function [parent=#Ripple3D] getPosition 
 -- @param self
--- @return math::Vector2#math::Vector2 ret (return value: cc.math::Vector2)
+-- @return vec2_table#vec2_table ret (return value: vec2_table)
         
 --------------------------------
 -- @function [parent=#Ripple3D] create 
 -- @param self
 -- @param #float float
 -- @param #size_table size
--- @param #cc.math::Vector2 array
+-- @param #vec2_table vec2
 -- @param #float float
 -- @param #unsigned int int
 -- @param #float float

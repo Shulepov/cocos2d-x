@@ -77,7 +77,7 @@
 --------------------------------
 -- @function [parent=#LabelTTF] setFontFillColor 
 -- @param self
--- @param #color3B_table color3b
+-- @param #color3b_table color3b
 -- @param #bool bool
         
 --------------------------------
@@ -88,7 +88,7 @@
 --------------------------------
 -- @function [parent=#LabelTTF] enableStroke 
 -- @param self
--- @param #color3B_table color3b
+-- @param #color3b_table color3b
 -- @param #float float
 -- @param #bool bool
         
@@ -176,6 +176,13 @@
 -- @function [parent=#LabelTTF] getContentSize 
 -- @param self
 -- @return size_table#size_table ret (return value: size_table)
+        
+--------------------------------
+-- @function [parent=#LabelTTF] visit 
+-- @param self
+-- @param #cc.Renderer renderer
+-- @param #mat4_table mat4
+-- @param #bool bool
         
 --------------------------------
 -- @function [parent=#LabelTTF] LabelTTF 

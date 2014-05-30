@@ -31,7 +31,7 @@
 --------------------------------
 -- @function [parent=#ControlStepper] updateLayoutUsingTouchLocation 
 -- @param self
--- @param #cc.math::Vector2 array
+-- @param #vec2_table vec2
         
 --------------------------------
 -- @function [parent=#ControlStepper] setValueWithSendingEvent 

@@ -24,10 +24,9 @@
 
 
 #include "renderer/CCBatchCommand.h"
-#include "2d/ccGLStateCache.h"
-#include "2d/CCTextureAtlas.h"
-#include "2d/CCTexture2D.h"
-#include "2d/CCGLProgram.h"
+#include "renderer/ccGLStateCache.h"
+#include "renderer/CCTextureAtlas.h"
+#include "renderer/CCTexture2D.h"
 
 NS_CC_BEGIN
 
@@ -40,7 +39,7 @@ BatchCommand::BatchCommand()
     _shader = nullptr;
 }
 
-void BatchCommand::init(float globalOrder, GLProgram* shader, BlendFunc blendType, TextureAtlas *textureAtlas, const Matrix& modelViewTransform)
+void BatchCommand::init(float globalOrder, GLProgram* shader, BlendFunc blendType, TextureAtlas *textureAtlas, const Mat4& modelViewTransform)
 {
     CCASSERT(shader, "shader cannot be nill");
     CCASSERT(textureAtlas, "textureAtlas cannot be nill");

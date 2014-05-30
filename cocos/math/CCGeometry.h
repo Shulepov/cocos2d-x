@@ -35,17 +35,10 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
-USING_NS_CC_MATH;
-
 /**
  * @addtogroup data_structures
  * @{
  */
-
-// for Vector2 assignement operator and copy constructor
-class CC_DLL Size;
-
-CC_DEPRECATED_ATTRIBUTE typedef Vector2 Point;
 
 class CC_DLL Size
 {
@@ -53,9 +46,9 @@ public:
     float width;
     float height;
 public:
-    operator Vector2() const
+    operator Vec2() const
     {
-        return Vector2(width, height);
+        return Vec2(width, height);
     }
 
 public:
@@ -76,7 +69,7 @@ public:
      * @js NA
      * @lua NA
      */
-    explicit Size(const Vector2& point);
+    explicit Size(const Vec2& point);
     /**
      * @js NA
      * @lua NA
@@ -86,7 +79,7 @@ public:
      * @js NA
      * @lua NA
      */
-    Size& operator= (const Vector2& point);
+    Size& operator= (const Vec2& point);
     /**
      * @js NA
      * @lua NA
@@ -123,7 +116,7 @@ public:
 class CC_DLL Rect
 {
 public:
-    Vector2 origin;
+    Vec2 origin;
     Size  size;
 
 public:
@@ -181,7 +174,7 @@ public:
     /**
      * @js NA
      */
-    bool containsPoint(const Vector2& point) const;
+    bool containsPoint(const Vec2& point) const;
     /**
      * @js NA
      */

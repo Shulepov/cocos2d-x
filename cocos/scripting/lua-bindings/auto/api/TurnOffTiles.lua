@@ -6,12 +6,12 @@
 --------------------------------
 -- @function [parent=#TurnOffTiles] turnOnTile 
 -- @param self
--- @param #cc.math::Vector2 array
+-- @param #vec2_table vec2
         
 --------------------------------
 -- @function [parent=#TurnOffTiles] turnOffTile 
 -- @param self
--- @param #cc.math::Vector2 array
+-- @param #vec2_table vec2
         
 --------------------------------
 -- @function [parent=#TurnOffTiles] shuffle 

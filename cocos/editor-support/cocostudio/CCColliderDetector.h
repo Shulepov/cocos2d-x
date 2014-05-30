@@ -25,10 +25,8 @@ THE SOFTWARE.
 #ifndef __CCCOLLIDERDETECTOR_H__
 #define __CCCOLLIDERDETECTOR_H__
 
-#include "base/CCRef.h"
-#include "base/CCVector.h"
-#include "math/CCMath.h"
 #include "cocostudio/CCArmatureDefine.h"
+#include "cocostudio/CCDatas.h"
 
 #ifndef PT_RATIO
 #define PT_RATIO 32
@@ -44,10 +42,7 @@ THE SOFTWARE.
 
 namespace cocostudio {
 
-USING_NS_CC_MATH;
-
 class Bone;
-class ContourData;
 
 /**
  *  @js NA
@@ -110,7 +105,7 @@ public:
     virtual void setShape(cpShape *shape) { _shape = shape; }
     virtual cpShape *getShape() const { return _shape; }
 #elif ENABLE_PHYSICS_SAVE_CALCULATED_VERTEX
-    virtual const std::vector<Vector2> &getCalculatedVertexList() const { return _calculatedVertexList; }
+    virtual const std::vector<cocos2d::Vec2> &getCalculatedVertexList() const { return _calculatedVertexList; }
 #endif
 
 private:
@@ -122,7 +117,7 @@ private:
     cpShape *_shape;
     ColliderFilter *_filter;
 #elif ENABLE_PHYSICS_SAVE_CALCULATED_VERTEX
-    std::vector<Vector2> _calculatedVertexList;
+    std::vector<cocos2d::Vec2> _calculatedVertexList;
 #endif
 
     ContourData *_contourData;
@@ -160,7 +155,7 @@ public:
     void removeContourData(ContourData *contourData);
     void removeAll();
 
-    void updateTransform(Matrix &t);
+    void updateTransform(cocos2d::Mat4 &t);
 
     void setActive(bool active);
     bool getActive();

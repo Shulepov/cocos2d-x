@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "UIHelper.h"
-#include "UIWidget.h"
+#include "ui/UIHelper.h"
+#include "ui/UIWidget.h"
 
 NS_CC_BEGIN
 
@@ -56,13 +56,13 @@ Widget* Helper::seekWidgetByTag(Widget* root, int tag)
     return nullptr;
 }
 
-Widget* Helper::seekWidgetByName(Widget* root, const char *name)
+Widget* Helper::seekWidgetByName(Widget* root, const std::string& name)
 {
     if (!root)
     {
         return nullptr;
     }
-    if (strcmp(root->getName(), name) == 0)
+    if (root->getName() == name)
     {
         return root;
     }

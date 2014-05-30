@@ -26,7 +26,7 @@
 -- @function [parent=#TransitionFadeTR] draw 
 -- @param self
 -- @param #cc.Renderer renderer
--- @param #cc.math::Matrix matrix
+-- @param #mat4_table mat4
 -- @param #bool bool
         
 return nil

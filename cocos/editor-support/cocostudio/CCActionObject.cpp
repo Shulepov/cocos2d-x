@@ -53,6 +53,7 @@ ActionObject::~ActionObject()
 {
 	_actionNodeList.clear();
 	CC_SAFE_RELEASE(_pScheduler);
+	CC_SAFE_RELEASE(_CallBack);
 }
 
 void ActionObject::setName(const char* name)
@@ -124,7 +125,7 @@ void ActionObject::initWithDictionary(const rapidjson::Value& dic, Ref* root)
 		if(length > maxLength)
 			maxLength = length;
 	}
-	_fTotalTime = maxLength*_fTotalTime;
+	_fTotalTime = maxLength*_fUnitTime;
 }
 
 void ActionObject::addActionNode(ActionNode* node)
@@ -167,6 +168,7 @@ void ActionObject::play(CallFunc* func)
 {
 	this->play();
 	this->_CallBack = func;
+	CC_SAFE_RETAIN(_CallBack);
 }
 void ActionObject::pause()
 {
@@ -214,6 +216,10 @@ void ActionObject::simulationActionUpdate(float dt)
 		if (_loop)
 		{
 			this->play();
+		}
+		else
+		{
+			_pScheduler->unschedule(schedule_selector(ActionObject::simulationActionUpdate), this);
 		}
 	}
 }

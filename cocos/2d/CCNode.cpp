@@ -30,28 +30,28 @@ THE SOFTWARE.
 
 #include <algorithm>
 
-#include "deprecated/CCString.h"
-#include "math/TransformUtils.h"
-#include "2d/CCGrid.h"
 #include "base/CCDirector.h"
 #include "base/CCScheduler.h"
 #include "base/CCTouch.h"
-#include "2d/CCActionManager.h"
-#include "2d/CCScriptSupport.h"
-#include "2d/CCGLProgram.h"
 #include "base/CCEventDispatcher.h"
 #include "base/CCEvent.h"
 #include "base/CCEventTouch.h"
+#include "base/ccCArray.h"
+#include "2d/CCGrid.h"
+#include "2d/CCActionManager.h"
+#include "base/CCScriptSupport.h"
 #include "2d/CCScene.h"
+#include "2d/CCComponent.h"
+#include "2d/CCComponentContainer.h"
+#include "renderer/CCGLProgram.h"
+#include "renderer/CCGLProgramState.h"
+#include "math/TransformUtils.h"
+
+#include "deprecated/CCString.h"
 
 #if CC_USE_PHYSICS
 #include "physics/CCPhysicsBody.h"
 #endif
-
-// externals
-#include "2d/CCComponent.h"
-#include "2d/CCComponentContainer.h"
-
 
 
 #if CC_NODE_RENDER_SUBPIXEL
@@ -81,11 +81,11 @@ Node::Node(void)
 , _scaleY(1.0f)
 , _scaleZ(1.0f)
 , _positionZ(0.0f)
-, _position(Vector2::ZERO)
+, _position(Vec2::ZERO)
 , _skewX(0.0f)
 , _skewY(0.0f)
-, _anchorPointInPoints(Vector2::ZERO)
-, _anchorPoint(Vector2::ZERO)
+, _anchorPointInPoints(Vec2::ZERO)
+, _anchorPoint(Vec2::ZERO)
 , _contentSize(Size::ZERO)
 , _useAdditionalTransform(false)
 , _transformDirty(true)
@@ -101,7 +101,7 @@ Node::Node(void)
 // userData is always inited as nil
 , _userData(nullptr)
 , _userObject(nullptr)
-, _shaderProgram(nullptr)
+, _glProgramState(nullptr)
 , _orderOfArrival(0)
 , _running(false)
 , _visible(true)
@@ -136,7 +136,7 @@ Node::Node(void)
     ScriptEngineProtocol* engine = ScriptEngineManager::getInstance()->getScriptEngine();
     _scriptType = engine != nullptr ? engine->getScriptType() : kScriptTypeNone;
 #endif
-    _transform = _inverse = _additionalTransform = Matrix::identity();
+    _transform = _inverse = _additionalTransform = Mat4::IDENTITY;
 }
 
 Node::~Node()
@@ -155,7 +155,7 @@ Node::~Node()
     CC_SAFE_RELEASE_NULL(_userObject);
     
     // attributes
-    CC_SAFE_RELEASE_NULL(_shaderProgram);
+    CC_SAFE_RELEASE_NULL(_glProgramState);
 
     for (auto& child : _children)
     {
@@ -284,7 +284,7 @@ float Node::getRotationSkewX() const
     return _rotationZ_X;
 }
 
-void Node::setRotation3D(const Vector3& rotation)
+void Node::setRotation3D(const Vec3& rotation)
 {
     if (_rotationX == rotation.x &&
         _rotationY == rotation.y &&
@@ -309,12 +309,12 @@ void Node::setRotation3D(const Vector3& rotation)
 #endif
 }
 
-Vector3 Node::getRotation3D() const
+Vec3 Node::getRotation3D() const
 {
     // rotation Z is decomposed in 2 to simulate Skew for Flash animations
     CCASSERT(_rotationZ_X == _rotationZ_Y, "_rotationZ_X != _rotationZ_Y");
 
-    return Vector3(_rotationX,_rotationY,_rotationZ_X);
+    return Vec3(_rotationX,_rotationY,_rotationZ_X);
 }
 
 void Node::setRotationSkewX(float rotationX)
@@ -425,13 +425,13 @@ void Node::setScaleY(float scaleY)
 
 
 /// position getter
-const Vector2& Node::getPosition() const
+const Vec2& Node::getPosition() const
 {
     return _position;
 }
 
 /// position setter
-void Node::setPosition(const Vector2& position)
+void Node::setPosition(const Vec2& position)
 {
     if (_position.equals(position))
         return;
@@ -457,18 +457,18 @@ void Node::getPosition(float* x, float* y) const
 
 void Node::setPosition(float x, float y)
 {
-    setPosition(Vector2(x, y));
+    setPosition(Vec2(x, y));
 }
 
-void Node::setPosition3D(const Vector3& position)
+void Node::setPosition3D(const Vec3& position)
 {
     _positionZ = position.z;
-    setPosition(Vector2(position.x, position.y));
+    setPosition(Vec2(position.x, position.y));
 }
 
-Vector3 Node::getPosition3D() const
+Vec3 Node::getPosition3D() const
 {
-    Vector3 ret;
+    Vec3 ret;
     ret.x = _position.x;
     ret.y = _position.y;
     ret.z = _positionZ;
@@ -482,7 +482,7 @@ float Node::getPositionX() const
 
 void Node::setPositionX(float x)
 {
-    setPosition(Vector2(x, _position.y));
+    setPosition(Vec2(x, _position.y));
 }
 
 float Node::getPositionY() const
@@ -492,7 +492,7 @@ float Node::getPositionY() const
 
 void Node::setPositionY(float y)
 {
-    setPosition(Vector2(_position.x, y));
+    setPosition(Vec2(_position.x, y));
 }
 
 float Node::getPositionZ() const
@@ -527,31 +527,31 @@ bool Node::isVisible() const
 }
 
 /// isVisible setter
-void Node::setVisible(bool var)
+void Node::setVisible(bool visible)
 {
-    if(var != _visible)
+    if(visible != _visible)
     {
-        _visible = var;
+        _visible = visible;
         if(_visible) _transformUpdated = _transformDirty = _inverseDirty = true;
         _director->setRequireRedraw();
     }
 }
 
-const Vector2& Node::getAnchorPointInPoints() const
+const Vec2& Node::getAnchorPointInPoints() const
 {
     return _anchorPointInPoints;
 }
 
 /// anchorPoint getter
-const Vector2& Node::getAnchorPoint() const
+const Vec2& Node::getAnchorPoint() const
 {
     return _anchorPoint;
 }
 
-void Node::setAnchorPoint(const Vector2& point)
+void Node::setAnchorPoint(const Vec2& point)
 {
 #if CC_USE_PHYSICS
-    if (_physicsBody != nullptr && !point.equals(Vector2::ANCHOR_MIDDLE))
+    if (_physicsBody != nullptr && !point.equals(Vec2::ANCHOR_MIDDLE))
     {
         CCLOG("Node warning: This node has a physics body, the anchor must be in the middle, you cann't change this to other value.");
         return;
@@ -561,7 +561,7 @@ void Node::setAnchorPoint(const Vector2& point)
     if( ! point.equals(_anchorPoint))
     {
         _anchorPoint = point;
-        _anchorPointInPoints = Vector2(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y );
+        _anchorPointInPoints = Vec2(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y );
         _transformUpdated = _transformDirty = _inverseDirty = true;
         _director->setRequireRedraw();
     }
@@ -579,7 +579,7 @@ void Node::setContentSize(const Size & size)
     {
         _contentSize = size;
 
-        _anchorPointInPoints = Vector2(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y );
+        _anchorPointInPoints = Vec2(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y );
         _transformUpdated = _transformDirty = _inverseDirty = true;
         _director->setRequireRedraw();
     }
@@ -592,9 +592,9 @@ bool Node::isRunning() const
 }
 
 /// parent setter
-void Node::setParent(Node * var)
+void Node::setParent(Node * parent)
 {
-    _parent = var;
+    _parent = parent;
 }
 
 /// isRelativeAnchorPoint getter
@@ -620,15 +620,15 @@ int Node::getTag() const
 }
 
 /// tag setter
-void Node::setTag(int var)
+void Node::setTag(int tag)
 {
-    _tag = var;
+    _tag = tag ;
 }
 
 /// userData setter
-void Node::setUserData(void *var)
+void Node::setUserData(void *userData)
 {
-    _userData = var;
+    _userData = userData;
 }
 
 int Node::getOrderOfArrival() const
@@ -642,19 +642,41 @@ void Node::setOrderOfArrival(int orderOfArrival)
     _orderOfArrival = orderOfArrival;
 }
 
-void Node::setUserObject(Ref *pUserObject)
+void Node::setUserObject(Ref *userObject)
 {
-    CC_SAFE_RETAIN(pUserObject);
+    CC_SAFE_RETAIN(userObject);
     CC_SAFE_RELEASE(_userObject);
-    _userObject = pUserObject;
+    _userObject = userObject;
 }
 
-void Node::setShaderProgram(GLProgram *pShaderProgram)
+GLProgramState* Node::getGLProgramState() const
 {
-    CC_SAFE_RETAIN(pShaderProgram);
-    CC_SAFE_RELEASE(_shaderProgram);
-    _shaderProgram = pShaderProgram;
-    _director->setRequireRedraw();
+    return _glProgramState;
+}
+
+void Node::setGLProgramState(cocos2d::GLProgramState *glProgramState)
+{
+    if(glProgramState != _glProgramState) {
+        CC_SAFE_RELEASE(_glProgramState);
+        _glProgramState = glProgramState;
+        CC_SAFE_RETAIN(_glProgramState);
+    }
+}
+
+void Node::setGLProgram(GLProgram *glProgram)
+{
+    if (_glProgramState == nullptr || (_glProgramState && _glProgramState->getGLProgram() != glProgram))
+    {
+        CC_SAFE_RELEASE(_glProgramState);
+        _glProgramState = GLProgramState::getOrCreateWithGLProgram(glProgram);
+        _glProgramState->retain();
+    }
+	_director->setRequireRedraw();
+}
+
+GLProgram * Node::getGLProgram() const
+{
+    return _glProgramState ? _glProgramState->getGLProgram() : nullptr;
 }
 
 Scene* Node::getScene()
@@ -671,7 +693,7 @@ Rect Node::getBoundingBox() const
     return RectApplyAffineTransform(rect, getNodeToParentAffineTransform());
 }
 
-Node * Node::create(void)
+Node * Node::create()
 {
 	Node * ret = new Node();
     if (ret && ret->init())
@@ -713,12 +735,12 @@ std::string Node::getDescription() const
 }
 
 // lazy allocs
-void Node::childrenAlloc(void)
+void Node::childrenAlloc()
 {
     _children.reserve(4);
 }
 
-Node* Node::getChildByTag(int tag)
+Node* Node::getChildByTag(int tag) const
 {
     CCASSERT( tag != Node::INVALID_TAG, "Invalid tag");
 
@@ -918,6 +940,7 @@ void Node::detachChild(Node *child, ssize_t childIndex, bool doCleanup)
 // helper used by reorderChild & add
 void Node::insertChild(Node* child, int z)
 {
+    _transformUpdated = true;
     _reorderChildDirty = true;
     _children.pushBack(child);
     child->_setLocalZOrder(z);
@@ -947,18 +970,18 @@ void Node::draw()
     draw(renderer, _modelViewTransform, true);
 }
 
-void Node::draw(Renderer* renderer, const Matrix &transform, bool transformUpdated)
+void Node::draw(Renderer* renderer, const Mat4 &transform, bool transformUpdated)
 {
 }
 
 void Node::visit()
 {
     auto renderer = Director::getInstance()->getRenderer();
-    Matrix parentTransform = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+    Mat4 parentTransform = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     visit(renderer, parentTransform, true);
 }
 
-void Node::visit(Renderer* renderer, const Matrix &parentTransform, bool parentTransformUpdated)
+void Node::visit(Renderer* renderer, const Mat4 &parentTransform, bool parentTransformUpdated)
 {
     // quick return if not visible. children won't be drawn.
     if (!_visible)
@@ -973,7 +996,7 @@ void Node::visit(Renderer* renderer, const Matrix &parentTransform, bool parentT
 
 
     // IMPORTANT:
-    // To ease the migration to v3.0, we still support the Matrix stack,
+    // To ease the migration to v3.0, we still support the Mat4 stack,
     // but it is deprecated and your code should not rely on it
     Director* director = Director::getInstance();
     CCASSERT(nullptr != director, "Director is null when seting matrix stack");
@@ -1012,9 +1035,9 @@ void Node::visit(Renderer* renderer, const Matrix &parentTransform, bool parentT
     director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }
 
-Matrix Node::transform(const Matrix& parentTransform)
+Mat4 Node::transform(const Mat4& parentTransform)
 {
-    Matrix ret = this->getNodeToParentTransform();
+    Mat4 ret = this->getNodeToParentTransform();
     ret  = parentTransform * ret;
     return ret;
 }
@@ -1343,7 +1366,7 @@ AffineTransform Node::getNodeToParentAffineTransform() const
     return ret;
 }
 
-const Matrix& Node::getNodeToParentTransform() const
+const Mat4& Node::getNodeToParentTransform() const
 {
     if (_transformDirty)
     {
@@ -1378,7 +1401,7 @@ const Matrix& Node::getNodeToParentTransform() const
         // optimization:
         // inline anchor point calculation if skew is not needed
         // Adjusted transform calculation for rotational skew
-        if (! needsSkewMatrix && !_anchorPointInPoints.equals(Vector2::ZERO))
+        if (! needsSkewMatrix && !_anchorPointInPoints.equals(Vec2::ZERO))
         {
             x += cy * -_anchorPointInPoints.x * _scaleX + -sx * -_anchorPointInPoints.y * _scaleY;
             y += sy * -_anchorPointInPoints.x * _scaleX +  cx * -_anchorPointInPoints.y * _scaleY;
@@ -1399,13 +1422,13 @@ const Matrix& Node::getNodeToParentTransform() const
         // FIX ME: Expensive operation.
         // FIX ME: It should be done together with the rotationZ
         if(_rotationY) {
-            Matrix rotY;
-            Matrix::createRotationY(CC_DEGREES_TO_RADIANS(_rotationY), &rotY);
+            Mat4 rotY;
+            Mat4::createRotationY(CC_DEGREES_TO_RADIANS(_rotationY), &rotY);
             _transform = _transform * rotY;
         }
         if(_rotationX) {
-            Matrix rotX;
-            Matrix::createRotationX(CC_DEGREES_TO_RADIANS(_rotationX), &rotX);
+            Mat4 rotX;
+            Mat4::createRotationX(CC_DEGREES_TO_RADIANS(_rotationX), &rotX);
             _transform = _transform * rotX;
         }
 
@@ -1413,7 +1436,7 @@ const Matrix& Node::getNodeToParentTransform() const
         // If skew is needed, apply skew and then anchor point
         if (needsSkewMatrix)
         {
-            Matrix skewMatrix(1, (float)tanf(CC_DEGREES_TO_RADIANS(_skewY)), 0, 0,
+            Mat4 skewMatrix(1, (float)tanf(CC_DEGREES_TO_RADIANS(_skewY)), 0, 0,
                               (float)tanf(CC_DEGREES_TO_RADIANS(_skewX)), 1, 0, 0,
                               0,  0,  1, 0,
                               0,  0,  0, 1);
@@ -1421,9 +1444,9 @@ const Matrix& Node::getNodeToParentTransform() const
             _transform = _transform * skewMatrix;
 
             // adjust anchor point
-            if (!_anchorPointInPoints.equals(Vector2::ZERO))
+            if (!_anchorPointInPoints.equals(Vec2::ZERO))
             {
-                // XXX: Argh, Matrix needs a "translate" method.
+                // XXX: Argh, Mat4 needs a "translate" method.
                 // XXX: Although this is faster than multiplying a vec4 * mat4
                 _transform.m[12] += _transform.m[0] * -_anchorPointInPoints.x + _transform.m[4] * -_anchorPointInPoints.y;
                 _transform.m[13] += _transform.m[1] * -_anchorPointInPoints.x + _transform.m[5] * -_anchorPointInPoints.y;
@@ -1441,7 +1464,7 @@ const Matrix& Node::getNodeToParentTransform() const
     return _transform;
 }
 
-void Node::setNodeToParentTransform(const Matrix& transform)
+void Node::setNodeToParentTransform(const Mat4& transform)
 {
     _transform = transform;
     _transformDirty = false;
@@ -1450,12 +1473,12 @@ void Node::setNodeToParentTransform(const Matrix& transform)
 
 void Node::setAdditionalTransform(const AffineTransform& additionalTransform)
 {
-    Matrix tmp;
+    Mat4 tmp;
     CGAffineToGL(additionalTransform, tmp.m);
     setAdditionalTransform(&tmp);
 }
 
-void Node::setAdditionalTransform(Matrix* additionalTransform)
+void Node::setAdditionalTransform(Mat4* additionalTransform)
 {
     if(additionalTransform == nullptr) {
         _useAdditionalTransform = false;
@@ -1470,13 +1493,13 @@ void Node::setAdditionalTransform(Matrix* additionalTransform)
 AffineTransform Node::getParentToNodeAffineTransform() const
 {
     AffineTransform ret;
-    Matrix ret4 = getParentToNodeTransform();
+    Mat4 ret4 = getParentToNodeTransform();
 
     GLToCGAffine(ret4.m,&ret);
     return ret;
 }
 
-const Matrix& Node::getParentToNodeTransform() const
+const Mat4& Node::getParentToNodeTransform() const
 {
     if ( _inverseDirty ) {
         _inverse = _transform.getInversed();
@@ -1497,9 +1520,9 @@ AffineTransform Node::getNodeToWorldAffineTransform() const
     return t;
 }
 
-Matrix Node::getNodeToWorldTransform() const
+Mat4 Node::getNodeToWorldTransform() const
 {
-    Matrix t = this->getNodeToParentTransform();
+    Mat4 t = this->getNodeToParentTransform();
 
     for (Node *p = _parent; p != nullptr; p = p->getParent())
     {
@@ -1514,59 +1537,59 @@ AffineTransform Node::getWorldToNodeAffineTransform() const
     return AffineTransformInvert(this->getNodeToWorldAffineTransform());
 }
 
-Matrix Node::getWorldToNodeTransform() const
+Mat4 Node::getWorldToNodeTransform() const
 {
     return getNodeToWorldTransform().getInversed();
 }
 
 
-Vector2 Node::convertToNodeSpace(const Vector2& worldPoint) const
+Vec2 Node::convertToNodeSpace(const Vec2& worldPoint) const
 {
-    Matrix tmp = getWorldToNodeTransform();
-    Vector3 vec3(worldPoint.x, worldPoint.y, 0);
-    Vector3 ret;
+    Mat4 tmp = getWorldToNodeTransform();
+    Vec3 vec3(worldPoint.x, worldPoint.y, 0);
+    Vec3 ret;
     tmp.transformPoint(vec3,&ret);
-    return Vector2(ret.x, ret.y);
+    return Vec2(ret.x, ret.y);
 }
 
-Vector2 Node::convertToWorldSpace(const Vector2& nodePoint) const
+Vec2 Node::convertToWorldSpace(const Vec2& nodePoint) const
 {
-    Matrix tmp = getNodeToWorldTransform();
-    Vector3 vec3(nodePoint.x, nodePoint.y, 0);
-    Vector3 ret;
+    Mat4 tmp = getNodeToWorldTransform();
+    Vec3 vec3(nodePoint.x, nodePoint.y, 0);
+    Vec3 ret;
     tmp.transformPoint(vec3,&ret);
-    return Vector2(ret.x, ret.y);
+    return Vec2(ret.x, ret.y);
 
 }
 
-Vector2 Node::convertToNodeSpaceAR(const Vector2& worldPoint) const
+Vec2 Node::convertToNodeSpaceAR(const Vec2& worldPoint) const
 {
-    Vector2 nodePoint = convertToNodeSpace(worldPoint);
+    Vec2 nodePoint = convertToNodeSpace(worldPoint);
     return nodePoint - _anchorPointInPoints;
 }
 
-Vector2 Node::convertToWorldSpaceAR(const Vector2& nodePoint) const
+Vec2 Node::convertToWorldSpaceAR(const Vec2& nodePoint) const
 {
-    Vector2 pt = nodePoint + _anchorPointInPoints;
+    Vec2 pt = nodePoint + _anchorPointInPoints;
     return convertToWorldSpace(pt);
 }
 
-Vector2 Node::convertToWindowSpace(const Vector2& nodePoint) const
+Vec2 Node::convertToWindowSpace(const Vec2& nodePoint) const
 {
-    Vector2 worldPoint = this->convertToWorldSpace(nodePoint);
+    Vec2 worldPoint = this->convertToWorldSpace(nodePoint);
     return Director::getInstance()->convertToUI(worldPoint);
 }
 
-// convenience methods which take a Touch instead of Vector2
-Vector2 Node::convertTouchToNodeSpace(Touch *touch) const
+// convenience methods which take a Touch instead of Vec2
+Vec2 Node::convertTouchToNodeSpace(Touch *touch) const
 {
-    Vector2 point = touch->getLocation();
+    Vec2 point = touch->getLocation();
     return this->convertToNodeSpace(point);
 }
 
-Vector2 Node::convertTouchToNodeSpaceAR(Touch *touch) const
+Vec2 Node::convertTouchToNodeSpaceAR(Touch *touch) const
 {
-    Vector2 point = touch->getLocation();
+    Vec2 point = touch->getLocation();
     return this->convertToNodeSpaceAR(point);
 }
 
@@ -1577,25 +1600,25 @@ void Node::updateTransform()
         child->updateTransform();
 }
 
-Component* Node::getComponent(const std::string& pName)
+Component* Node::getComponent(const std::string& name)
 {
     if( _componentContainer )
-        return _componentContainer->get(pName);
+        return _componentContainer->get(name);
     return nullptr;
 }
 
-bool Node::addComponent(Component *pComponent)
+bool Node::addComponent(Component *component)
 {
     // lazy alloc
     if( !_componentContainer )
         _componentContainer = new ComponentContainer(this);
-    return _componentContainer->add(pComponent);
+    return _componentContainer->add(component);
 }
 
-bool Node::removeComponent(const std::string& pName)
+bool Node::removeComponent(const std::string& name)
 {
     if( _componentContainer )
-        return _componentContainer->remove(pName);
+        return _componentContainer->remove(name);
     return false;
 }
 
@@ -1613,7 +1636,7 @@ void Node::updatePhysicsBodyPosition(Scene* scene)
     {
         if (scene != nullptr && scene->getPhysicsWorld() != nullptr)
         {
-            Vector2 pos = getParent() == scene ? getPosition() : scene->convertToNodeSpace(_parent->convertToWorldSpace(getPosition()));
+            Vec2 pos = getParent() == scene ? getPosition() : scene->convertToNodeSpace(_parent->convertToWorldSpace(getPosition()));
             _physicsBody->setPosition(pos);
         }
         else
@@ -1652,10 +1675,10 @@ void Node::setPhysicsBody(PhysicsBody* body)
         
         // physics rotation based on body position, but node rotation based on node anthor point
         // it cann't support both of them, so I clear the anthor point to default.
-        if (!getAnchorPoint().equals(Vector2::ANCHOR_MIDDLE))
+        if (!getAnchorPoint().equals(Vec2::ANCHOR_MIDDLE))
         {
-            CCLOG("Node warning: setPhysicsBody sets anchor point to Vector2::ANCHOR_MIDDLE.");
-            setAnchorPoint(Vector2::ANCHOR_MIDDLE);
+            CCLOG("Node warning: setPhysicsBody sets anchor point to Vec2::ANCHOR_MIDDLE.");
+            setAnchorPoint(Vec2::ANCHOR_MIDDLE);
         }
     }
     
@@ -1704,7 +1727,7 @@ GLubyte Node::getOpacity(void) const
 	return _realOpacity;
 }
 
-GLubyte Node::getDisplayedOpacity(void) const
+GLubyte Node::getDisplayedOpacity() const
 {
 	return _displayedOpacity;
 }
