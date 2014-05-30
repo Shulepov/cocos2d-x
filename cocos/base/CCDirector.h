@@ -146,6 +146,10 @@ public:
      */
     virtual ~Director();
     virtual bool init();
+    
+    void setRequireRedraw() {
+        _shouldRedraw = true;
+    }
 
     // attribute
 
@@ -486,6 +490,8 @@ protected:
 
     /* whether or not the next delta time will be zero */
     bool _nextDeltaTimeZero;
+    
+    bool _shouldRedraw;
     
     /* projection used */
     Projection _projection;

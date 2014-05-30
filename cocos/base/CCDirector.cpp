@@ -286,11 +286,13 @@ void Director::drawScene()
     pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 
     Matrix identity = Matrix::identity();
-
+   
     // draw the scene
     if (_runningScene)
     {
-        _runningScene->visit(_renderer, identity, false);
+        if (_shouldRedraw) {
+            _runningScene->visit(_renderer, identity, false);
+        }
         _eventDispatcher->dispatchEvent(_eventAfterVisit);
     }
 
@@ -305,23 +307,31 @@ void Director::drawScene()
         showStats();
     }
 
-    _renderer->render();
+    if (_shouldRedraw) {
+        _renderer->render();
+    }
+    
     _eventDispatcher->dispatchEvent(_eventAfterDraw);
 
     popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 
     _totalFrames++;
 
-    // swap buffers
-    if (_openGLView)
-    {
-        _openGLView->swapBuffers();
+    if (_shouldRedraw) {
+        // swap buffers
+        if (_openGLView)
+        {
+            _openGLView->swapBuffers();
+        }
     }
+
 
     if (_displayStats)
     {
         calculateMPF();
     }
+    
+    _shouldRedraw = false;
 }
 
 void Director::calculateDeltaTime()

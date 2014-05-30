@@ -53,6 +53,7 @@ class ComponentContainer;
 class EventDispatcher;
 class Scene;
 class Renderer;
+class Director;
 #if CC_USE_PHYSICS
 class PhysicsBody;
 #endif
@@ -1426,6 +1427,7 @@ protected:
     ActionManager *_actionManager;  ///< a pointer to ActionManager singleton, which is used to handle all the actions
 
     EventDispatcher* _eventDispatcher;  ///< event dispatcher used to dispatch all kinds of events
+    Director *_director;
 
     bool _running;                  ///< is running
 

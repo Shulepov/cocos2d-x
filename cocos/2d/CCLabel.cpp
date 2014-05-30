@@ -477,6 +477,7 @@ void Label::setString(const std::string& text)
 {
     _originalUTF8String = text;
     _contentDirty = true;
+    _director->setRequireRedraw();
 }
 
 void Label::setAlignment(TextHAlignment hAlignment,TextVAlignment vAlignment)

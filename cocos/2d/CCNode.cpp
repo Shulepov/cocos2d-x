@@ -124,6 +124,7 @@ Node::Node(void)
 {
     // set default scheduler and actionManager
     Director *director = Director::getInstance();
+    _director = director;
     _actionManager = director->getActionManager();
     _actionManager->retain();
     _scheduler = director->getScheduler();
@@ -200,6 +201,7 @@ void Node::setSkewX(float skewX)
     
     _skewX = skewX;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 }
 
 float Node::getSkewY() const
@@ -214,6 +216,7 @@ void Node::setSkewY(float skewY)
     
     _skewY = skewY;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 }
 
 
@@ -222,6 +225,7 @@ void Node::setSkewY(float skewY)
 void Node::_setLocalZOrder(int z)
 {
     _localZOrder = z;
+    _director->setRequireRedraw();
 }
 
 void Node::setLocalZOrder(int z)
@@ -236,6 +240,7 @@ void Node::setLocalZOrder(int z)
     }
 
     _eventDispatcher->setDirtyForNode(this);
+    _director->setRequireRedraw();
 }
 
 void Node::setGlobalZOrder(float globalZOrder)
@@ -244,6 +249,7 @@ void Node::setGlobalZOrder(float globalZOrder)
     {
         _globalZOrder = globalZOrder;
         _eventDispatcher->setDirtyForNode(this);
+        _director->setRequireRedraw();
     }
 }
 
@@ -262,6 +268,7 @@ void Node::setRotation(float rotation)
     
     _rotationZ_X = _rotationZ_Y = rotation;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 
 #if CC_USE_PHYSICS
     if (_physicsBody && !_physicsBody->_rotationResetTag)
@@ -285,6 +292,7 @@ void Node::setRotation3D(const Vector3& rotation)
         return;
     
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 
     _rotationX = rotation.x;
     _rotationY = rotation.y;
@@ -316,6 +324,7 @@ void Node::setRotationSkewX(float rotationX)
     
     _rotationZ_X = rotationX;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 }
 
 float Node::getRotationSkewY() const
@@ -330,6 +339,7 @@ void Node::setRotationSkewY(float rotationY)
     
     _rotationZ_Y = rotationY;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 }
 
 /// scale getter
@@ -347,6 +357,7 @@ void Node::setScale(float scale)
 
     _scaleX = _scaleY = _scaleZ = scale;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 }
 
 /// scaleX getter
@@ -364,6 +375,7 @@ void Node::setScale(float scaleX,float scaleY)
     _scaleX = scaleX;
     _scaleY = scaleY;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 }
 
 /// scaleX setter
@@ -374,6 +386,7 @@ void Node::setScaleX(float scaleX)
     
     _scaleX = scaleX;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 }
 
 /// scaleY getter
@@ -390,6 +403,7 @@ void Node::setScaleZ(float scaleZ)
     
     _scaleZ = scaleZ;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 }
 
 /// scaleY getter
@@ -406,6 +420,7 @@ void Node::setScaleY(float scaleY)
     
     _scaleY = scaleY;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 }
 
 
@@ -423,6 +438,7 @@ void Node::setPosition(const Vector2& position)
     
     _position = position;
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 
 #if CC_USE_PHYSICS
     if (_physicsBody != nullptr && !_physicsBody->_positionResetTag)
@@ -490,6 +506,7 @@ void Node::setPositionZ(float positionZ)
         return;
     
     _transformUpdated = _transformDirty = _inverseDirty = true;
+    _director->setRequireRedraw();
 
     _positionZ = positionZ;
 
@@ -516,6 +533,7 @@ void Node::setVisible(bool var)
     {
         _visible = var;
         if(_visible) _transformUpdated = _transformDirty = _inverseDirty = true;
+        _director->setRequireRedraw();
     }
 }
 
@@ -545,6 +563,7 @@ void Node::setAnchorPoint(const Vector2& point)
         _anchorPoint = point;
         _anchorPointInPoints = Vector2(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y );
         _transformUpdated = _transformDirty = _inverseDirty = true;
+        _director->setRequireRedraw();
     }
 }
 
@@ -562,6 +581,7 @@ void Node::setContentSize(const Size & size)
 
         _anchorPointInPoints = Vector2(_contentSize.width * _anchorPoint.x, _contentSize.height * _anchorPoint.y );
         _transformUpdated = _transformDirty = _inverseDirty = true;
+        _director->setRequireRedraw();
     }
 }
 
@@ -589,6 +609,7 @@ void Node::ignoreAnchorPointForPosition(bool newValue)
     {
 		_ignoreAnchorPointForPosition = newValue;
         _transformUpdated = _transformDirty = _inverseDirty = true;
+        _director->setRequireRedraw();
 	}
 }
 
@@ -633,6 +654,7 @@ void Node::setShaderProgram(GLProgram *pShaderProgram)
     CC_SAFE_RETAIN(pShaderProgram);
     CC_SAFE_RELEASE(_shaderProgram);
     _shaderProgram = pShaderProgram;
+    _director->setRequireRedraw();
 }
 
 Scene* Node::getScene()
@@ -760,6 +782,7 @@ void Node::addChild(Node *child, int zOrder, int tag)
     {
         updateCascadeOpacity();
     }
+    _director->setRequireRedraw();
 }
 
 void Node::addChild(Node *child, int zOrder)
@@ -855,6 +878,7 @@ void Node::removeAllChildrenWithCleanup(bool cleanup)
     }
     
     _children.clear();
+    _director->setRequireRedraw();
 }
 
 void Node::detachChild(Node *child, ssize_t childIndex, bool doCleanup)
@@ -887,6 +911,7 @@ void Node::detachChild(Node *child, ssize_t childIndex, bool doCleanup)
     child->setParent(nullptr);
 
     _children.eraseObject(child);
+    _director->setRequireRedraw();
 }
 
 
@@ -896,6 +921,7 @@ void Node::insertChild(Node* child, int z)
     _reorderChildDirty = true;
     _children.pushBack(child);
     child->_setLocalZOrder(z);
+    _director->setRequireRedraw();
 }
 
 void Node::reorderChild(Node *child, int zOrder)
@@ -904,6 +930,7 @@ void Node::reorderChild(Node *child, int zOrder)
     _reorderChildDirty = true;
     child->setOrderOfArrival(s_globalOrderOfArrival++);
     child->_setLocalZOrder(zOrder);
+    _director->setRequireRedraw();
 }
 
 void Node::sortAllChildren()
@@ -1700,6 +1727,7 @@ void Node::updateDisplayedOpacity(GLubyte parentOpacity)
             child->updateDisplayedOpacity(_displayedOpacity);
         }
     }
+    _director->setRequireRedraw();
 }
 
 bool Node::isCascadeOpacityEnabled(void) const
@@ -1777,6 +1805,7 @@ void Node::updateDisplayedColor(const Color3B& parentColor)
             child->updateDisplayedColor(_displayedColor);
         }
     }
+    _director->setRequireRedraw();
 }
 
 bool Node::isCascadeColorEnabled(void) const
