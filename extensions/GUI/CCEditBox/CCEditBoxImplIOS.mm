@@ -31,7 +31,7 @@
 #include "CCEditBox.h"
 #import "CCEAGLView.h"
 #include "base/CCDirector.h"
-#include "2d/platform/ios/CCGLView.h"
+#include "platform/ios/CCGLView.h"
 
 #define getEditBoxImplIOS() ((cocos2d::extension::EditBoxImplIOS*)editBox_)
 

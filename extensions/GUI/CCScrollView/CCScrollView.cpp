@@ -392,7 +392,7 @@ Vec2 ScrollView::maxContainerOffset()
         yOffset = (_viewSize.height - containerHeight) / 2;
     }
     
-    return Vector2(xOffset, yOffset);
+    return Vec2(xOffset, yOffset);
 }
 
 Vec2 ScrollView::minContainerOffset()
@@ -413,7 +413,7 @@ Vec2 ScrollView::minContainerOffset()
         yOffset = _viewSize.height - containerHeight;
     }
     
-    return Vector2(xOffset, yOffset);
+    return Vec2(xOffset, yOffset);
 }
 
 
@@ -438,7 +438,7 @@ void ScrollView::deaccelerateScrolling(float dt)
         newX = _container->getPosition().x;
         newY = _container->getPosition().y;
         
-        _scrollDistance     = _scrollDistance - Vector2(newX - _container->getPosition().x, newY - _container->getPosition().y);
+        _scrollDistance     = _scrollDistance - Vec2(newX - _container->getPosition().x, newY - _container->getPosition().y);
         _scrollDistance     = _scrollDistance * SCROLL_DEACCEL_RATE;
         this->setContentOffset({newX,newY});
         
@@ -459,7 +459,7 @@ void ScrollView::deaccelerateScrolling(float dt)
         newY     = MIN(_container->getPosition().y, maxInset.y);
         newY     = MAX(newY, minInset.y);
         
-        _scrollDistance     = _scrollDistance - Vector2(newX - _container->getPosition().x, newY - _container->getPosition().y);
+        _scrollDistance     = _scrollDistance - Vec2(newX - _container->getPosition().x, newY - _container->getPosition().y);
         _scrollDistance     = _scrollDistance * SCROLL_DEACCEL_RATE;
         this->setContentOffset({newX,newY});
         

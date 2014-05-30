@@ -24,8 +24,8 @@
 #include "AssetsManager.h"
 #include "base/CCDirector.h"
 #include "base/CCScheduler.h"
-#include "2d/CCUserDefault.h"
-#include "2d/platform/CCFileUtils.h"
+#include "base/CCUserDefault.h"
+#include "platform/CCFileUtils.h"
 
 #include <curl/curl.h>
 #include <curl/easy.h>

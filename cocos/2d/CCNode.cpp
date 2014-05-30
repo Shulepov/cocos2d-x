@@ -36,7 +36,6 @@ THE SOFTWARE.
 #include "base/CCEventDispatcher.h"
 #include "base/CCEvent.h"
 #include "base/CCEventTouch.h"
-#include "base/ccCArray.h"
 #include "2d/CCGrid.h"
 #include "2d/CCActionManager.h"
 #include "base/CCScriptSupport.h"
