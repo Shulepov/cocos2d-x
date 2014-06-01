@@ -99,10 +99,12 @@ ProgressTimer::~ProgressTimer(void)
 
 void ProgressTimer::setPercentage(float percentage)
 {
-    if (_percentage != percentage)
+    if (fabsf(_percentage - percentage) > 0.5f)
     {
         _percentage = clampf(percentage, 0, 100);
         updateProgress();
+        
+        _director->setRequireRedraw();
     }
 }
 
