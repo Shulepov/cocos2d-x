@@ -56,6 +56,7 @@ class EventCustom;
 class EventListenerCustom;
 class TextureCache;
 class Renderer;
+class TransitionScene;
 
 #if  (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
 class Console;
@@ -270,6 +271,10 @@ public:
      * ONLY call it if there is a running scene.
      */
     void popScene();
+    void popScene(TransitionScene *transition);
+    const Vector<Scene*> &getScenesStack() const {
+        return _scenesStack;
+    }
 
     /** Pops out all scenes from the stack until the root scene in the queue.
      * This scene will replace the running one.
