@@ -462,26 +462,24 @@ ValueVector FileUtilsApple::getValueVectorFromFile(const std::string& filename)
 
 static bool writeDataToFile(const std::string &filePath, NSData *data) {
     NSString *pathStr = [NSString stringWithUTF8String:filePath.c_str()];
-    
-    NSLog(@"Save file with size %@", @([data length]));
-    
     NSString *directory = [pathStr stringByDeletingLastPathComponent];
-    bool directoryExists =[s_fileManager fileExistsAtPath:directory];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    bool directoryExists = [fm fileExistsAtPath:directory];
     if (!directoryExists) {
-        [s_fileManager createDirectoryAtPath:directory
+        [fm createDirectoryAtPath:directory
                  withIntermediateDirectories:YES
                                   attributes:nil
                                        error:nil];
     };
-    
     return [data writeToFile:pathStr atomically:YES];
 }
 
 bool FileUtilsApple::writeDataToFile(const std::string &filePath, const char *rawData, size_t dataLength, bool preferAsync) {
     NSData *data = [NSData dataWithBytes:rawData length:dataLength];
     if (preferAsync) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            cocos2d::writeDataToFile(filePath, data);
+        const std::string copyPath = filePath;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            cocos2d::writeDataToFile(copyPath, data);
         });
         return true;
     } else {
