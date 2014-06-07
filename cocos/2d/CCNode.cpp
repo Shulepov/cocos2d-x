@@ -660,6 +660,7 @@ void Node::setGLProgramState(cocos2d::GLProgramState *glProgramState)
         _glProgramState = glProgramState;
         CC_SAFE_RETAIN(_glProgramState);
     }
+    _director->setRequireRedraw();
 }
 
 void Node::setGLProgram(GLProgram *glProgram)
