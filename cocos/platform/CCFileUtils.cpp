@@ -531,7 +531,7 @@ static tinyxml2::XMLElement* generateElementForArray(const ValueVector& array, t
     return rootNode;
 }
 
-bool FileUtils::writeDataToFile(const std::string &filePath, const char *data, size_t dataLength) {
+bool FileUtils::writeDataToFile(const std::string &filePath, const char *data, size_t dataLength, bool preferAsync) {
     const char *mode = "wb";
     FILE *fp = fopen(filePath.c_str(), mode);
     if (!fp) {
@@ -561,7 +561,7 @@ NS_CC_BEGIN
 ValueMap FileUtils::getValueMapFromFile(const std::string& filename) {return ValueMap();}
 ValueVector FileUtils::getValueVectorFromFile(const std::string& filename) {return ValueVector();}
 bool FileUtils::writeToFile(const ValueMap& dict, const std::string &fullPath) {return false;}
-bool FileUtils::writeDataToFile(const std::string &filePath, const char *data, size_t dataLength) {return false;}
+bool FileUtils::writeDataToFile(const std::string &filePath, const char *data, size_t dataLength, bool preferAsync) {return false;}
 
 #endif /* (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC) */
 

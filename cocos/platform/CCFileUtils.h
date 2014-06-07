@@ -332,7 +332,7 @@ public:
     /** Returns the full path cache */
     const std::unordered_map<std::string, std::string>& getFullPathCache() const { return _fullPathCache; }
   
-    virtual bool writeDataToFile(const std::string &filePath, const char *data, size_t dataLength);
+    virtual bool writeDataToFile(const std::string &filePath, const char *data, size_t dataLength, bool preferAsync);
     void renameFile(const std::string &from, const std::string &to);
     virtual void removeFile(const std::string &filePath);
     

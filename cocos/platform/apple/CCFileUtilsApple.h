@@ -51,7 +51,7 @@ public:
     virtual bool writeToFile(const ValueMap& dict, const std::string& fullPath) override;
     
     virtual ValueVector getValueVectorFromFile(const std::string& filename) override;
-    virtual bool writeDataToFile(const std::string &filePath, const char *data, size_t dataLength) override;
+    virtual bool writeDataToFile(const std::string &filePath, const char *data, size_t dataLength, bool preferAsync) override;
     
 private:
     virtual bool isFileExistInternal(const std::string& filePath) const override;
