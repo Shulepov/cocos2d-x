@@ -136,4 +136,12 @@ bool ComponentContainer::isEmpty() const
     return (_components == nullptr || _components->empty());
 }
 
+void ComponentContainer::nodeOnEnter() {
+    if (_components) {
+        for (auto iter = _components->begin(); iter != _components->end(); ++iter) {
+            iter->second->nodeOnEnter();
+        }
+    }
+}
+
 NS_CC_END

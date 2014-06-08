@@ -1094,6 +1094,9 @@ void Node::onEnter()
         child->onEnter();
     
     this->resume();
+    if (_componentContainer) {
+        _componentContainer->nodeOnEnter();
+    }
     
 #if CC_ENABLE_SCRIPT_BINDING
     if (_scriptType == kScriptTypeLua)

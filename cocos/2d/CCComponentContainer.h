@@ -52,6 +52,8 @@ public:
     virtual bool remove(const std::string& name);
     virtual void removeAll();
     virtual void visit(float delta);
+    void nodeOnEnter();
+    
 public:
     bool isEmpty() const;
     
