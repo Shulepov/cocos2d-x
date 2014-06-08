@@ -115,7 +115,7 @@ void ProgressTimer::setSprite(Sprite *sprite)
         CC_SAFE_RETAIN(sprite);
         CC_SAFE_RELEASE(_sprite);
         _sprite = sprite;
-        setContentSize(_sprite->getContentSize());
+        setContentSize({_sprite->getContentSize().width * _sprite->getScaleX(), _sprite->getContentSize().height * _sprite->getScaleY()});
 
         //    Every time we set a new sprite, we free the current vertex data
         if (_vertexData)
@@ -181,8 +181,10 @@ Vec2 ProgressTimer::vertexFromAlphaPoint(Vec2 alpha)
         return ret;
     }
     V3F_C4B_T2F_Quad quad = _sprite->getQuad();
-    Vec2 min = Vec2(quad.bl.vertices.x,quad.bl.vertices.y);
-    Vec2 max = Vec2(quad.tr.vertices.x,quad.tr.vertices.y);
+    const float scaleX = _sprite->getScaleX();
+    const float scaleY = _sprite->getScaleY();
+    Vec2 min = Vec2(quad.bl.vertices.x * scaleX,quad.bl.vertices.y * scaleY);
+    Vec2 max = Vec2(quad.tr.vertices.x * scaleX,quad.tr.vertices.y * scaleY);
     ret.x = min.x * (1.f - alpha.x) + max.x * alpha.x;
     ret.y = min.y * (1.f - alpha.y) + max.y * alpha.y;
     return ret;
