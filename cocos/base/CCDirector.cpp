@@ -255,6 +255,10 @@ void Director::setGLDefaultValues()
 // Draw the Scene
 void Director::drawScene()
 {
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    _shouldRedraw = true;
+#endif
+    
     // calculate "global" dt
     calculateDeltaTime();
     
