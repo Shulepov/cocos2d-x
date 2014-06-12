@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "base/CCDirector.h"
 #include "base/CCEventCustom.h"
 #include "base/CCEventType.h"
+#include "base/CCEventDispatcher.h"
 #include "renderer/CCGLProgramCache.h"
 #include "renderer/CCTextureCache.h"
 #include "renderer/ccGLStateCache.h"

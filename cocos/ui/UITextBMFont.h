@@ -89,15 +89,13 @@ public:
 protected:
     virtual void initRenderer() override;
     virtual void onSizeChanged() override;
-    virtual void updateTextureColor() override;
-    virtual void updateTextureOpacity() override;
-    virtual void updateTextureRGBA() override;
+   
     void labelBMFontScaleChangedWithSize();
     virtual Widget* createCloneInstance() override;
     virtual void copySpecialProperties(Widget* model) override;
     virtual void adaptRenderers() override;
 protected:
-    cocos2d::Label* _labelBMFontRenderer;
+    Label* _labelBMFontRenderer;
     bool _fntFileHasInit;
     std::string _fntFileName;
     std::string _stringValue;

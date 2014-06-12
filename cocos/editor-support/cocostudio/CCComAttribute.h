@@ -28,6 +28,8 @@ THE SOFTWARE.
 #include "2d/CCComponent.h"
 #include "base/CCValue.h"
 #include "CCComBase.h"
+#include "2d/CCComponent.h"
+#include "base/CCValue.h"
 
 namespace cocostudio {
 

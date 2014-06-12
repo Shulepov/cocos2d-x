@@ -23,7 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "cocostudio/CCComAttribute.h"
-#include "2d/platform/CCFileUtils.h"
+#include "platform/CCFileUtils.h"
 
 using namespace cocos2d;
 

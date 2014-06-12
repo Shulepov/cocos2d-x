@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "cocostudio/CCComAudio.h"
 #include "audio/include/SimpleAudioEngine.h"
-#include "2d/platform/CCFileUtils.h"
+#include "platform/CCFileUtils.h"
 
 namespace cocostudio {
 
