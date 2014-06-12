@@ -30,6 +30,7 @@
 #include "CCEditBox.h"
 #include "jni/Java_org_cocos2dx_lib_Cocos2dxBitmap.h"
 #include "jni/Java_org_cocos2dx_lib_Cocos2dxHelper.h"
+#include "base/ccUTF8.h"
 
 
 NS_CC_EXT_BEGIN
@@ -166,7 +167,7 @@ void EditBoxImplAndroid::setText(const char* pText)
 			
             if (EditBox::InputFlag::PASSWORD == _editBoxInputFlag)
             {
-                long length = cc_utf8_strlen(_text.c_str(), -1);
+                long length = StringUtils::getCharacterCountInUTF8String(_text);
                 for (long i = 0; i < length; i++)
                 {
                     strToShow.append("*");

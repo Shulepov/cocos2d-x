@@ -28,7 +28,7 @@
 #include <string>
 #include <mutex>
 #include "extensions/ExtensionMacros.h"
-#include "CCNode.h"
+#include "2d/CCNode.h"
 
 NS_CC_EXT_BEGIN
 

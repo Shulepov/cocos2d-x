@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "base/CCEventType.h"
 #include "renderer/CCGLProgramCache.h"
 #include "renderer/CCTextureCache.h"
+#include "renderer/ccGLStateCache.h"
 #include "2d/CCDrawingPrimitives.h"
 #include "CCGLView.h"
 #include "platform/android/jni/JniHelper.h"

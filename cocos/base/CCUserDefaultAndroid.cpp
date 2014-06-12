@@ -387,7 +387,7 @@ Data UserDefault::getDataForKey(const char* pKey, const Data& defaultValue)
     if (encodedDefaultData)
         free(encodedDefaultData);
 
-    CCLOG("ENCODED STRING: --%s--%d", encodedStr.c_str(), encodedStr.length());
+    CCLOG("ENCODED STRING: --%s--%d", encodedStr.c_str(), (int)encodedStr.length());
       
     unsigned char * decodedData = NULL;
     int decodedDataLen = base64Decode((unsigned char*)encodedStr.c_str(), (unsigned int)encodedStr.length(), &decodedData);
@@ -455,7 +455,7 @@ void UserDefault::setDataForKey(const char* pKey, const Data& value)
     deleteNodeByKey(pKey);
 #endif
     
-    CCLOG("SET DATA FOR KEY: --%s--%d", value.getBytes(), value.getSize());
+    CCLOG("SET DATA FOR KEY: --%s--%d", value.getBytes(), (int)value.getSize());
     char * encodedData = nullptr;
     unsigned int encodedDataLen = base64Encode(value.getBytes(), value.getSize(), &encodedData);
 

@@ -40,7 +40,6 @@ THE SOFTWARE.
 extern "C"
 {
 #include "png.h"
-#include "tiffio.h"
 #include "base/etc1.h"
 #include "jpeglib.h"
 }
@@ -485,12 +484,6 @@ bool Image::initWithImageData(const unsigned char * data, ssize_t dataLen)
         case Format::JPG:
             ret = initWithJpgData(unpackedData, unpackedLen);
             break;
-        case Format::TIFF:
-            ret = initWithTiffData(unpackedData, unpackedLen);
-            break;
-        case Format::WEBP:
-            ret = initWithWebpData(unpackedData, unpackedLen);
-            break;
         case Format::PVR:
             ret = initWithPVRData(unpackedData, unpackedLen);
             break;
@@ -637,14 +630,6 @@ Image::Format Image::detectFormat(const unsigned char * data, ssize_t dataLen)
     else if (isJpg(data, dataLen))
     {
         return Format::JPG;
-    }
-    else if (isTiff(data, dataLen))
-    {
-        return Format::TIFF;
-    }
-    else if (isWebp(data, dataLen))
-    {
-        return Format::WEBP;
     }
     else if (isPvr(data, dataLen))
     {
@@ -978,176 +963,6 @@ bool Image::initWithPngData(const unsigned char * data, ssize_t dataLen)
     return bRet;
 }
 
-namespace
-{
-    static tmsize_t tiffReadProc(thandle_t fd, void* buf, tmsize_t size)
-    {
-        tImageSource* isource = (tImageSource*)fd;
-        uint8* ma;
-        uint64 mb;
-        unsigned long n;
-        unsigned long o;
-        tmsize_t p;
-        ma=(uint8*)buf;
-        mb=size;
-        p=0;
-        while (mb>0)
-        {
-            n=0x80000000UL;
-            if ((uint64)n>mb)
-            n=(unsigned long)mb;
-            
-            
-            if((int)(isource->offset + n) <= isource->size)
-            {
-                memcpy(ma, isource->data+isource->offset, n);
-                isource->offset += n;
-                o = n;
-            }
-            else
-            {
-                return 0;
-            }
-            
-            ma+=o;
-            mb-=o;
-            p+=o;
-            if (o!=n)
-            {
-                break;
-            }
-        }
-        return p;
-    }
-    
-    static tmsize_t tiffWriteProc(thandle_t fd, void* buf, tmsize_t size)
-    {
-        CC_UNUSED_PARAM(fd);
-        CC_UNUSED_PARAM(buf);
-        CC_UNUSED_PARAM(size);
-        return 0;
-    }
-    
-    
-    static uint64 tiffSeekProc(thandle_t fd, uint64 off, int whence)
-    {
-        tImageSource* isource = (tImageSource*)fd;
-        uint64 ret = -1;
-        do
-        {
-            if (whence == SEEK_SET)
-            {
-                CC_BREAK_IF(off >= (uint64)isource->size);
-                ret = isource->offset = (uint32)off;
-            }
-            else if (whence == SEEK_CUR)
-            {
-                CC_BREAK_IF(isource->offset + off >= (uint64)isource->size);
-                ret = isource->offset += (uint32)off;
-            }
-            else if (whence == SEEK_END)
-            {
-                CC_BREAK_IF(off >= (uint64)isource->size);
-                ret = isource->offset = (uint32)(isource->size-1 - off);
-            }
-            else
-            {
-                CC_BREAK_IF(off >= (uint64)isource->size);
-                ret = isource->offset = (uint32)off;
-            }
-        } while (0);
-        
-        return ret;
-    }
-    
-    static uint64 tiffSizeProc(thandle_t fd)
-    {
-        tImageSource* pImageSrc = (tImageSource*)fd;
-        return pImageSrc->size;
-    }
-    
-    static int tiffCloseProc(thandle_t fd)
-    {
-        CC_UNUSED_PARAM(fd);
-        return 0;
-    }
-    
-    static int tiffMapProc(thandle_t fd, void** pbase, toff_t* psize)
-    {
-        CC_UNUSED_PARAM(fd);
-        CC_UNUSED_PARAM(pbase);
-        CC_UNUSED_PARAM(psize);
-        return 0;
-    }
-    
-    static void tiffUnmapProc(thandle_t fd, void* base, toff_t size)
-    {
-        CC_UNUSED_PARAM(fd);
-        CC_UNUSED_PARAM(base);
-        CC_UNUSED_PARAM(size);
-    }
-}
-
-bool Image::initWithTiffData(const unsigned char * data, ssize_t dataLen)
-{
-    bool bRet = false;
-    do 
-    {
-        // set the read call back function
-        tImageSource imageSource;
-        imageSource.data    = data;
-        imageSource.size    = dataLen;
-        imageSource.offset  = 0;
-
-        TIFF* tif = TIFFClientOpen("file.tif", "r", (thandle_t)&imageSource, 
-            tiffReadProc, tiffWriteProc,
-            tiffSeekProc, tiffCloseProc, tiffSizeProc,
-            tiffMapProc,
-            tiffUnmapProc);
-
-        CC_BREAK_IF(nullptr == tif);
-
-        uint32 w = 0, h = 0;
-        uint16 bitsPerSample = 0, samplePerPixel = 0, planarConfig = 0;
-        size_t npixels = 0;
-        
-        TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
-        TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
-        TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &bitsPerSample);
-        TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &samplePerPixel);
-        TIFFGetField(tif, TIFFTAG_PLANARCONFIG, &planarConfig);
-
-        npixels = w * h;
-        
-        _renderFormat = Texture2D::PixelFormat::RGBA8888;
-        _width = w;
-        _height = h;
-
-        _dataLen = npixels * sizeof (uint32);
-        _data = static_cast<unsigned char*>(malloc(_dataLen * sizeof(unsigned char)));
-
-        uint32* raster = (uint32*) _TIFFmalloc(npixels * sizeof (uint32));
-        if (raster != nullptr) 
-        {
-           if (TIFFReadRGBAImageOriented(tif, w, h, raster, ORIENTATION_TOPLEFT, 0))
-           {
-                /* the raster data is pre-multiplied by the alpha component 
-                   after invoking TIFFReadRGBAImageOriented*/
-                _preMulti = true;
-
-               memcpy(_data, raster, npixels*sizeof (uint32));
-           }
-
-          _TIFFfree(raster);
-        }
-        
-
-        TIFFClose(tif);
-
-        bRet = true;
-    } while (0);
-    return bRet;
-}
 
 namespace
 {
@@ -1840,47 +1655,6 @@ bool Image::initWithPVRData(const unsigned char * data, ssize_t dataLen)
 {
     return initWithPVRv2Data(data, dataLen) || initWithPVRv3Data(data, dataLen);
 }
-
-bool Image::initWithWebpData(const unsigned char * data, ssize_t dataLen)
-{
-	bool bRet = false;  
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-    CCLOG("WEBP image format not supported on WinRT or WP8");
-#else
-	do
-	{
-        WebPDecoderConfig config;
-        if (WebPInitDecoderConfig(&config) == 0) break;
-        if (WebPGetFeatures(static_cast<const uint8_t*>(data), dataLen, &config.input) != VP8_STATUS_OK) break;
-        if (config.input.width == 0 || config.input.height == 0) break;
-        
-        config.output.colorspace = MODE_RGBA;
-        _renderFormat = Texture2D::PixelFormat::RGBA8888;
-        _width    = config.input.width;
-        _height   = config.input.height;
-        
-        _dataLen = _width * _height * 4;
-        _data = static_cast<unsigned char*>(malloc(_dataLen * sizeof(unsigned char)));
-        
-        config.output.u.RGBA.rgba = static_cast<uint8_t*>(_data);
-        config.output.u.RGBA.stride = _width * 4;
-        config.output.u.RGBA.size = _dataLen;
-        config.output.is_external_memory = 1;
-        
-        if (WebPDecode(static_cast<const uint8_t*>(data), dataLen, &config) != VP8_STATUS_OK)
-        {
-            free(_data);
-            _data = nullptr;
-            break;
-        }
-        
-        bRet = true;
-	} while (0);
-#endif
-	return bRet;
-}
-
 
 bool Image::initWithRawData(const unsigned char * data, ssize_t dataLen, int width, int height, int bitsPerComponent, bool preMulti)
 {
