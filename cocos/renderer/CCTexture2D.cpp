@@ -781,20 +781,20 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
         }
 
         // set the premultiplied tag
-        if (!image->hasPremultipliedAlpha())
-        {
+        //if (!image->hasPremultipliedAlpha())
+        //{
             if (image->getFileType() == Image::Format::PVR)
             {
                 _hasPremultipliedAlpha = _PVRHaveAlphaPremultiplied;
             }else
             {
-                CCLOG("wanning: We cann't find the data is premultiplied or not, we will assume it's false.");
+//                CCLOG("wanning: We cann't find the data is premultiplied or not, we will assume it's false.");
                 _hasPremultipliedAlpha = false;
             }
-        }else
+        /*}else
         {
             _hasPremultipliedAlpha = image->isPremultipliedAlpha();
-        }
+        }*/
         return true;
     }
 }
