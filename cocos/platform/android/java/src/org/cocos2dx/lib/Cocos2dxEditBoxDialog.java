@@ -27,19 +27,24 @@ package org.cocos2dx.lib;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -151,31 +156,10 @@ public class Cocos2dxEditBoxDialog extends Dialog {
 	@Override
 	protected void onCreate(final Bundle pSavedInstanceState) {
 		super.onCreate(pSavedInstanceState);
-
 		this.getWindow().setBackgroundDrawable(new ColorDrawable(0x80000000));
-
-		final LinearLayout layout = new LinearLayout(this.getContext());
-		layout.setOrientation(LinearLayout.VERTICAL);
-
-		final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-		this.mTextViewTitle = new TextView(this.getContext());
-		final LinearLayout.LayoutParams textviewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		textviewParams.leftMargin = textviewParams.rightMargin = this.convertDipsToPixels(10);
-		this.mTextViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-		layout.addView(this.mTextViewTitle, textviewParams);
-
-		this.mInputEditText = new EditText(this.getContext());
-		final LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		editTextParams.leftMargin = editTextParams.rightMargin = this.convertDipsToPixels(10);
-
-		layout.addView(this.mInputEditText, editTextParams);
-
-		this.setContentView(layout, layoutParams);
-
+		final RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		this.setContentView(getViews(), layoutParams);
 		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-		this.mTextViewTitle.setText(this.mTitle);
 		this.mInputEditText.setText(this.mMessage);
 
 		int oldImeOptions = this.mInputEditText.getImeOptions();
@@ -210,7 +194,7 @@ public class Cocos2dxEditBoxDialog extends Dialog {
 		}
 
 		if (this.mIsMultiline) {
-			this.mInputModeContraints |= InputType.TYPE_TEXT_FLAG_MULTI_LINE;
+			//this.mInputModeContraints |= InputType.TYPE_TEXT_FLAG_MULTI_LINE;
 		}
 
 		this.mInputEditText.setInputType(this.mInputModeContraints | this.mInputFlagConstraints);
@@ -229,11 +213,13 @@ public class Cocos2dxEditBoxDialog extends Dialog {
 				this.mInputFlagConstraints = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
 				break;
 			case kEditBoxInputFlagInitialCapsAllCharacters:
-				this.mInputFlagConstraints = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
+				//this.mInputFlagConstraints = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
 				break;
 			default:
 				break;
 		}
+        //TODO: set flag from cocos2dx
+        this.mInputFlagConstraints = InputType.TYPE_TEXT_FLAG_CAP_WORDS;
 
 		this.mInputEditText.setInputType(this.mInputFlagConstraints | this.mInputModeContraints);
 
@@ -262,6 +248,8 @@ public class Cocos2dxEditBoxDialog extends Dialog {
 			this.mInputEditText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(this.mMaxLength) });
 		}
 
+        mInputEditText.setSingleLine(true);
+
 		final Handler initHandler = new Handler();
 		initHandler.postDelayed(new Runnable() {
 			@Override
@@ -270,7 +258,7 @@ public class Cocos2dxEditBoxDialog extends Dialog {
 				Cocos2dxEditBoxDialog.this.mInputEditText.setSelection(Cocos2dxEditBoxDialog.this.mInputEditText.length());
 				Cocos2dxEditBoxDialog.this.openKeyboard();
 			}
-		}, 200);
+		}, 150);
 
 		this.mInputEditText.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
@@ -287,6 +275,77 @@ public class Cocos2dxEditBoxDialog extends Dialog {
 		});
 	}
 
+    private ViewGroup getViews(){
+        final RelativeLayout layout = new RelativeLayout(getContext());
+        Button button = new Button(getContext());
+        button.setId(101);
+        button.setText("OK");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cocos2dxHelper.setEditTextDialogResult(mInputEditText.getText().toString());
+                Cocos2dxEditBoxDialog.this.closeKeyboard();
+                Cocos2dxEditBoxDialog.this.dismiss();
+            }
+        });
+        button.setWidth(convertDipsToPixels(80));
+        button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
+        GradientDrawable shape =  new GradientDrawable();
+        float rounded = convertDipsToPixels(6);
+        float[] rounArr =  new float[] {0, 0, rounded, rounded, rounded,rounded, 0, 0};
+        shape.setCornerRadii(rounArr);
+        shape.setColor(Color.rgb(255, 146, 138));
+        button.setTextColor(Color.WHITE);
+        GradientDrawable shapePressed =  new GradientDrawable();
+        shapePressed.setCornerRadii(rounArr);
+        shapePressed.setColor(Color.rgb(100, 64, 60));
+
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[] {android.R.attr.state_pressed}, shapePressed );
+        states.addState(new int[] { },shape);
+        button.setBackgroundDrawable(states);
+
+        final RelativeLayout.LayoutParams buttonParams = new RelativeLayout
+                .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        buttonParams.rightMargin = convertDipsToPixels(10);
+        buttonParams.bottomMargin = convertDipsToPixels(30);
+        layout.addView(button, buttonParams);
+
+        //----EDIT TEXT
+        mInputEditText =  new EditText(this.getContext())
+        {
+            @Override
+            public boolean onKeyPreIme(int keyCode, KeyEvent event)
+            {
+                if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+                {
+                    Cocos2dxEditBoxDialog.this.closeKeyboard();
+                    Cocos2dxEditBoxDialog.this.dismiss();
+                    return true;
+                }
+                return super.onKeyPreIme(keyCode, event);
+            }
+        };
+
+        final RelativeLayout.LayoutParams editTextParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        editTextParams.leftMargin = convertDipsToPixels(10);
+        editTextParams.bottomMargin = convertDipsToPixels(30);
+        mInputEditText.setHint(mTitle);
+        editTextParams.addRule(RelativeLayout.LEFT_OF, 101);
+        editTextParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        GradientDrawable shapeEditBack =  new GradientDrawable();
+        shapeEditBack.setCornerRadii(new float[] {rounded, rounded, 0, 0, 0,0, rounded, rounded});
+        shapeEditBack.setColor(Color.WHITE);
+        mInputEditText.setBackgroundDrawable(shapeEditBack);
+        mInputEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
+
+        layout.addView(this.mInputEditText, editTextParams);
+
+        return layout;
+    }
 
 	// ===========================================================
 	// Getter & Setter
@@ -318,4 +377,6 @@ public class Cocos2dxEditBoxDialog extends Dialog {
 	// ===========================================================
 	// Inner and Anonymous Classes
 	// ===========================================================
+
+
 }
