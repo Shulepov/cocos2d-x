@@ -28,8 +28,11 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView;
 
+import android.util.Log;
 import org.cocos2dx.lib.Cocos2dxHelper;
 public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
+    private static final String TAG = Cocos2dxRenderer.class.getName();
+
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -70,6 +73,7 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
 
 	@Override
 	public void onSurfaceCreated(final GL10 pGL10, final EGLConfig pEGLConfig) {
+        Log.v(TAG, "NATIVE INIT");
 		Cocos2dxRenderer.nativeInit(this.mScreenWidth, this.mScreenHeight);
 		this.mLastTickInNanoSeconds = System.nanoTime();
 	}
@@ -145,11 +149,13 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
 	}
 
 	public void handleOnPause() {
+        Log.v(TAG, "HANDLE PAUSE");
 		Cocos2dxHelper.onEnterBackground();
 		Cocos2dxRenderer.nativeOnPause();
 	}
 
 	public void handleOnResume() {
+        Log.v(TAG, "HANDLE RESUME");
 		Cocos2dxHelper.onEnterForeground();
 		Cocos2dxRenderer.nativeOnResume();
 	}
