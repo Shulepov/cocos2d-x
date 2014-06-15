@@ -289,7 +289,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
 	}
 
 	@Override
-	public boolean onKeyDown(final int pKeyCode, final KeyEvent pKeyEvent) {
+	public boolean onKeyUp(final int pKeyCode, final KeyEvent pKeyEvent) {
 		switch (pKeyCode) {
 			case KeyEvent.KEYCODE_BACK:
 			case KeyEvent.KEYCODE_MENU:
@@ -308,7 +308,7 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
 				});
 				return true;
 			default:
-				return super.onKeyDown(pKeyCode, pKeyEvent);
+				return super.onKeyUp(pKeyCode, pKeyEvent);
 		}
 	}
 
